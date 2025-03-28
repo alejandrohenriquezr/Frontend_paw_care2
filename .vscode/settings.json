@@ -1,0 +1,11 @@
+{
+    "livePreview.defaultPreviewPath": "/templates/index.html",
+    "cSpell.words": [
+        "clinicas",
+        "jsonify",
+        "obtener"
+    ],
+    "python.analysis.extraPaths": [
+        "./app"
+    ]
+}

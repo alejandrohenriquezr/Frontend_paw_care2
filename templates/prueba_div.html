@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujador de Divs</title>
+    <style>
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh; /* 🔥 Ocupa toda la altura de la pantalla */
+    display: flex;
+    justify-content: center; /* 🔥 Centra horizontalmente */
+    align-items: center; /* 🔥 Centra verticalmente */
+    font-family: Arial, sans-serif;
+}
+
+
+/* Contenedor principal */
+.contenedor {
+    display: flex;
+    width: 50%;
+    height: 200px; /* Usa toda la altura de la ventana */
+    align-items: center;
+}
+
+/* Columna 1 (275x183px) */
+.columna-1 {
+    width: 275px;
+    height: 199px;
+    background-color: #f0f0f0; /* Color de fondo opcional */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 5px; /* Bordes redondeados opcionales */
+}
+
+/* Columna 2 (ocupa el resto del espacio disponible) */
+.columna-2 {
+    width: 95%; /* 🔥 Ocupa el 95% del ancho restante */
+    height: 199px; /* Altura fija */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Espaciado uniforme entre filas */
+    padding: 5px 0;
+    /*  background-color: #e3f2fd; /* Color de fondo opcional */
+}
+
+/* Filas dentro de la columna 2 */
+.fila {
+    width: 90%; /* Cada fila ocupa el 90% del ancho disponible */
+    height: 46px; /* Altura fija */
+    padding: 5px 0;
+    background-color: #bbdefb; /* Color de fondo opcional */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 5px; /* Bordes redondeados opcionales */
+    font-weight: bold;
+    margin-bottom: 5px; /* 🔥 Espaciado de 5px entre filas */
+}
+</style>
+</head>
+<body>
+    <div class="contenedor">
+        <!-- Columna 1 (275x183px) -->
+        <div class="columna-1">
+            Contenido Columna 1
+        </div>
+
+        <!-- Columna 2 (resto del ancho) -->
+        <div class="columna-2">
+            <div class="fila">Fila 1</div>
+            <div class="fila">Fila 2</div>
+            <div class="fila">Fila 3</div>
+            <div class="fila">Fila 4</div>
+        </div>
+    </div>
+</body>
+</html>

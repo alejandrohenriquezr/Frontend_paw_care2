@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zona Privada</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <img src="{{ url_for('static', filename='images/logo_paw_care.png') }}" alt="Logo Paw Care">
+        <div class="right-buttons">
+            <a href="{{ url_for('cerrar_sesion') }}">
+                <button>Cerrar Sesión</button>
+            </a>
+        </div>
+    </header>
+    <main>
+        <body>
+            <h1>Bienvenido, {{ user['name'] }}</h1>
+            <p>Email: {{ user['email'] }}</p>
+            <img src="{{ user['picture'] }}" alt="Foto de perfil">
+            <br><br>
+            <a href="/logout">Cerrar sesión</a>
+        </body>
+    </main>
+    <footer>
+        &copy; 2025 Mi Página Web. Todos los derechos reservados.
+    </footer>
+</body>
+</html>
+

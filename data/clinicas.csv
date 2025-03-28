@@ -1,0 +1,4 @@
+﻿id_clinica;nombre;direccion;dpa;estado;n_calificaciones;calificacion;especialidades
+1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;13130;1;25;4,2;aaaa
+2;Clínica 2;Los Conquistadores 2328;13123;1;45;5;bbbb
+3;Clínica 3;Avenida El Rosal 4250;13119;1;12;3,9;cccc

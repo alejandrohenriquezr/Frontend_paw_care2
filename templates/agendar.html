@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+
+
+<script>
+  // Obtener los parámetros de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const idClinica = urlParams.get('id_clinica');
+  const accionAgendar = urlParams.get('accion_agendar');
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove("visible");
+}
+
+</script>
+
+<head>
+  <title>PawCare</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="static/agendar_p1.js" defer></script> <!-- Este script el formulario para seleccionar la fecha y hora -->   
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+      window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+      };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    
+<style>
+  * {
+    font-family: "Inter", sans-serif;
+  }
+
+/*  ::-webkit-scrollbar {
+    display: none;
+  }*/
+</style>
+
+  <script>
+        tailwind.config = {
+            theme: {
+              extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+              },
+            },
+            variants: {
+              extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+              },
+            },
+            plugins: [],
+          };
+  </script>
+
+</head>
+
+              <body class="h-full text-base-content">
+                <div id="root" class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
+  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <i class="fa-solid fa-paw text-2xl"></i>
+          <span class="ml-2 text-xl">PawCare</span>
+        </div>
+
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="hover:text">
+          <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
+          </a>
+          <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
+        </nav>
+
+        <div class="flex items-center space-x-4">
+          <button class="p-2 relative">
+            <i class="fa-regular fa-bell text-xl"></i>
+            <span class="absolute -top-1 -right-1 bg-neutral-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
+          </button>
+          <button  onclick="window.location.href='iniciar_sesion.html'"   class="px-4 py-2 bg-white text-[#5A8F99] rounded-lg hover:bg-neutral-100 transition-colors">
+            Iniciar Sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="pt-20">
+    <div class="grid md:grid-cols-3 gap-6">
+      <div  id="datos_de_la_clinica"  class="bg-white p-6 rounded-xl shadow-lg">
+      </div>
+      <script src="static/muestra_clinica.js"></script> <!-- Este script debe mostrar los datos de la clínica seleccinada -->
+    </div>
+    <div id="finalizar_reserva" class="container">
+      <h2>Finalizar Reserva</h2>
+      <div id="mensaje_bienvenida"></div>
+      <div id="formulario_mascotas"></div>
+    </div>
+    <div class="container mx-auto px-4">
+      <section id="booking-header" class="py-8">
+        <div id="agendar_resultados" class="container">
+          <script src="static/script_clinicas.js"></script>
+          <!-- 🔥 Aquí se insertan los datos de la clínica -->
+        </div>  
+        <!-- Formulario de selección de fecha y hora -->
+        <div id="form-container" class="container mt-4">
+          <form id="f1">
+            <div id="fecha-container" class="flex space-x-2">
+              <!-- Fechas se insertarán dinámicamente aquí -->
+            </div>
+            <div id="hora-container" class="flex space-x-2 mt-4 hidden">
+              <!-- Horas se insertarán dinámicamente aquí -->
+            </div>
+            <input type="hidden" id="id_clinica" value="">
+            <input type="hidden" id="selected_date" value="">
+            <input type="hidden" id="selected_time" value="">
+            <button type="button" id="btn-agendar" class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-full">
+                Agendar
+            </button>
+          </form>
+        </div>        
+      </section>
+
+            <!-- 🔥 Modal de éxito -->
+      <div id="modal_exito" class="modal">
+        <div class="modal-content">
+            <p>✅ Agendamiento exitoso.</p>
+            <button onclick="cerrarModal('modal_exito')">Cerrar</button>
+        </div>
+      </div>
+
+      <!-- 🔥 Modal de error -->
+      <div id="modal_error" class="modal">
+        <div class="modal-content">
+            <p>❌ No pudimos agendar tu cita. Inténtalo nuevamente.</p>
+            <button onclick="cerrarModal('modal_error')">Cerrar</button>
+        </div>
+      </div>
+
+
+
+      <section id="available-clinics" class="py-8">
+       <!--- <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl text-[#2E2E2E]">Clínicas disponibles (4)</h2>
+          <span class="text-neutral-600 flex items-center">
+            <i class="fa-solid fa-spinner animate-spin mr-2"></i>
+            Actualizando resultados...
+          </span>
+        </div>-->
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl text-[#2E2E2E]">Clínica Veterinaria San Miguel</h3>
+              <span class="bg-[#5A8F99] text-white px-3 py-1 rounded-lg">$35.000</span>
+            </div>
+            
+            <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
+              <span class="text-white">Imagen de la clínica</span>
+            </div>
+            
+            <p class="flex items-center text-[#4A4A4A] mb-2">
+              <i class="fa-solid fa-location-dot mr-2"></i>
+              Av. Principal 123, San Miguel
+            </p>
+            
+            <div class="flex items-center mb-4">
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star-half-alt text-[#5A8F99]"></i>
+              <span class="ml-2 text-[#4A4A4A]">(256 reseñas)</span>
+            </div>
+
+            <div class="flex gap-4">
+              <button class="flex-1 py-2 bg-[#5A8F99] text-white rounded-lg hover:bg-[#4A7F89] transition-colors">
+                Reservar con cualquier veterinario
+              </button>
+              <button class="flex-1 py-2 border-2 border-[#5A8F99] text-[#5A8F99] rounded-lg hover:bg-[#5A8F99] hover:text-white transition-colors">
+                Ver veterinarios
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white p-6 rounded-xl shadow-lg">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl text-[#2E2E2E]">Centro Veterinario El Bosque</h3>
+              <span class="text-[#5A8F99]">$32.000</span>
+            </div>
+            
+            <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
+              <span class="text-white">Imagen de la clínica</span>
+            </div>
+            
+            <p class="flex items-center text-[#4A4A4A] mb-2">
+              <i class="fa-solid fa-location-dot mr-2"></i>
+              Calle Los Pinos 456, El Bosque
+            </p>
+            
+            <div class="flex items-center mb-4">
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-solid fa-star text-[#5A8F99]"></i>
+              <i class="fa-regular fa-star text-[#5A8F99]"></i>
+              <span class="ml-2 text-[#4A4A4A]">(189 reseñas)</span>
+            </div>
+
+            <div class="flex gap-4">
+              <button class="flex-1 py-2 bg-[#5A8F99] text-white rounded-lg">
+                Reservar con cualquier veterinario
+              </button>
+              <button class="flex-1 py-2 border-2 border-[#5A8F99] text-[#5A8F99] rounded-lg">
+                Ver veterinarios
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="footer" class="bg-[#87AEB5] text-white py-12 mt-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h4 class="text-lg mb-4">Enlaces rápidos</h4>
+          <ul class="space-y-2">
+            <li><span class="hover:text-neutral-200 cursor-pointer">Inicio</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Buscar Veterinarios</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Mascotas</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Citas</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg mb-4">Soporte</h4>
+          <ul class="space-y-2">
+            <li><span class="hover:text-neutral-200 cursor-pointer">Centro de ayuda</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">FAQ</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Contacto</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Política de privacidad</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg mb-4">Síguenos</h4>
+          <div class="flex space-x-4">
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-facebook text-2xl"></i></span>
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-instagram text-2xl"></i></span>
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-twitter text-2xl"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+              </body>
+            </html>
+          

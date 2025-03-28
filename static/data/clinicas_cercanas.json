@@ -1,0 +1,29 @@
+[
+    {
+        "id_clinica": 1,
+        "nombre": "Clínica 1",
+        "direccion": "José Joaquín Vallejos 1312",
+        "especialidades": "aaaa",
+        "calificacion": "4,2",
+        "n_calificaciones": 25,
+        "distancia": "2.9 km"
+    },
+    {
+        "id_clinica": 2,
+        "nombre": "Clínica 2",
+        "direccion": "Los Conquistadores 2328",
+        "especialidades": "bbbb",
+        "calificacion": "5",
+        "n_calificaciones": 45,
+        "distancia": "2.9 km"
+    },
+    {
+        "id_clinica": 3,
+        "nombre": "Clínica 3",
+        "direccion": "Avenida El Rosal 4250",
+        "especialidades": "cccc",
+        "calificacion": "3,9",
+        "n_calificaciones": 12,
+        "distancia": "3.1 km"
+    }
+]
