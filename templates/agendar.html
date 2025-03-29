@@ -62,209 +62,184 @@
 
 </head>
 
-              <body class="h-full text-base-content">
-                <div id="root" class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
-  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
-    <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center">
-          <i class="fa-solid fa-paw text-2xl"></i>
-          <span class="ml-2 text-xl">PawCare</span>
-        </div>
-
-        <nav class="hidden md:flex items-center space-x-8">
-          <a href="index.html" class="hover:text">
-          <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
-          </a>
-          <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
-        </nav>
-
-        <div class="flex items-center space-x-4">
-          <button class="p-2 relative">
-            <i class="fa-regular fa-bell text-xl"></i>
-            <span class="absolute -top-1 -right-1 bg-neutral-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
-          </button>
-          <button  onclick="window.location.href='iniciar_sesion.html'"   class="px-4 py-2 bg-white text-[#5A8F99] rounded-lg hover:bg-neutral-100 transition-colors">
-            Iniciar Sesión
-          </button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main id="main" class="pt-20">
-    <div class="grid md:grid-cols-3 gap-6">
-      <div  id="datos_de_la_clinica"  class="bg-white p-6 rounded-xl shadow-lg">
-      </div>
-      <script src="static/muestra_clinica.js"></script> <!-- Este script debe mostrar los datos de la clínica seleccinada -->
-    </div>
-    <div id="finalizar_reserva" class="container">
-      <h2>Finalizar Reserva</h2>
-      <div id="mensaje_bienvenida"></div>
-      <div id="formulario_mascotas"></div>
-    </div>
-    <div class="container mx-auto px-4">
-      <section id="booking-header" class="py-8">
-        <div id="agendar_resultados" class="container">
-          <script src="static/script_clinicas.js"></script>
-          <!-- 🔥 Aquí se insertan los datos de la clínica -->
-        </div>  
-        <!-- Formulario de selección de fecha y hora -->
-        <div id="form-container" class="container mt-4">
-          <form id="f1">
-            <div id="fecha-container" class="flex space-x-2">
-              <!-- Fechas se insertarán dinámicamente aquí -->
-            </div>
-            <div id="hora-container" class="flex space-x-2 mt-4 hidden">
-              <!-- Horas se insertarán dinámicamente aquí -->
-            </div>
-            <input type="hidden" id="id_clinica" value="">
-            <input type="hidden" id="selected_date" value="">
-            <input type="hidden" id="selected_time" value="">
-            <button type="button" id="btn-agendar" class="mt-4 px-6 py-3 bg-blue-500 text-white rounded-full">
-                Agendar
-            </button>
-          </form>
-        </div>        
-      </section>
-
-            <!-- 🔥 Modal de éxito -->
-      <div id="modal_exito" class="modal">
-        <div class="modal-content">
-            <p>✅ Agendamiento exitoso.</p>
-            <button onclick="cerrarModal('modal_exito')">Cerrar</button>
-        </div>
-      </div>
-
-      <!-- 🔥 Modal de error -->
-      <div id="modal_error" class="modal">
-        <div class="modal-content">
-            <p>❌ No pudimos agendar tu cita. Inténtalo nuevamente.</p>
-            <button onclick="cerrarModal('modal_error')">Cerrar</button>
-        </div>
-      </div>
-
-
-
-      <section id="available-clinics" class="py-8">
-       <!--- <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl text-[#2E2E2E]">Clínicas disponibles (4)</h2>
-          <span class="text-neutral-600 flex items-center">
-            <i class="fa-solid fa-spinner animate-spin mr-2"></i>
-            Actualizando resultados...
-          </span>
-        </div>-->
-
-        <div class="grid md:grid-cols-2 gap-6">
-          <div class="bg-white p-6 rounded-xl shadow-lg">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl text-[#2E2E2E]">Clínica Veterinaria San Miguel</h3>
-              <span class="bg-[#5A8F99] text-white px-3 py-1 rounded-lg">$35.000</span>
-            </div>
-            
-            <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
-              <span class="text-white">Imagen de la clínica</span>
-            </div>
-            
-            <p class="flex items-center text-[#4A4A4A] mb-2">
-              <i class="fa-solid fa-location-dot mr-2"></i>
-              Av. Principal 123, San Miguel
-            </p>
-            
-            <div class="flex items-center mb-4">
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star-half-alt text-[#5A8F99]"></i>
-              <span class="ml-2 text-[#4A4A4A]">(256 reseñas)</span>
+  <body class="h-full text-base-content">
+    <div id="root" class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
+      <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+        <div class="container mx-auto px-4">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+              <i class="fa-solid fa-paw text-2xl"></i>
+              <span class="ml-2 text-xl">PawCare</span>
             </div>
 
-            <div class="flex gap-4">
-              <button class="flex-1 py-2 bg-[#5A8F99] text-white rounded-lg hover:bg-[#4A7F89] transition-colors">
-                Reservar con cualquier veterinario
+            <nav class="hidden md:flex items-center space-x-8">
+              <a href="index.html" class="hover:text">
+              <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
+              </a>
+              <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
+              <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
+              <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+              <button class="p-2 relative">
+                <i class="fa-regular fa-bell text-xl"></i>
+                <span class="absolute -top-1 -right-1 bg-neutral-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
               </button>
-              <button class="flex-1 py-2 border-2 border-[#5A8F99] text-[#5A8F99] rounded-lg hover:bg-[#5A8F99] hover:text-white transition-colors">
-                Ver veterinarios
-              </button>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-xl shadow-lg">
-            <div class="flex justify-between items-start mb-4">
-              <h3 class="text-xl text-[#2E2E2E]">Centro Veterinario El Bosque</h3>
-              <span class="text-[#5A8F99]">$32.000</span>
-            </div>
-            
-            <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
-              <span class="text-white">Imagen de la clínica</span>
-            </div>
-            
-            <p class="flex items-center text-[#4A4A4A] mb-2">
-              <i class="fa-solid fa-location-dot mr-2"></i>
-              Calle Los Pinos 456, El Bosque
-            </p>
-            
-            <div class="flex items-center mb-4">
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-solid fa-star text-[#5A8F99]"></i>
-              <i class="fa-regular fa-star text-[#5A8F99]"></i>
-              <span class="ml-2 text-[#4A4A4A]">(189 reseñas)</span>
-            </div>
-
-            <div class="flex gap-4">
-              <button class="flex-1 py-2 bg-[#5A8F99] text-white rounded-lg">
-                Reservar con cualquier veterinario
-              </button>
-              <button class="flex-1 py-2 border-2 border-[#5A8F99] text-[#5A8F99] rounded-lg">
-                Ver veterinarios
+              <button  onclick="window.location.href='iniciar_sesion.html'"   class="px-4 py-2 bg-white text-[#5A8F99] rounded-lg hover:bg-neutral-100 transition-colors">
+                Iniciar Sesión
               </button>
             </div>
           </div>
         </div>
-      </section>
-    </div>
-  </main>
+      </header>
 
-  <footer id="footer" class="bg-[#87AEB5] text-white py-12 mt-12">
-    <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-3 gap-8">
-        <div>
-          <h4 class="text-lg mb-4">Enlaces rápidos</h4>
-          <ul class="space-y-2">
-            <li><span class="hover:text-neutral-200 cursor-pointer">Inicio</span></li>
-            <li><span class="hover:text-neutral-200 cursor-pointer">Buscar Veterinarios</span></li>
-            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Mascotas</span></li>
-            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Citas</span></li>
-          </ul>
+      <main id="main" class="pt-20">
+        <div class="container mx-auto px-">
+          <section id="booking-header" class="py-18">
+            <div id="agendar_resultados" class="container">
+                <script src="static/script_clinicas.js"></script>
+                <!-- 🔥 Aquí se insertan los datos de la clínica -->
+            </div>  
+            <!-- Formulario de selección de fecha y hora -->
+            <div id="form-container" class="container mt-4">
+
+              </div>
+          </section>
         </div>
-        
-        <div>
-          <h4 class="text-lg mb-4">Soporte</h4>
-          <ul class="space-y-2">
-            <li><span class="hover:text-neutral-200 cursor-pointer">Centro de ayuda</span></li>
-            <li><span class="hover:text-neutral-200 cursor-pointer">FAQ</span></li>
-            <li><span class="hover:text-neutral-200 cursor-pointer">Contacto</span></li>
-            <li><span class="hover:text-neutral-200 cursor-pointer">Política de privacidad</span></li>
-          </ul>
+
+        <div class="grid md:grid-cols-3 gap-6">
+          <div  id="datos_de_la_clinica"  class="bg-white p-6 rounded-xl shadow-lg">
+          </div>
+          <script src="static/muestra_clinica.js"></script> <!-- Este script debe mostrar los datos de la clínica seleccinada -->
         </div>
-        
-        <div>
-          <h4 class="text-lg mb-4">Síguenos</h4>
-          <div class="flex space-x-4">
-            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-facebook text-2xl"></i></span>
-            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-instagram text-2xl"></i></span>
-            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-twitter text-2xl"></i></span>
+                <!-- 🔥 Modal de éxito -->
+          <div id="modal_exito" class="modal">
+            <div class="modal-content">
+                <p>✅ Agendamiento exitoso.</p>
+                <button onclick="cerrarModal('modal_exito')">Cerrar</button>
+            </div>
+          </div>
+
+          <!-- 🔥 Modal de error -->
+          <div id="modal_error" class="modal">
+            <div class="modal-content">
+                <p>❌ No pudimos agendar tu cita. Inténtalo nuevamente.</p>
+                <button onclick="cerrarModal('modal_error')">Cerrar</button>
+            </div>
+          </div>
+
+
+
+          <section id="available-clinics" class="py-8">
+            <div class="grid md:grid-cols-2 gap-6">
+              <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-start mb-4">
+                  <h3 class="text-xl text-[#2E2E2E]">Clínica Veterinaria San Miguel</h3>
+                  <span class="bg-[#5A8F99] text-white px-3 py-1 rounded-lg">$35.000</span>
+                </div>
+                
+                <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
+                  <span class="text-white">Imagen de la clínica</span>
+                </div>
+                
+                <p class="flex items-center text-[#4A4A4A] mb-2">
+                  <i class="fa-solid fa-location-dot mr-2"></i>
+                  Av. Principal 123, San Miguel
+                </p>
+                
+                <div class="flex items-center mb-4">
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star-half-alt text-[#5A8F99]"></i>
+                  <span class="ml-2 text-[#4A4A4A]">(256 reseñas)</span>
+                </div>
+
+                <div class="flex gap-4">
+                  <button class="flex-1 py-2 bg-[#5A8F99] text-white rounded-lg hover:bg-[#4A7F89] transition-colors">
+                    Reservar con cualquier veterinario
+                  </button>
+                  <button class="flex-1 py-2 border-2 border-[#5A8F99] text-[#5A8F99] rounded-lg hover:bg-[#5A8F99] hover:text-white transition-colors">
+                    Ver veterinarios
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-start mb-4">
+                  <h3 class="text-xl text-[#2E2E2E]">Centro Veterinario El Bosque</h3>
+                  <span class="text-[#5A8F99]">$32.000</span>
+                </div>
+                
+                <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
+                  <span class="text-white">Imagen de la clínica</span>
+                </div>
+                
+                <p class="flex items-center text-[#4A4A4A] mb-2">
+                  <i class="fa-solid fa-location-dot mr-2"></i>
+                  Calle Los Pinos 456, El Bosque
+                </p>
+                
+                <div class="flex items-center mb-4">
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-solid fa-star text-[#5A8F99]"></i>
+                  <i class="fa-regular fa-star text-[#5A8F99]"></i>
+                  <span class="ml-2 text-[#4A4A4A]">(189 reseñas)</span>
+                </div>
+
+                <div class="flex gap-4">
+                  <button class="flex-1 py-2 bg-[#5A8F99] text-white rounded-lg">
+                    Reservar con cualquier veterinario
+                  </button>
+                  <button class="flex-1 py-2 border-2 border-[#5A8F99] text-[#5A8F99] rounded-lg">
+                    Ver veterinarios
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+      </main>
+
+      <footer id="footer" class="bg-[#87AEB5] text-white py-12 mt-12">
+        <div class="container mx-auto px-4">
+          <div class="grid md:grid-cols-3 gap-8">
+            <div>
+              <h4 class="text-lg mb-4">Enlaces rápidos</h4>
+              <ul class="space-y-2">
+                <li><span class="hover:text-neutral-200 cursor-pointer">Inicio</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Buscar Veterinarios</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Mis Mascotas</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Mis Citas</span></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-lg mb-4">Soporte</h4>
+              <ul class="space-y-2">
+                <li><span class="hover:text-neutral-200 cursor-pointer">Centro de ayuda</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">FAQ</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Contacto</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Política de privacidad</span></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-lg mb-4">Síguenos</h4>
+              <div class="flex space-x-4">
+                <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-facebook text-2xl"></i></span>
+                <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-instagram text-2xl"></i></span>
+                <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-twitter text-2xl"></i></span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </footer>
     </div>
-  </footer>
-</div>
-              </body>
-            </html>
+  </body>
+</html>
           

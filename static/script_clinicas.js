@@ -63,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     mostrarClinicas();
 });
 
+//Este script muestra las fechas y horas disponibles para agendar una cita en la clínica seleccionada.
 document.addEventListener("DOMContentLoaded", function () {
     const agendarResultados = document.getElementById("agendar_resultados");
     
@@ -94,6 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const fecha = new Date();
         fecha.setDate(hoy.getDate() + i);
         const fechaTexto = fecha.toLocaleDateString("es-ES", opcionesFecha);
+        fecha.setDate(hoy.getDate() + (i));
         const fechaValor = fecha.toISOString().split("T")[0]; // Formato YYYY-MM-DD
 
         const btnFecha = document.createElement("button");
@@ -125,16 +127,39 @@ document.addEventListener("DOMContentLoaded", function () {
             btnHora.className = "flex-shrink-0 px-6 py-3 rounded-full bg-[#5A8F99] text-white";
             btnHora.dataset.hora = horaTexto;
 
-            // 🔴 Bloquear horas 13:00 y 14:00
-            if (hora === 13 || hora === 14) {
-                btnHora.classList.add("bg-gray-400", "cursor-not-allowed");
-                btnHora.disabled = true;
-            } else {
-                btnHora.addEventListener("click", function () {
-                    document.querySelectorAll("#horas-container button").forEach(btn => btn.classList.remove("bg-blue-500"));
-                    btnHora.classList.add("bg-blue-500");
-                });
-            }
+            esHoraBloqueada(id_clinica, fechaSeleccionada, horaTexto).then(isBlocked => {
+                if (isBlocked) {
+                    //console.log(`La fecha ${fechaSeleccionada} : ${horaTexto} está bloqueada.`);
+                    btnHora.classList.add("bg-gray-400", "cursor-not-allowed");
+                    btnHora.disabled = true;
+                }else{
+                    // 🔴 Bloquear horas 13:00 y 14:00
+                    if (hora === 13 || hora === 14) {
+                        //console.log(`La fecha ${fechaSeleccionada} : ${horaTexto} está bloqueada.`);
+                        btnHora.classList.add("bg-gray-400", "cursor-not-allowed");
+                        btnHora.disabled = true;
+                    } else {
+                        btnHora.addEventListener("click", function () {
+                            document.querySelectorAll("#horas-container button").forEach(btn => btn.classList.remove("bg-blue-500"));
+                            btnHora.classList.add("bg-blue-500");
+                        });
+                    }                    
+                }
+            });
+                
+
+            
+
+            // Verificar si la hora está bloqueada
+            //if (esHoraBloqueada(id_clinica, fechaSeleccionada, horaTexto)) {
+            //    btnHora.classList.add("bg-gray-400", "cursor-not-allowed");
+            //    btnHora.disabled = true;
+            //} else {
+            //    btnHora.addEventListener("click", function () {
+            //    document.querySelectorAll("#horas-container button").forEach(btn => btn.classList.remove("bg-blue-500"));
+            //    btnHora.classList.add("bg-blue-500");
+            //    });
+            //}
 
             horasContainer.appendChild(btnHora);
         }
@@ -163,9 +188,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }).toString();
 
         if (usuarioAutenticado()) {
-            window.location.href = `agendar_p2.html?${parametros}`;
+            window.location.href = `agendar?${parametros}`;
         } else {
-            window.location.href = `iniciar_sesion.html?redirect=agendar&${parametros}`;
+            window.location.href = `login?redirect=agendar&${parametros}`;
         }
     });
 
@@ -180,3 +205,27 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector(`[data-hora="${horaGuardada}"]`)?.click();
     }
 });
+
+// Función para verificar si una hora está bloqueada
+async function esHoraBloqueada(id_clinica, fecha, hora) {
+    try {
+        const response = await fetch('/api/reservas');
+        const reservas = await response.json();
+        //console.log(id_clinica, fecha, hora);
+        for (const reserva of reservas) {
+            const reservaFechaFormateada = new Date(reserva.fecha.split('-').reverse().join('-')).toISOString().split('T')[0];
+            const fechaFormateada = new Date(fecha).toISOString().split('T')[0];
+            const horaFormateada = hora.padStart(2, '0') + ':00'; // Asegura que la hora tenga el formato HH:MM
+            const reservahoraFormateada = reserva.hora.padStart(5, '0');
+
+            if (reserva.id_clinica === id_clinica && reservaFechaFormateada === fechaFormateada && reservahoraFormateada === horaFormateada && reserva.estado === '1') {
+                //console.log(`La hora ${hora} del ${fecha} está bloqueada.`);
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        console.error('Error al obtener las reservas:', error);
+        return false;
+    }
+}

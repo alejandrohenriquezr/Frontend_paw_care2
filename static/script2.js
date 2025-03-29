@@ -28,11 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
             imagen.height = 184;
             
             fila1.appendChild(imagen);
-            //contenedor.append(columna1);
-
-            // Columna 2 con la información
-            //const columna2 = document.createElement("div");
-            //columna2.classList.add("columna-2");
 
             const fila2 = document.createElement("div");
             fila2.classList.add("fila2");
@@ -42,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const fila3 = document.createElement("div");
             fila3.classList.add("fila2");
-            //fila2.className=`<p class="text-[#4A4A4A] mb-2"><i class="fa-solid fa-location-dot"></i>`;
             fila3.textContent =clinica.direccion;
 
             const fila4 = document.createElement("div");
@@ -70,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const formulario = document.createElement("form");
             formulario.classList.add("search-form");
-            formulario.action = "agendar.html";
+            formulario.action = "/agendar";
             formulario.method = "GET";
 
             const inputIdClinica = document.createElement("input");

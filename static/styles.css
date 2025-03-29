@@ -505,3 +505,12 @@ body { font-family: Arial, sans-serif; text-align: center; }
             .day, .hour { flex: 1 1 45%; margin: 5px; }
         }
 
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* Opcional: ajusta el espacio entre los elementos */
+}
+
+.container {
+    flex: 1; /* Ajusta el tamaño de los contenedores según sea necesario */
+    margin: 10px; /* Opcional: ajusta el margen entre los contenedores */
+}

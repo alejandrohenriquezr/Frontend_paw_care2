@@ -1,5 +1,6 @@
 from flask import Flask, redirect, url_for, session, request, jsonify, render_template
 from authlib.integrations.flask_client import OAuth
+from urllib.parse import urlencode
 import os
 import base64
 import requests
@@ -7,9 +8,11 @@ from config import Config
 import jwt
 import pandas as pd
 import unicodedata
+import csv
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.secret_key = os.urandom(24)
 
 def get_google_provider_cfg():
     return requests.get(Config.GOOGLE_DISCOVERY_URL).json()
@@ -44,14 +47,34 @@ def generate_nonce(length=16):
 def login():
     nonce = generate_nonce()
     session['nonce'] = nonce
+
+    redirect_value = request.args.get('redirect')
+    id_clinica = request.args.get('id_clinica')
+    fecha = request.args.get('fecha')
+    hora = request.args.get('hora')
+    
+    # Guardar los parámetros en la sesión
+    session['redirect'] = redirect_value
+    session['id_clinica'] = id_clinica
+    session['fecha'] = fecha
+    session['hora'] = hora
+
     redirect_uri = url_for('callback', _external=True)
+
+    
     return google.authorize_redirect(redirect_uri, nonce=nonce)
+
 
 # 📌 Ruta de callback (Google redirige aquí después de autenticación)
 @app.route("/login/callback")
 def callback():
     token = google.authorize_access_token()
-
+    # Recuperar los parámetros de la sesión
+    redirect_value = session.get('redirect')
+    id_clinica = session.get('id_clinica')
+    fecha = session.get('fecha')
+    hora = session.get('hora')
+    redirect_value+="?" + id_clinica + fecha + hora
     # Obtener metadatos de OpenID de Google
     google_provider_cfg = get_google_provider_cfg()
     jwks_uri = google_provider_cfg.get("jwks_uri")
@@ -68,7 +91,22 @@ def callback():
 
     # Guardar la sesión del usuario
     session["user"] = user_info
-    return redirect(url_for("sitio_privado"))
+    # Obtener el parámetro de redirección
+    redirect_url = request.args.get('redirect')
+    redirect_value = session.get('redirect')
+    #print(f"Valor de redirect: {redirect_value}")
+    #print(f"Valor de redirect_url: {redirect_url}")
+    if redirect_value:
+        # Crear un diccionario con los parámetros
+        params = {
+            'id_clinica': id_clinica,
+            'fecha': fecha,
+            'hora': hora
+        }
+        return redirect(url_for(redirect_value, id_clinica=id_clinica, fecha=fecha, hora=hora))
+    else:
+        return redirect(url_for('sitio_privado'))
+
 
 # 📌 Ruta de Dashboard (Solo accesible si está autenticado)
 @app.route("/dashboard")
@@ -79,11 +117,11 @@ def dashboard():
     
     return f"Bienvenido {user['name']} ({user['email']})"
 
-# 📌 Ruta de logout
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("home"))
+# 📌 Ruta de agendar
+@app.route("/agendar")
+def agendar():
+    parametros = request.query_string.decode('utf-8')
+    return render_template("agendar.html")
 
 @app.route('/authorize')
 def authorize():
@@ -160,6 +198,18 @@ def cerrar_sesion():
     session.clear()
     return redirect(url_for("home"))
 
+
+@app.route("/api/reservas", methods=["GET"])
+def obtener_reservas():
+    try:
+        reservas = []
+        with open('data/reservas.csv', newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile, delimiter=';')
+            for row in reader:
+                reservas.append(row)
+        return jsonify(reservas)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
