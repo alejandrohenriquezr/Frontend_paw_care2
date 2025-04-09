@@ -45,15 +45,20 @@
             },
             plugins: [],
           };
+
+
   </script>
     <script>
+
       window.onload = function() {
-          if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(showPosition, showError);
-          } else {
-              alert("La geolocalización no es soportada por este navegador.");
-          }
+        sessionStorage.clear();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("La geolocalización no es soportada por este navegador.");
+        }
       };
+
 
       function showPosition(position) {
           const lat = position.coords.latitude;
@@ -63,8 +68,24 @@
           fetch(url)
               .then(response => response.json())
               .then(data => {
+                  
+                //comuna = data. identifier || data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
                   const comuna = data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
-//                    alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
+                  sessionStorage.setItem("comuna", comuna);  
+                  //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
+                  cargarComunas(comuna);
+                  /*
+                  fetch('/guardar_datos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        comuna: comuna
+                    })
+                  });
+                  */
+                  //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
               })
               .catch(error => {
                   console.error('Error:', error);
@@ -75,7 +96,7 @@
       function showError(error) {
           switch(error.code) {
               case error.PERMISSION_DENIED:
-                  alert("El usuario denegó la solicitud de geolocalización.");
+                  //alert("El usuario denegó la solicitud de geolocalización.");
                   break;
               case error.POSITION_UNAVAILABLE:
                   alert("La información de ubicación no está disponible.");
@@ -88,6 +109,65 @@
                   break;
           }
       }
+      
+      async function cargarComunas(comuna) {
+            const response = await fetch('/api/insertar_comunas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ comuna: comuna })
+            });
+            const options = await response.text();
+            document.getElementById('comunas').innerHTML = options;
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+          
+            const searchInput = document.getElementById("search-input");
+            const suggestionsContainer = document.getElementById("suggestions");
+            searchInput.addEventListener("input", async function() {
+                const query = searchInput.value.trim();
+                const comuna = document.getElementById("comunas").value;
+                if (query.length < 2) { // Mostrar sugerencias solo si hay al menos 2 caracteres
+                    suggestionsContainer.innerHTML = "";
+                    suggestionsContainer.style.display = "none";
+                    return;
+                }
+                try {
+                    const response = await fetch(`/sugerencias?q=${query}&comuna=${comuna}`);
+                    const data = await response.json();
+                    // Limpiar sugerencias anteriores
+                    suggestionsContainer.innerHTML = "";
+                    if (data.length > 0) {
+                        suggestionsContainer.style.display = "block";
+                        data.forEach(sugerencia => {
+                            const div = document.createElement("div");
+                            div.classList.add("suggestion-item");
+                            div.textContent = sugerencia;
+                            div.onclick = function() {
+                                searchInput.value = sugerencia;
+                                suggestionsContainer.innerHTML = "";
+                                suggestionsContainer.style.display = "none";
+                            };
+                            suggestionsContainer.appendChild(div);
+                        });
+                    } else {
+                        suggestionsContainer.style.display = "none";
+                    }
+                } catch (error) {
+                    console.error("Error obteniendo sugerencias:", error);
+                }
+            });
+            // Ocultar sugerencias cuando se hace clic fuera
+            document.addEventListener("click", function(event) {
+                if (!searchInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+                    suggestionsContainer.style.display = "none";
+                }
+            });
+        });
+
 
       async function cargarUsuarios() {
           let respuesta = await fetch("/tipo_usuarios");
@@ -120,7 +200,7 @@
 
 </script>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+  /*document.addEventListener("DOMContentLoaded", function() {
       const searchInput = document.getElementById("search-input");
       //const suggestions = ["Veterinaria San Miguel", "Centro Veterinario Las Condes", "Veterinaria Providencia", "Clínica Veterinaria Santiago", "Clínica Veterinaria Ñuñoa"];
 
@@ -130,7 +210,8 @@
           suggestionBox.innerHTML = "";
 
           if (value) {
-              const filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(value));
+              console.log("Buscando sugerencias para:", value); // Ver en la consola del navegador
+              filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(value));
               filteredSuggestions.forEach(suggestion => {
                   const suggestionItem = document.createElement("div");
                   suggestionItem.textContent = suggestion;
@@ -144,7 +225,7 @@
           }
       });
   });
-
+  
 
   const fs = require('fs');
   const csv = require('csv-parser');
@@ -162,7 +243,7 @@
       // Guardamos la lista en un archivo JSON para usarla en tu HTML
       fs.writeFileSync('data/suggestions.json', JSON.stringify(suggestions));
   });
-
+*/
 </script>
 <script>
       tailwind.config = {
@@ -184,12 +265,14 @@
         };
 </script>
 <script>
+  /*
   document.addEventListener("DOMContentLoaded", function() {
      const searchInput = document.getElementById("search-input");
      const suggestionsContainer = document.getElementById("suggestions");
 
      searchInput.addEventListener("input", async function() {
          const query = searchInput.value.trim();
+         const comuna = document.getElementById("comunas").value; // Obtener la comuna seleccionada
          if (query.length < 2) {  // Mostrar sugerencias solo si hay al menos 2 caracteres
              suggestionsContainer.innerHTML = "";
              suggestionsContainer.style.display = "none";
@@ -230,7 +313,8 @@
              suggestionsContainer.style.display = "none";
          }
      });
- });
+  });
+  */
  </script>
 
 
@@ -266,7 +350,7 @@
           <button onclick="window.location.href='login'"  class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
             Iniciar Sesión
           </button>
-          <button id="authButton" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
+          <button id="authButton"  onclick="window.location.href='cerrar_sesion'"   class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
             Cerrar Sesión
           </button>
         </div>
@@ -282,11 +366,11 @@
         <p class="text-[#4A4A4A] text-lg mb-8">Encuentra la mejor atención para tu mascota, ya sea presencial o mediante teleconsulta</p>
         
         <div class="flex flex-col md:flex-row gap-4 justify-center mb-8">
-          <button class="flex items-center justify-center gap-2 px-6 py-3 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
+          <button name="btn_presencial" class="flex items-center justify-center gap-2 px-6 py-3 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200 btn-seleccionado">
             <i class="fa-solid fa-hospital"></i>
             Consulta Presencial
           </button>
-          <button class="flex items-center justify-center gap-2 px-6 py-3 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
+          <button name="btn_teleconsulta" class="flex items-center justify-center gap-2 px-6 py-3 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200 btn-no-seleccionado">
             <i class="fa-solid fa-video"></i>
             Teleconsulta
           </button>
@@ -295,11 +379,19 @@
         <!-- Search Section -->
         <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-lg">
           <div class="flex flex-col md:flex-row gap-4">
-            <form id="search-form" class="search-form">
-              <input type="text"  id="search-input" paceholder="Buscar por especialidad, veterinario o clínica" class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]">
-              <select class="px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]">
+            <form id="search-form" class="search-form"  method="GET" action="">
+ 
+              <!-- Select para comunas (presencial) -->
+              <select id="comunas" name="comuna" class="px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]">
                 <option>Seleccionar ciudad</option>
               </select>
+
+              <!-- Select para teleconsulta (inicialmente oculto) -->
+              <select id="teleconsulta" name="especialidades_teleconsulta" class="hidden px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]">
+                <option value="">Seleccionar especialidad</option>
+              </select>
+
+              <input type="text" id="search-input" name="search" placeholder="Buscar por especialidad, veterinario o clínica" class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]">
               <button class="px-6 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
                 <i class="fa-solid fa-magnifying-glass"></i>
               </button>
@@ -334,7 +426,7 @@
         <!-- Paginación -->
         <div id="paginacion" class="flex justify-center mt-6"></div>
         
-        <script src="/static/script_clinicas.js"></script>
+        <script src="/static/script2.js"></script>
         
       </div>
     </div>
@@ -377,6 +469,79 @@
   </footer>
 </div>
 
-              </body>
-            </html>
+<script>
+      /*
+      document.querySelector('button[name="btn_teleconsulta"]').addEventListener('click', async function() {
+        const selectComunas = document.getElementById('comunas');
+        selectComunas.name = 'especialidades_teleconsulta';
+        selectComunas.innerHTML = '<option value="">Seleccionar especialidad</option>';
+        try {
+          const response = await fetch('/api/especialidades_teleconsulta');
+          const options = await response.text();
+          selectComunas.innerHTML += options;
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+      */
+      document.addEventListener("DOMContentLoaded", function () {
+    const btnPresencial = document.querySelector('button[name="btn_presencial"]');
+    const btnTeleconsulta = document.querySelector('button[name="btn_teleconsulta"]');
+    const selectComunas = document.getElementById("comunas");
+    const selectTeleconsulta = document.getElementById("teleconsulta");
+
+    // Al cargar la página: activar presencial y cargar comunas
+    btnPresencial.classList.add("btn-seleccionado");
+    btnPresencial.classList.remove("btn-no-seleccionado");
+    btnTeleconsulta.classList.add("btn-no-seleccionado");
+    btnTeleconsulta.classList.remove("btn-seleccionado");
+
+    selectComunas.classList.remove("hidden");
+    selectTeleconsulta.classList.add("hidden");
+    const comunaInicial = sessionStorage.getItem("comuna");
+    cargarComunas(comunaInicial);
+
+    // Evento botón presencial
+    btnPresencial.addEventListener("click", function () {
+      btnPresencial.classList.add("btn-seleccionado");
+      btnPresencial.classList.remove("btn-no-seleccionado");
+      btnTeleconsulta.classList.add("btn-no-seleccionado");
+      btnTeleconsulta.classList.remove("btn-seleccionado");
+
+      selectComunas.name = "comuna";
+      selectComunas.classList.remove("hidden");
+      selectTeleconsulta.classList.add("hidden");
+      selectTeleconsulta.name = "";
+
+      const comuna = sessionStorage.getItem("comuna");
+      cargarComunas(comuna);
+    });
+
+    // Evento botón teleconsulta
+    btnTeleconsulta.addEventListener("click", async function () {
+      btnTeleconsulta.classList.add("btn-seleccionado");
+      btnTeleconsulta.classList.remove("btn-no-seleccionado");
+      btnPresencial.classList.add("btn-no-seleccionado");
+      btnPresencial.classList.remove("btn-seleccionado");
+
+      selectComunas.classList.add("hidden");
+      selectComunas.name = "";
+      selectTeleconsulta.classList.remove("hidden");
+      selectTeleconsulta.name = "especialidades_teleconsulta";
+
+      selectTeleconsulta.innerHTML = "<option value=''>Seleccionar especialidad</option>";
+      try {
+        const response = await fetch("/api/especialidades_teleconsulta");
+        const options = await response.text();
+        selectTeleconsulta.innerHTML += options;
+      } catch (error) {
+        console.error("Error al cargar especialidades de teleconsulta:", error);
+      }
+    });
+  });
+</script>
+
+
+  </body>
+</html>
           

@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "csv-parser": "^3.2.0",
+    "fs": "^0.0.1-security",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }

@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
             paginadorContainer.appendChild(botonPagina);
         }
     }
-
+    //ejecuto la api clinitas y le entrego los paráme
     fetch("/api/clinicas")  // Ajustar el endpoint según sea necesario
         .then(response => response.json())
         .then(data => {

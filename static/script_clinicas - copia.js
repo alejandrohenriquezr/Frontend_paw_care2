@@ -1,54 +1,19 @@
 let response;
 let data;
 let usuarioestaautenticado;
-
-//recuperar el valor de las variables de sesión
+//let parametros = await fetch('/api/parametros');;
+//recuperar el valor de la variable de sesion fechaSeleccionada
 let fechaSeleccionada = sessionStorage.getItem("fechaSeleccionada");
-let fecha= sessionStorage.getItem("fechaSeleccionada");
-let horaSeleccionada = sessionStorage.getItem("horaSeleccionada"); 
-let hora= sessionStorage.getItem("horaSeleccionada");   
+let horaSeleccionada = sessionStorage.getItem("horaSeleccionada");    
 let mascotaSeleccionada = sessionStorage.getItem("mascotaSeleccionada");
 let id_clinica = sessionStorage.getItem("id_clinica");
 //si la variable id_clinica existe en la url y es distinta de vacio, entonces almacenarla en la variable de sesion id_clinica
-if (fechaSeleccionada == null || fechaSeleccionada == "") {   
-    const urlParams = new URLSearchParams(window.location.search);
-    let fechaSeleccionada = urlParams.get("fecha") || ""; 
-    sessionStorage.setItem("fechaSeleccionada", fechaSeleccionada);
-}
-
-if (horaSeleccionada == null || horaSeleccionada == "") {   
-    const urlParams = new URLSearchParams(window.location.search);
-    let horaSeleccionada = urlParams.get("hora") || ""; 
-    sessionStorage.setItem("horaSeleccionada", horaSeleccionada);
-}
-
 if (id_clinica == null || id_clinica == "") {   
     const urlParams = new URLSearchParams(window.location.search);
     let id_clinica = urlParams.get("id_clinica") || ""; 
     sessionStorage.setItem("id_clinica", id_clinica);
 }
 
-//almacenar las variables de sesión de JS en PYTHON
-fetch('/guardar_datos', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        id_clinica: id_clinica || "",
-        fechaSeleccionada: fechaSeleccionada || "",
-        horaSeleccionada: horaSeleccionada || "",
-        mascotaSeleccionada: mascotaSeleccionada || ""
-    })
-});
-
-//si al cargar la página el btn_agendar ha sido cliqueado, entonces ejecuta la /api/insertar_reservas
-if (sessionStorage.getItem("btnAgendar") == "true") {
-    console.log("El botón Agendar ha sido clicado.");
-    fetch('/api/insertar_reservas');
-}else{
-    console.log("El botón Agendar no ha sido clicado.");  
-}
 document.addEventListener("DOMContentLoaded", async function () {
 /*    response = await fetch('/api/estado_autenticacion');
     data = await response.json();
@@ -123,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
-    //mostrarClinicas();
+    mostrarClinicas();
 });
 
 //Este script muestra las fechas y horas disponibles para agendar una cita en la clínica seleccionada.
@@ -133,16 +98,12 @@ document.addEventListener("DOMContentLoaded", function () {
    
     // 📌 Obtener ID de la clínica desde la URL
     const urlParams = new URLSearchParams(window.location.search);
+    id_clinica = urlParams.get("id_clinica") || "";
     user_info = urlParams.get("user");
     user = user_info || null;
-
-    id_clinica = urlParams.get("id_clinica") || "";
-    /*
     fecha = urlParams.get("fecha") || null;
-    console.log("fecha en línea 140=", fecha);
-
     hora = urlParams.get("hora") || null;
-*/
+
 
     // 📌 Formulario f1
     const formHTML = `
@@ -161,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnAgendar = document.getElementById("btn-agendar");
     btnAgendar.disabled = true;
     usuarioAutenticado().then(autenticado => {
-        console.log("Estado de autenticación3:", autenticado);
+        console.log("Estado de autenticación:", autenticado);
         if (autenticado) {
             btnAgendar.textContent = "Agendar Cita";
         } else {
@@ -172,9 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (fecha==null || hora==null){
         btnAgendar.disabled = true;
-        //cambiamos el color de fondo a gris
-        btnAgendar.classList.add("bg-gray-400");
-        btnAgendar.classList.remove("bg-green-500");
     } else {
         btnAgendar.disabled = false;
     }
@@ -229,10 +187,8 @@ document.addEventListener("DOMContentLoaded", function () {
             btnHora.textContent = horaTexto;
             btnHora.className = "flex-shrink-0 px-6 py-3 rounded-full bg-[#5A8F99] text-white";
             btnHora.dataset.hora = horaTexto;
-            //const urlParams = new URLSearchParams(window.location.search);
-            //const id_clinica = urlParams.get("id_clinica") || "";
-            //id_clinica es igual a la sesion de id_clinica
-            id_clinica = sessionStorage.getItem("id_clinica") || "";
+            const urlParams = new URLSearchParams(window.location.search);
+            const id_clinica = urlParams.get("id_clinica") || "";
             esHoraBloqueada(id_clinica, fechaSeleccionada, horaTexto).then(bloqueada => {
 /*
             if (esHoraBloqueada(id_clinica, fecha, hora)) {
@@ -242,8 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }else{
 */            
                 // 🔴 Bloquear horas 13:00 y 14:00
-                console.log("horaSeleccionada=", horaSeleccionada);
-                if (bloqueada || hora === 13 || hora === 14 || horaSeleccionada == horaTexto) {
+                if (bloqueada || hora === 13 || hora === 14) {
                     //console.log(`La fecha ${fechaSeleccionada} : ${horaTexto} está bloqueada.`);
                     btnHora.classList.add("bg-gray-400", "cursor-not-allowed");
                     btnHora.disabled = true;
@@ -256,10 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         sessionStorage.setItem("horaSeleccionada", horaTexto);
                         console.log("Hora seleccionada:", sessionStorage.getItem("horaSeleccionada"));
                         usuarioAutenticado().then(autenticado => {
-                            console.log("Estado de autenticación4:", autenticado);
+                            console.log("Estado de autenticación:", autenticado);
                             if (autenticado) {
                                 btnAgendar.disabled = false;
-                                console.log("El botón Agendar ha sido habilitado.");
                                 insertarCampoMascotas();
                                 
                             } else {
@@ -280,16 +234,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             horasContainer.appendChild(btnHora);
         }
-    usuarioAutenticado().then(autenticado => {
-        console.log("Estado de autenticación4:", autenticado);
-        if (autenticado) {
-            btnAgendar.disabled = false;
-            console.log("El botón Agendar ha sido habilitado.");
-            insertarCampoMascotas();
-         
- 
-        }
-    });
     }
 
     async function insertarCampoMascotas() {
@@ -298,21 +242,9 @@ document.addEventListener("DOMContentLoaded", function () {
         //almacenar la mascota seleccionada en la variable de sesión mascota
         const mascotas = document.getElementById("mis_mascotas");
         mascotas.addEventListener("change", function () {
-            mascotaSeleccionada = mascotas.value;
+            const mascotaSeleccionada = mascotas.value;
             sessionStorage.setItem("mascotaSeleccionada", mascotaSeleccionada);
             console.log("Mascota seleccionada:", sessionStorage.getItem("mascotaSeleccionada"));
-            //debo gardar la mascota seleccionada en una variable sesión y entrregarla a python
-            fetch('/guardar_datos', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    mascotaSeleccionada: mascotaSeleccionada
-                })
-            });
-
-
         });
       }
 
@@ -321,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const response = await fetch('/api/estado_autenticacion');
             const data = await response.json();
-            console.log("Estado de autenticación5:", data.autenticado);
+            console.log("Estado de autenticación:", data.autenticado);
             return data.autenticado;
         } catch (error) {
             console.error('Error al verificar la autenticación:', error);
@@ -332,32 +264,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // 📌 Evento de agendar
     btnAgendar.addEventListener("click", function () {
         const fechaSeleccionada = document.querySelector("#fechas-container .bg-blue-500")?.dataset.fecha;
-        //si variable de sesion horaSeleccinada no es null o vacia, entonces usarla
-        if (sessionStorage.getItem("horaSeleccionada") != null || sessionStorage.getItem("horaSeleccionada") != "") {       
-            horaSeleccionada = sessionStorage.getItem("horaSeleccionada");
-        } else { 
-            horaSeleccionada = document.querySelector("#horas-container .bg-blue-500")?.dataset.hora;
-        }
+        const horaSeleccionada = document.querySelector("#horas-container .bg-blue-500")?.dataset.hora;
         const mascotas = document.getElementById("mis_mascotas");
-        console.log("Fecha seleccionada final:", fechaSeleccionada);
-        console.log("Hora seleccionada: final", horaSeleccionada);
+        console.log("Fecha seleccionada:", fechaSeleccionada);
+        console.log("Hora seleccionada:", horaSeleccionada);
         if (!fechaSeleccionada || !horaSeleccionada) {
             alert("Por favor, selecciona una fecha y una hora.");
             return;
         }
-        mascotaSeleccionada = mascotas.value;
-        sessionStorage.setItem("mascotaSeleccionada", mascotaSeleccionada);
-        console.log("Mascota seleccionada:", sessionStorage.getItem("mascotaSeleccionada"));
-        //debo gardar la mascota seleccionada en una variable sesión y entrregarla a python
-        fetch('/guardar_datos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                mascotaSeleccionada: mascotaSeleccionada
-            })
-        });
 
         // 🔹 Construcción de URL con variables
         const parametros = new URLSearchParams({
@@ -369,10 +283,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }).toString();
 
         usuarioAutenticado().then(autenticado => {
-            console.log("Estado de autenticación6:", autenticado);
+            console.log("Estado de autenticación:", autenticado);
             if (autenticado) {
-                sessionStorage.setItem("btnAgendar", true);
-                window.location.href = `agendar?ac=1`;
+                window.location.href = `agendar?${parametros}`;
             } else {
                 window.location.href = `login?redirect=agendar&${parametros}`;
             }
@@ -380,27 +293,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 📌 Restaurar selección si el usuario regresa después del login
-    fechaGuardada = urlParams.get("fecha");
-    if (!fechaGuardada) {
-        fechaGuardada = sessionStorage.getItem("fechaSeleccionada");
-    }
+    const fechaGuardada = urlParams.get("fecha");
+    const horaGuardada = urlParams.get("hora");
+    const hora2 = horaGuardada.split(":")[0];
     console.log("Fecha guardada:", fechaGuardada);
-   horaGuardada = urlParams.get("hora");
-   if (!horaGuardada) {
-        horaGuardada = sessionStorage.getItem("horaSeleccionada");
-   }
-    if (horaGuardada) {
-        hora2 = horaGuardada.split(":")[0];
-        console.log("Hora2 guardada:", hora2);
-    }
-
-
+    console.log("Hora guardada:", hora2);
     if (fechaGuardada) {
         document.querySelector(`[data-fecha="${fechaGuardada}"]`)?.click();
     }
     if (horaGuardada) {
         console.log("activando borton hora ", hora2);
-        document.querySelector(`[data-hora="${hora2}:00"]`)?.click();
+        document.querySelector(`[data-hora="${hora2}"]:00`)?.click();
     }
 });
 
@@ -409,7 +312,7 @@ async function esHoraBloqueada(id_clinica, fecha, hora) {
     try {
         const response = await fetch('/api/reservas');
         const reservas = await response.json();
-        //console.log(reservas); // Verifica el contenido de reservas
+        console.log(reservas); // Verifica el contenido de reservas
         //alert(reservas);
         //alert(id_clinica);
         if (!Array.isArray(reservas)) {
@@ -420,9 +323,6 @@ async function esHoraBloqueada(id_clinica, fecha, hora) {
             const fechaFormateada = new Date(fecha).toISOString().split('T')[0];
             const horaFormateada = hora.padStart(2, '0') + ':00'; // Asegura que la hora tenga el formato HH:MM
             const reservahoraFormateada = reserva.hora.padStart(5, '0');
-            /*console.log("reserva.hora=", reserva.hora);
-            console.log("horaFormateada=", horaFormateada);
-            console.log("reservahoraFormateada=", reservahoraFormateada);   */
 
             if (reserva.id_clinica === id_clinica && reservaFechaFormateada === fechaFormateada && reservahoraFormateada === horaFormateada && reserva.estado === '1') {
                 return true;

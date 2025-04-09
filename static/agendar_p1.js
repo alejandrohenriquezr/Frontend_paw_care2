@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const id_clinica = urlParams.get("id_clinica");
-    console.log("ID de la clínica:", id_clinica);
+    console.log("ID de la clínicaxxxx:", id_clinica);
     console.log("autenticación es:", isUserAuthenticated());
     const today = new Date();
     const dates = Array.from({ length: 7 }, (_, i) => {

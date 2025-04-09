@@ -514,3 +514,19 @@ body { font-family: Arial, sans-serif; text-align: center; }
     flex: 1; /* Ajusta el tamaño de los contenedores según sea necesario */
     margin: 10px; /* Opcional: ajusta el margen entre los contenedores */
 }
+
+
+.btn-seleccionado {
+    border: 2px solid #3B82F6; /* azul */
+    background-color: #2563eb !important; /* azul más intenso */
+    color: white;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-no-seleccionado {
+    background-color: #5A8F99 !important;
+    border: 2px solid #5A8F99;
+    color: white;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15); /* relieve leve */
+  }
+    

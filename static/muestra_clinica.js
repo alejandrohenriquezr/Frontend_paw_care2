@@ -4,8 +4,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 🔥 Obtener id_clinica de la URL
     const urlParams = new URLSearchParams(window.location.search);
-    const id_clinica = urlParams.get("id_clinica");
+    const parametros = urlParams.get("params") || "";
 
+    id_clinica = urlParams.get("id_clinica");
+    if (!id_clinica) {
+
+        id_clinica = sessionStorage.getItem("id_clinica");
+        //const id_clinica = parametros.split("=")[1];
+        //console.log("id_clinicaxxxxx=", parametros.split("=")[1]);
+    }
     // 🔥 Llamar a la API para obtener todas las clínicas
     fetch("/api/clinicas")  
         .then(response => response.json())

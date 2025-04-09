@@ -16,10 +16,11 @@
 
 <head>
   <title>PawCare</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://apis.google.com/js/platform.js" async defer></script>
-  <script src="static/agendar_p1.js" defer></script> <!-- Este script el formulario para seleccionar la fecha y hora -->   
+  <!--<script //src="static/agendar_p1.js" defer></script>--> <!-- Este script el formulario para seleccionar la fecha y hora -->   
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -63,6 +64,7 @@
 </head>
 
   <body class="h-full text-base-content">
+    
     <div id="root" class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
       <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
         <div class="container mx-auto px-4">
@@ -86,7 +88,10 @@
                 <i class="fa-regular fa-bell text-xl"></i>
                 <span class="absolute -top-1 -right-1 bg-neutral-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
               </button>
-              <button  onclick="window.location.href='iniciar_sesion.html'"   class="px-4 py-2 bg-white text-[#5A8F99] rounded-lg hover:bg-neutral-100 transition-colors">
+              <a href="{{ url_for('cerrar_sesion') }}">
+                <button>Cerrar Sesión</button>
+              </a>              
+              <button  onclick="window.location.href='login'"   class="px-4 py-2 bg-white text-[#5A8F99] rounded-lg hover:bg-neutral-100 transition-colors">
                 Iniciar Sesión
               </button>
             </div>
@@ -240,6 +245,55 @@
         </div>
       </footer>
     </div>
+
+
+
+    <!-- Ventana modal -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmModalLabel">Felicitaciones!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+              <span aria-hidden="true">&times;</span>
+            <div class="modal-body">
+              <p id="modalMessage"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+  <script>
+    window.addEventListener("load", function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ac = urlParams.get('ac');
+        const c = urlParams.get('c');
+        const r = urlParams.get('r');
+
+        if (ac && c && r) {
+            let nombreUsuario = sessionStorage.getItem("nombreUsuario");
+            let mensaje = `Felicitaciones!, haz agendado exitosamente tu hora en una de nuestras clínicas asociadas.`;
+
+            document.getElementById("modalMessage").innerText = mensaje;
+            $('#confirmModal').modal('show');
+        } else if (ac==1){
+            let nombreUsuario = sessionStorage.getItem("nombreUsuario");
+            let mensaje = `Te hemos enviado un correo para que confirmes la reserva.`;
+            document.getElementById("modalMessage").innerText = mensaje;
+            $('#confirmModal').modal('show');          
+        }
+    });
+  </script>
+
+
   </body>
 </html>
           
