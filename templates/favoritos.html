@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+              
+<head>
+  <title>Paw Care - favoritos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+      window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+      };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    
+  <script>
+        tailwind.config = {
+            theme: {
+              extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+              },
+            },
+            variants: {
+              extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+              },
+            },
+            plugins: [],
+          };
+  </script>
+
+</head>
+
+<body class="h-full text-base-content">
+  <div id="root" class="min-h-screen bg-[#E8EFF1]">
+  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <i class="fa-solid fa-paw text-2xl"></i>
+          <span class="ml-2 text-xl">PawCare</span>
+        </div>
+
+        <nav class="hidden md:flex items-center space-x-8">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'" >Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'" >Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
+        </nav>
+
+        <div class="flex items-center space-x-4">
+          <button class="p-2 relative">
+            <i class="fa-regular fa-bell text-xl"></i>
+            <span class="absolute -top-1 -right-1 bg-neutral-700 text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+          </button>
+          <!-- Botón Iniciar Sesión (se muestra solo si no hay login) -->
+          <button  id="btn-login" onclick="window.location.href='iniciar_sesion'"  class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
+            Iniciar Sesión
+          </button>
+          <!-- Avatar Usuario (oculto por defecto, se muestra si hay login) -->
+          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
+          </span>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="appointments" class="pt-24 pb-16">
+    <div class="container mx-auto px-4">
+      <div class="bg-neutral-100 p-4 rounded-lg mb-8 flex items-center gap-3">
+        <i class="fa-solid fa-clock text-neutral-700"></i>
+        <p class="text-neutral-700">Tienes una cita en las próximas 24 horas con Clínica Veterinaria San Miguel</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+          <input type="text" placeholder="Buscar citas..." class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg">
+          <select class="px-4 py-2 border border-neutral-300 rounded-lg">
+            <option>Todas las clínicas</option>
+          </select>
+          <select class="px-4 py-2 border border-neutral-300 rounded-lg">
+            <option>Todos los veterinarios</option>
+          </select>
+          <select class="px-4 py-2 border border-neutral-300 rounded-lg">
+            <option>Todas las mascotas</option>
+          </select>
+          <select class="px-4 py-2 border border-neutral-300 rounded-lg">
+            <option>Todos los estados</option>
+          </select>
+        </div>
+
+        <div class="border-b border-neutral-200">
+          <div class="flex gap-6 mb-[-1px]">
+            <button class="px-4 py-2 border-b-2 border-neutral-700 text-neutral-700">Próximas Citas</button>
+            <button class="px-4 py-2 text-neutral-500">Citas Pasadas</button>
+          </div>
+        </div>
+
+        <div class="mt-6 space-y-4">
+          <div class="bg-[#D8E5E8] p-4 rounded-lg">
+            <div class="flex items-center justify-between mb-3">
+              <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">Confirmada</span>
+              <span class="text-neutral-600">15 de marzo, 2025 - 14:30</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h3 class="text-lg mb-2">Clínica Veterinaria San Miguel</h3>
+                <p class="text-neutral-600"><i class="fa-solid fa-location-dot mr-2"></i>Av. Principal 123, San Miguel</p>
+                <p class="text-neutral-600"><i class="fa-solid fa-user-doctor mr-2"></i>Dr. Juan Pérez</p>
+                <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i>Milo - Control General</p>
+                <p class="text-neutral-600"><i class="fa-solid fa-dollar-sign mr-2"></i>$45.000</p>
+              </div>
+              <div class="flex items-end justify-end gap-3">
+                <button class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg">Ver Detalles</button>
+                <button class="px-4 py-2 bg-neutral-700 text-white rounded-lg">Cancelar Cita</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-[#D8E5E8] p-4 rounded-lg">
+            <div class="flex items-center justify-between mb-3">
+              <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">Pendiente</span>
+              <span class="text-neutral-600">20 de marzo, 2025 - 11:00</span>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h3 class="text-lg mb-2">Centro Veterinario El Bosque</h3>
+                <p class="text-neutral-600"><i class="fa-solid fa-location-dot mr-2"></i>Calle Los Pinos 456, El Bosque</p>
+                <p class="text-neutral-600"><i class="fa-solid fa-user-doctor mr-2"></i>Dra. María González</p>
+                <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i>Luna - Vacunación</p>
+                <p class="text-neutral-600"><i class="fa-solid fa-dollar-sign mr-2"></i>$35.000</p>
+              </div>
+              <div class="flex items-end justify-end gap-3">
+                <button class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg">Ver Detalles</button>
+                <button class="px-4 py-2 bg-neutral-700 text-white rounded-lg">Cancelar Cita</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="bg-[#87AEB5] text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h4 class="text-lg mb-4">Enlaces rápidos</h4>
+          <ul class="space-y-2">
+            <li><span class="hover:text-neutral-200 cursor-pointer">Inicio</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Buscar Veterinarios</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Mascotas</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Citas</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg mb-4">Soporte</h4>
+          <ul class="space-y-2">
+            <li><span class="hover:text-neutral-200 cursor-pointer">Centro de ayuda</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">FAQ</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Contacto</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Política de privacidad</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg mb-4">Síguenos</h4>
+          <div class="flex space-x-4">
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-facebook text-2xl"></i></span>
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-instagram text-2xl"></i></span>
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-twitter text-2xl"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const user = {
+                picture: "{{ user['picture'] if user else '' }}",
+            };
+            if (user.picture) {
+                  
+              btnLogin = document.getElementById("btn-login");
+              btnLogin.classList.add("hidden");
+
+              const avatar = document.getElementById("user-avatar");
+              avatar.src = user.picture;
+              avatar.classList.remove("hidden");
+              const userNombre = document.getElementById("user-nombre");
+              userNombre.classList.remove("hidden");
+      
+            }
+        });
+    </script>
+
+</body>
+</html>
+          

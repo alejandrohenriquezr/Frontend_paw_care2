@@ -46,7 +46,6 @@
             plugins: [],
           };
 
-
   </script>
     <script>
 
@@ -74,18 +73,6 @@
                   sessionStorage.setItem("comuna", comuna);  
                   //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
                   cargarComunas(comuna);
-                  /*
-                  fetch('/guardar_datos', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        comuna: comuna
-                    })
-                  });
-                  */
-                  //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
               })
               .catch(error => {
                   console.error('Error:', error);
@@ -200,52 +187,6 @@
 
 </script>
 <script>
-  /*document.addEventListener("DOMContentLoaded", function() {
-      const searchInput = document.getElementById("search-input");
-      //const suggestions = ["Veterinaria San Miguel", "Centro Veterinario Las Condes", "Veterinaria Providencia", "Clínica Veterinaria Santiago", "Clínica Veterinaria Ñuñoa"];
-
-      searchInput.addEventListener("input", function() {
-          const value = this.value.toLowerCase();
-          const suggestionBox = document.getElementById("suggestions");
-          suggestionBox.innerHTML = "";
-
-          if (value) {
-              console.log("Buscando sugerencias para:", value); // Ver en la consola del navegador
-              filteredSuggestions = suggestions.filter(suggestion => suggestion.toLowerCase().includes(value));
-              filteredSuggestions.forEach(suggestion => {
-                  const suggestionItem = document.createElement("div");
-                  suggestionItem.textContent = suggestion;
-                  suggestionItem.classList.add("suggestion-item");
-                  suggestionItem.addEventListener("click", function() {
-                      searchInput.value = suggestion;
-                      suggestionBox.innerHTML = "";
-                  });
-                  suggestionBox.appendChild(suggestionItem);
-              });
-          }
-      });
-  });
-  
-
-  const fs = require('fs');
-  const csv = require('csv-parser');
-  const suggestions = [];
-
-  fs.createReadStream('data/clinicas.csv')
-  .pipe(csv())
-  .on('data', (row) => {
-      suggestions.push(row.nombre);
-  })
-  .on('end', () => {
-      console.log('CSV file successfully processed');
-      console.log(suggestions);
-
-      // Guardamos la lista en un archivo JSON para usarla en tu HTML
-      fs.writeFileSync('data/suggestions.json', JSON.stringify(suggestions));
-  });
-*/
-</script>
-<script>
       tailwind.config = {
           theme: {
             extend: {
@@ -264,66 +205,14 @@
           plugins: [],
         };
 </script>
-<script>
-  /*
-  document.addEventListener("DOMContentLoaded", function() {
-     const searchInput = document.getElementById("search-input");
-     const suggestionsContainer = document.getElementById("suggestions");
-
-     searchInput.addEventListener("input", async function() {
-         const query = searchInput.value.trim();
-         const comuna = document.getElementById("comunas").value; // Obtener la comuna seleccionada
-         if (query.length < 2) {  // Mostrar sugerencias solo si hay al menos 2 caracteres
-             suggestionsContainer.innerHTML = "";
-             suggestionsContainer.style.display = "none";
-             return;
-         }
-
-         try {
-             const response = await fetch(`/sugerencias?q=${query}`);
-             const data = await response.json();
-
-             // Limpiar sugerencias anteriores
-             suggestionsContainer.innerHTML = "";
-
-             if (data.length > 0) {
-                 suggestionsContainer.style.display = "block";
-                 data.forEach(sugerencia => {
-                     const div = document.createElement("div");
-                     div.classList.add("suggestion-item");
-                     div.textContent = sugerencia;
-                     div.onclick = function() {
-                         searchInput.value = sugerencia;
-                         suggestionsContainer.innerHTML = "";
-                         suggestionsContainer.style.display = "none";
-                     };
-                     suggestionsContainer.appendChild(div);
-                 });
-             } else {
-                 suggestionsContainer.style.display = "none";
-             }
-         } catch (error) {
-             console.error("Error obteniendo sugerencias:", error);
-         }
-     });
-
-     // Ocultar sugerencias cuando se hace clic fuera
-     document.addEventListener("click", function(event) {
-         if (!searchInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
-             suggestionsContainer.style.display = "none";
-         }
-     });
-  });
-  */
- </script>
 
 
  <!-- Agregar scripts de Bootstrap -->
  
 </head>
 
-              <body class="h-full text-base-content">
-                <div id="root" class="min-h-screen bg-white">
+<body class="h-full text-base-content">
+  <div id="root" class="min-h-screen bg-white">
   <!-- Header -->
   <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
     <div class="container mx-auto px-4">
@@ -337,9 +226,9 @@
         <!-- Navigation -->
         <nav class="hidden md:flex items-center space-x-8">
           <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'" >Mis Mascotas</span>
           <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'" >Favoritos</span>
         </nav>
 
         <!-- Right Side -->
@@ -347,12 +236,18 @@
           <button class="p-2">
             <i class="fa-regular fa-bell text-xl"></i>
           </button>
-          <button onclick="window.location.href='login'"  class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
+          <!-- Botón Iniciar Sesión (se muestra solo si no hay login) -->
+          <button  id="btn-login" onclick="window.location.href='iniciar_sesion'"  class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
             Iniciar Sesión
           </button>
-          <button id="authButton"  onclick="window.location.href='cerrar_sesion'"   class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
-            Cerrar Sesión
-          </button>
+          <!-- Avatar Usuario (oculto por defecto, se muestra si hay login) -->
+          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
+          </span>
+
         </div>
       </div>
     </div>
@@ -540,6 +435,26 @@
     });
   });
 </script>
+
+    <script>
+          document.addEventListener("DOMContentLoaded", function() {
+              const user = {
+                  picture: "{{ user['picture'] if user else '' }}",
+              };
+              if (user.picture) {
+                      
+                  btnLogin = document.getElementById("btn-login");
+                  btnLogin.classList.add("hidden");
+  
+                  const avatar = document.getElementById("user-avatar");
+                  avatar.src = user.picture;
+                  avatar.classList.remove("hidden");
+                  const userNombre = document.getElementById("user-nombre");
+                  userNombre.classList.remove("hidden");
+          
+              }
+          });
+      </script>
 
 
   </body>

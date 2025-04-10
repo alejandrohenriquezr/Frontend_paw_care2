@@ -1,7 +1,8 @@
-from flask import Flask, redirect, url_for, session, request, jsonify, render_template, send_from_directory
+from flask import Flask, abort, redirect, url_for, session, request, jsonify, render_template, send_from_directory
 from authlib.integrations.flask_client import OAuth
-from urllib.parse import urlencode
 from flask_mail import Mail, Message
+from functools import wraps
+from urllib.parse import urlparse, parse_qs, urlencode
 import os
 import base64
 import requests
@@ -56,7 +57,20 @@ def home():
     if busqueda:
         session["busqueda"] = busqueda
         print(f"[INFO] busqueda obtenida de la URL: {busqueda}")        
-    return render_template("index.html")
+
+    user=session.get("user", None)
+    print(f"[INFO] user: {user}")
+    # Verificar si el usuario está autenticado
+    #si el usuario está autenticado, entonces redirigie a intex.html y entregar los datos del usuario
+    if user:
+        print(f"[INFO] usuario autenticado: {user}")
+        # Redirigir a la página de inicio de sesión
+        return render_template("index.html", user=user)
+    else:
+        print(f"[INFO] usuario no autenticado: {user}")
+        # Redirigir a la página de inicio de sesión
+        return render_template(("index.html"))
+    #return render_template("index.html", user=user)
     
 
 # Guardar datos que provienen de JS en la sesión de python
@@ -109,13 +123,27 @@ def generate_nonce(length=16):
     """Genera un valor único para el nonce."""
     return base64.urlsafe_b64encode(os.urandom(length)).decode('utf-8')
 
+# ✅ Decorador para proteger rutas
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            # Guarda la ruta actual completa, incluyendo parámetros
+            session['next'] = request.full_path
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # 📌 Ruta de inicio de sesión con Google
 @app.route("/login")
 def login():
     nonce = generate_nonce()
     session['nonce'] = nonce
-
-    redirect_value = request.args.get('redirect')
+    #session['next'] = request.referrer or url_for('sitio_privado', _external=True)
+    #redirect_value = request.args.get('redirect')
+    #necesito guardar la url de origen
+    
+    #print(f"Valor de redirect en login es: {redirect_value}")
     #no usaré esta línea, se supone que se creo al comienzo del código
     #id_clinica = request.args.get('id_clinica')
     #id_clinica = session.get('id_clinica')
@@ -128,7 +156,7 @@ def login():
     #id_clientes_mascotas = request.args.get('id_clientes_mascotas')
     
     # Guardar los parámetros en la sesión
-    session['redirect'] = redirect_value
+    #session['redirect'] = redirect_value
     #session['id_clinica'] = id_clinica
     #session['id_clientes_mascotas'] = 'id_clientes_mascotas'
     session['fecha'] = fecha
@@ -148,49 +176,37 @@ def login():
 @app.route("/login/callback")
 def callback():
     token = google.authorize_access_token()
-    # Recuperar los parámetros de la sesión
-    redirect_value = session.get('redirect')
-    id_clinica = session.get('id_clinica')
-    print(f"Valor de redirect: {redirect_value}")
-    fecha = session.get('fecha')
-    hora = session.get('hora')
-    print(id_clinica, fecha, hora)
-    #if id_clinica  or fecha or hora:
-    #    redirect_value+="?" + id_clinica + fecha + hora
-    # Obtener metadatos de OpenID de Google
-    google_provider_cfg = get_google_provider_cfg()
-    jwks_uri = google_provider_cfg.get("jwks_uri")
-    
-    if not jwks_uri:
-        return "Error: No se encontró 'jwks_uri' en los metadatos de Google", 500
+    nonce = session.pop("nonce", None)
 
-    # Validar token con nonce
-    nonce = session.pop("nonce", None)  # Obtener nonce de la sesión
     if nonce is None:
         return "Error: Nonce missing", 400
 
-    user_info = google.parse_id_token(token, nonce=nonce)  # ← Aquí agregamos nonce
+    user_info = google.parse_id_token(token, nonce=nonce)
+    if not user_info:
+        return "Error: No se pudo obtener la información del usuario", 400
 
-    # Guardar la sesión del usuario
     session["user"] = user_info
-    # Obtener el parámetro de redirección
-    redirect_url = request.args.get('redirect')
-    redirect_value = session.get('redirect')
-    print(f"Valor de redirect: {redirect_value}")
-    print(f"Valor de redirect_url: {redirect_url}")
-    if redirect_value:
-        # Crear un diccionario con los parámetros
-        params = {
-            'id_clinica': id_clinica,
-            'id_clientes_mascotas': 'id_clientes_mascotas',
-            'fecha': fecha,
-            'hora': hora
-        }
-        print(params)
-        user = session.get("user")
-        return redirect(url_for(redirect_value, clinica=params['id_clinica'] , fecha=fecha, hora=hora, user=user))
-    else:
-        return redirect(url_for('sitio_privado', user=user))
+
+    # Recupera la ruta original (relativa) desde el decorador
+    next_path = session.pop("next", None)
+
+    # Si no existe next_path, redirige al home o sitio privado
+    if not next_path:
+        return redirect(url_for("sitio_privado"))
+
+    # Si empieza con /agendar, redirige con url_for para asegurar parámetros
+    parsed = urlparse(next_path)
+    if parsed.path.startswith("/agendar"):
+        params = parse_qs(parsed.query)
+        return redirect(url_for(
+            "agendar",
+            id_clinica=params.get("id_clinica", [None])[0],
+            fecha=params.get("fecha", [None])[0],
+            hora=params.get("hora", [None])[0]
+        ), user=user_info)
+
+    # Redirige a la ruta original completa con sus parámetros
+    return redirect(next_path + ("?" + parsed.query if parsed.query else ""))
 
 
 # 📌 Ruta de Dashboard (Solo accesible si está autenticado)
@@ -574,6 +590,26 @@ def obtener_especialidades_teleconsulta():
         return options
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# 📌 Ruta de iniciar sesión
+@app.route("/iniciar_sesion")
+def iniciar_sesion():
+    #primero debo ver si status_code existe y esta definida
+    #si no existe, entonces la reserva no fue creada
+    return render_template("iniciar_sesion.html")
+
+# 📌 Ruta de iniciar sesión
+@app.route("/favoritos")
+#@login_required
+def favoritos():
+    user = session.get("user", None)
+    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
+    session['next'] = request.full_path
+    print(f"[INFO] next: {request.full_path}")
+    if not user:
+        return redirect(url_for("login"))
+    return render_template("favoritos.html", user=user)
 
 
 if __name__ == "__main__":
