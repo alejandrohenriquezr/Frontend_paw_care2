@@ -188,8 +188,8 @@ def callback():
     session["user"] = user_info
 
     # Recupera la ruta original (relativa) desde el decorador
-    next_path = session.pop("next", None)
-
+    next_path = session.get("next", None)
+    print(f"Ruta de redirección en el callback es: {next_path}")
     # Si no existe next_path, redirige al home o sitio privado
     if not next_path:
         return redirect(url_for("sitio_privado"))
@@ -610,6 +610,20 @@ def favoritos():
     if not user:
         return redirect(url_for("login"))
     return render_template("favoritos.html", user=user)
+
+
+# 📌 Ruta de iniciar sesión
+@app.route("/mis_citas")
+#@login_required
+def mis_citas():
+    user = session.get("user", None)
+    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
+    session['next'] = request.full_path
+    print(f"[INFO] next mis_citas: {request.full_path}")
+    if not user:
+        return redirect(url_for("login"))
+    return render_template("mis_citas.html", user=user)
+
 
 
 if __name__ == "__main__":
