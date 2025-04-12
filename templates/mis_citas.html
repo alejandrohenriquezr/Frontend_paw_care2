@@ -1,8 +1,11 @@
-
-            <html class="">
+<!DOCTYPE html>
+<html lang="es">
               
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Paw Care</title>  
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
     
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -19,289 +22,9 @@
     font-family: "Inter", sans-serif;
   }
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
 </style>
 
     
-<style>
-  .highlighted-section {
-    outline: 2px solid #3F20FB;
-    background-color: rgba(63, 32, 251, 0.1);
-  }
-
-  .edit-button {
-    position: absolute;
-    z-index: 1000;
-  }
-</style>
-
-    
-<style>
-   :root {
-          /* Base colors */
-          --color-base: #ffffff;
-          --color-base-50: #f9fafb;
-          --color-base-100: #f3f4f6;
-          --color-base-200: #e5e7eb;
-          --color-base-300: #d1d5db;
-          --color-base-400: #9ca3af;
-          --color-base-500: #6b7280;
-          --color-base-600: #4b5563;  
-          --color-base-700: #374151;
-          --color-base-800: #1f2937;  
-          --color-base-900: #111827;
-          --color-base-content: #1f2937;
-
-          /* Primary colors */
-          --color-primary: #3b82f6;
-          --color-primary-50: #eff6ff;
-          --color-primary-100: #dbeafe;
-          --color-primary-200: #bfdbfe;
-          --color-primary-300: #93c5fd;
-          --color-primary-400: #60a5fa;
-          --color-primary-500: #3b82f6;
-          --color-primary-600: #2563eb;
-          --color-primary-700: #1d4ed8;
-          --color-primary-800: #1e40af;
-          --color-primary-900: #1e3a8a;
-          --color-primary-focus: #2563eb;
-          --color-primary-content: #ffffff;
-
-          /* Secondary colors */
-          --color-secondary: #8b5cf6;
-          --color-secondary-50: #f5f3ff;
-          --color-secondary-100: #ede9fe;
-          --color-secondary-200: #ddd6fe;
-          --color-secondary-300: #c4b5fd;
-          --color-secondary-400: #a78bfa;
-          --color-secondary-500: #8b5cf6;
-          --color-secondary-600: #7c3aed;
-          --color-secondary-700: #6d28d9;
-          --color-secondary-800: #5b21b6;
-          --color-secondary-900: #4c1d95;
-          --color-secondary-focus: #7c3aed;
-          --color-secondary-content: #ffffff;
-
-          /* Accent colors */
-          --color-accent: #f472b6;
-          --color-accent-50: #fdf2f8;
-          --color-accent-100: #fce7f3;
-          --color-accent-200: #fbcfe8;
-          --color-accent-300: #f9a8d4;
-          --color-accent-400: #f472b6;
-          --color-accent-500: #ec4899;
-          --color-accent-600: #db2777;
-          --color-accent-700: #be185d;
-          --color-accent-800: #9d174d;
-          --color-accent-900: #831843;
-          --color-accent-focus: #db2777;
-          --color-accent-content: #ffffff;
-
-          /* Neutral colors */
-          --color-neutral: #6b7280;
-          --color-neutral-50: #f9fafb;
-          --color-neutral-100: #f3f4f6;
-          --color-neutral-200: #e5e7eb;
-          --color-neutral-300: #d1d5db;
-          --color-neutral-400: #9ca3af;
-          --color-neutral-500: #6b7280;
-          --color-neutral-600: #4b5563;
-          --color-neutral-700: #374151;
-          --color-neutral-800: #1f2937;
-          --color-neutral-900: #111827;
-          --color-neutral-focus: #4b5563;
-          --color-neutral-content: #ffffff;
-
-          /* Info colors */
-          --color-info: #3b82f6;
-          --color-info-50: #eff6ff;
-          --color-info-100: #dbeafe;
-          --color-info-200: #bfdbfe;
-          --color-info-300: #93c5fd;
-          --color-info-400: #60a5fa;
-          --color-info-500: #3b82f6;
-          --color-info-600: #2563eb;
-          --color-info-700: #1d4ed8;
-          --color-info-800: #1e40af;
-          --color-info-900: #1e3a8a;
-          --color-info-focus: #2563eb;
-          --color-info-content: #ffffff;
-
-          /* Success colors */
-          --color-success: #10b981;
-          --color-success-50: #ecfdf5;
-          --color-success-100: #d1fae5;
-          --color-success-200: #a7f3d0;
-          --color-success-300: #6ee7b7;
-          --color-success-400: #34d399;
-          --color-success-500: #10b981;
-          --color-success-600: #059669;
-          --color-success-700: #047857;
-          --color-success-800: #065f46;
-          --color-success-900: #064e3b;
-          --color-success-focus: #059669;
-          --color-success-content: #ffffff;
-
-          /* Warning colors */
-          --color-warning: #f59e0b;
-          --color-warning-50: #fffbeb;
-          --color-warning-100: #fef3c7;
-          --color-warning-200: #fde68a;
-          --color-warning-300: #fcd34d;
-          --color-warning-400: #fbbf24;
-          --color-warning-500: #f59e0b;
-          --color-warning-600: #d97706;
-          --color-warning-700: #b45309;
-          --color-warning-800: #92400e;
-          --color-warning-900: #78350f;
-          --color-warning-focus: #d97706;
-          --color-warning-content: #ffffff;
-
-          /* Error colors */
-          --color-error: #ef4444;
-          --color-error-50: #fef2f2;
-          --color-error-100: #fee2e2;
-          --color-error-200: #fecaca;
-          --color-error-300: #fca5a5;
-          --color-error-400: #f87171;
-          --color-error-500: #ef4444;
-          --color-error-600: #dc2626;
-          --color-error-700: #b91c1c;
-          --color-error-800: #991b1b;
-          --color-error-900: #7f1d1d;
-          --color-error-focus: #dc2626;
-          --color-error-content: #ffffff;
-        }
-</style>
-
-    
-<style>
-/* Dark theme */
-        .dark {
-          /* Base colors */
-          --color-base: #1f2937;
-          --color-base-50: #111827;
-          --color-base-100: #1f2937;
-          --color-base-200: #374151;
-          --color-base-300: #4b5563;
-          --color-base-400: #6b7280;
-          --color-base-500: #9ca3af;
-          --color-base-600: #d1d5db;
-          --color-base-700: #e5e7eb;
-          --color-base-800: #f3f4f6;
-          --color-base-900: #f9fafb;
-          --color-base-content: #f9fafb;
-
-          /* Primary colors */
-          --color-primary: #60a5fa;
-          --color-primary-50: #1e3a8a;
-          --color-primary-100: #1e40af;
-          --color-primary-200: #1d4ed8;
-          --color-primary-300: #2563eb;
-          --color-primary-400: #3b82f6;
-          --color-primary-500: #60a5fa;
-          --color-primary-600: #93c5fd;
-          --color-primary-700: #bfdbfe;
-          --color-primary-800: #dbeafe;
-          --color-primary-900: #eff6ff;
-          --color-primary-focus: #3b82f6;
-          --color-primary-content: #1f2937;
-
-          /* Secondary colors */
-          --color-secondary: #a78bfa;
-          --color-secondary-50: #4c1d95;
-          --color-secondary-100: #5b21b6;
-          --color-secondary-200: #6d28d9;
-          --color-secondary-300: #7c3aed;
-          --color-secondary-400: #8b5cf6;
-          --color-secondary-500: #a78bfa;
-          --color-secondary-600: #c4b5fd;
-          --color-secondary-700: #ddd6fe;
-          --color-secondary-800: #ede9fe;
-          --color-secondary-900: #f5f3ff;
-          --color-secondary-focus: #8b5cf6;
-          --color-secondary-content: #1f2937;
-
-          /* Accent colors */
-          --color-accent: #f472b6;
-          --color-accent-50: #831843;
-          --color-accent-100: #9d174d;
-          --color-accent-200: #be185d;
-          --color-accent-300: #db2777;
-          --color-accent-400: #ec4899;
-          --color-accent-500: #f472b6;
-          --color-accent-600: #f9a8d4;
-          --color-accent-700: #fbcfe8;
-          --color-accent-800: #fce7f3;
-          --color-accent-900: #fdf2f8;
-          --color-accent-focus: #ec4899;
-          --color-accent-content: #1f2937;
-
-          /* Neutral colors remain the same as light theme */
-
-          /* Info colors */
-          --color-info: #60a5fa;
-          --color-info-50: #1e3a8a;
-          --color-info-100: #1e40af;
-          --color-info-200: #1d4ed8;
-          --color-info-300: #2563eb;
-          --color-info-400: #3b82f6;
-          --color-info-500: #60a5fa;
-          --color-info-600: #93c5fd;
-          --color-info-700: #bfdbfe;
-          --color-info-800: #dbeafe;
-          --color-info-900: #eff6ff;
-          --color-info-focus: #3b82f6;
-          --color-info-content: #1f2937;
-
-          /* Success colors */
-          --color-success: #34d399;
-          --color-success-50: #064e3b;
-          --color-success-100: #065f46;
-          --color-success-200: #047857;
-          --color-success-300: #059669;
-          --color-success-400: #10b981;
-          --color-success-500: #34d399;
-          --color-success-600: #6ee7b7;
-          --color-success-700: #a7f3d0;
-          --color-success-800: #d1fae5;
-          --color-success-900: #ecfdf5;
-          --color-success-focus: #10b981;
-          --color-success-content: #1f2937;
-
-          /* Warning colors */
-          --color-warning: #fbbf24;
-          --color-warning-50: #78350f;
-          --color-warning-100: #92400e;
-          --color-warning-200: #b45309;
-          --color-warning-300: #d97706;
-          --color-warning-400: #f59e0b;
-          --color-warning-500: #fbbf24;
-          --color-warning-600: #fcd34d;
-          --color-warning-700: #fde68a;
-          --color-warning-800: #fef3c7;
-          --color-warning-900: #fffbeb;
-          --color-warning-focus: #f59e0b;
-          --color-warning-content: #1f2937;
-
-          /* Error colors */
-          --color-error: #f87171;
-          --color-error-50: #7f1d1d;
-          --color-error-100: #991b1b;
-          --color-error-200: #b91c1c;
-          --color-error-300: #dc2626;
-          --color-error-400: #ef4444;
-          --color-error-500: #f87171;
-          --color-error-600: #fca5a5;
-          --color-error-700: #fecaca;
-          --color-error-800: #fee2e2;
-          --color-error-900: #fef2f2;
-          --color-error-focus: #ef4444;
-          --color-error-content: #1f2937;
-        }
-</style>
 
     
   <script>
@@ -328,35 +51,49 @@
 
               <body class="h-full text-base-content">
                 <div id="root" class="min-h-screen bg-[#E8EFF1]">
-  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
-    <div class="container mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center">
-          <i class="fa-solid fa-paw text-2xl"></i>
-          <span class="ml-2 text-xl">PawCare</span>
-        </div>
-
-        <nav class="hidden md:flex items-center space-x-8">
-          <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
-        </nav>
-
-        <div class="flex items-center space-x-4">
-          <button class="p-2 relative">
-            <i class="fa-regular fa-bell text-xl"></i>
-            <span class="absolute -top-1 -right-1 bg-neutral-700 text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
-          </button>
-          <div class="flex items-center gap-2">
-            <img src="https://api.dicebear.com/7.x/notionists/svg?scale=200&seed=123" alt="Avatar" class="w-8 h-8 rounded-full">
-            <span>Alejandro Henriquez</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
+                  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+                    <div class="container mx-auto px-4">
+                      <div class="flex items-center justify-between h-16">
+                        <!-- Logo -->
+                        <div class="flex items-center">
+                          <i class="fa-solid fa-paw text-2xl"></i>
+                          <span class="ml-2 text-xl">PawCare</span>
+                        </div>
+                  
+                        <!-- Botón hamburguesa móvil -->
+                        <div class="md:hidden">
+                          <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+                            <i class="fas fa-bars"></i>
+                          </button>
+                        </div>
+                  
+                        <!-- Navegación principal -->
+                        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+                          <span class="hover:text-neutral-100 cursor-pointer" >Mis Citas</span>
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+                        </nav>
+                  
+                        <!-- Menú móvil desplegable -->
+                        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+                        </div>
+                  
+                        <!-- Right Side -->
+                        <div class="flex items-center space-x-4">
+                          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+                          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+                          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+                          <span id="user-nombre" class="hover:text-neutral-100 hidden cursor-pointer"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </header>
+                
   <main id="appointments" class="pt-24 pb-16">
     <div class="container mx-auto px-4">
       <div class="bg-neutral-100 p-4 rounded-lg mb-8 flex items-center gap-3">
@@ -383,52 +120,38 @@
 
         <div class="border-b border-neutral-200">
           <div class="flex gap-6 mb-[-1px]">
-            <button class="px-4 py-2 border-b-2 border-neutral-700 text-neutral-700">Próximas Citas</button>
-            <button class="px-4 py-2 text-neutral-500">Citas Pasadas</button>
+            <button id="btn-proximas" name="proximas_citas" class="px-4 py-2 border-b-2 border-neutral-700 text-neutral-700">Próximas Citas</button>
+            <button id="btn-pasadas" name="citas_pasadas" class="px-4 py-2 text-neutral-500">Citas Pasadas</button>
           </div>
         </div>
-
-        <div class="mt-6 space-y-4">
-          <div class="bg-[#D8E5E8] p-4 rounded-lg">
-            <div class="flex items-center justify-between mb-3">
-              <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">Confirmada</span>
-              <span class="text-neutral-600">15 de marzo, 2025 - 14:30</span>
-            </div>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div>
-                <h3 class="text-lg mb-2">Clínica Veterinaria San Miguel</h3>
-                <p class="text-neutral-600"><i class="fa-solid fa-location-dot mr-2"></i>Av. Principal 123, San Miguel</p>
-                <p class="text-neutral-600"><i class="fa-solid fa-user-doctor mr-2"></i>Dr. Juan Pérez</p>
-                <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i>Milo - Control General</p>
-                <p class="text-neutral-600"><i class="fa-solid fa-dollar-sign mr-2"></i>$45.000</p>
+        <div class="mt-6 space-y-4" id="citas-container">
+          {% for cita in mis_citas %}
+            <div class="bg-[#D8E5E8] p-4 rounded-lg cita-item" data-fecha="{{ cita['fecha'].strftime('%Y-%m-%d') }}">
+              <div class="flex items-center justify-between mb-3">
+                <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">Confirmada</span>
+                <span class="text-neutral-600 fecha">{{ cita['fecha'].strftime('%d de %B, %Y') }} - {{ cita['hora'] }}</span>
               </div>
-              <div class="flex items-end justify-end gap-3">
-                <button class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg">Ver Detalles</button>
-                <button class="px-4 py-2 bg-neutral-700 text-white rounded-lg">Cancelar Cita</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-[#D8E5E8] p-4 rounded-lg">
-            <div class="flex items-center justify-between mb-3">
-              <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">Pendiente</span>
-              <span class="text-neutral-600">20 de marzo, 2025 - 11:00</span>
-            </div>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div>
-                <h3 class="text-lg mb-2">Centro Veterinario El Bosque</h3>
-                <p class="text-neutral-600"><i class="fa-solid fa-location-dot mr-2"></i>Calle Los Pinos 456, El Bosque</p>
-                <p class="text-neutral-600"><i class="fa-solid fa-user-doctor mr-2"></i>Dra. María González</p>
-                <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i>Luna - Vacunación</p>
-                <p class="text-neutral-600"><i class="fa-solid fa-dollar-sign mr-2"></i>$35.000</p>
-              </div>
-              <div class="flex items-end justify-end gap-3">
-                <button class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg">Ver Detalles</button>
-                <button class="px-4 py-2 bg-neutral-700 text-white rounded-lg">Cancelar Cita</button>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h3 class="text-lg mb-2 nombre_clinica">{{ cita['nombre'] }}</h3>
+                  <p class="text-neutral-600"><i class="fa-solid fa-location-dot mr-2"></i><span class="direccion">{{ cita['direccion'] }}, {{ cita['Nombre_Comuna'] }}</span></p>
+                  <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i><span class="nombre_mascota">{{ cita['nombre_mascota'] }}</span></p>
+                </div>
+                <div class="flex items-end justify-end gap-3">
+                <!--  <button class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg">Ver Detalles</button> -->
+                  <button 
+                  class="cancelar_cita bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                  data-id_clinica="{{ cita.id_clinica }}"
+                  data-correo="{{ cita.correo_cliente }}"
+                  data-fecha="{{ cita.fecha }}"
+                  >Cancelar Cita</button>
+                </div>
               </div>
             </div>
-          </div>
+          {% endfor %}
         </div>
+        
+        
       </div>
     </div>
   </main>
@@ -468,6 +191,37 @@
     </div>
   </footer>
 </div>
-              </body>
-            </html>
+    <script>
+          document.addEventListener("DOMContentLoaded", function() {
+              const user = {
+                  picture: "{{ user['picture'] if user else '' }}",
+              };
+              if (user.picture) {
+                      
+                  btnLogin = document.getElementById("btn-login");
+                  btnLogin.classList.add("hidden");
+  
+                  const avatar = document.getElementById("user-avatar");
+                  avatar.src = user.picture;
+                  avatar.classList.remove("hidden");
+                  const userNombre = document.getElementById("user-nombre");
+                  userNombre.classList.remove("hidden");
+          
+              }
+          });
+      </script>
+
+<script>
+  // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+    const mobileNav = document.getElementById("mobile-nav");
+    mobileNav.classList.toggle("hidden");
+  });
+
+ // src="{{ url_for('static', filename='static/mis_citas.js') }}";
+</script>
+<script src="static/mis_citas.js"></script>
+
+  </body>
+</html>
           

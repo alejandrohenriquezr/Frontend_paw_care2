@@ -1,0 +1,69 @@
+<!-- templates/header.html -->
+<header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <i class="fa-solid fa-paw text-2xl"></i>
+          <span class="ml-2 text-xl">PawCare</span>
+        </div>
+  
+        <!-- Botón hamburguesa móvil -->
+        <div class="md:hidden">
+          <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+  
+        <!-- Navegación escritorio -->
+        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </nav>
+  
+        <!-- Navegación móvil -->
+        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </div>
+  
+        <!-- Lado derecho -->
+        <div class="flex items-center space-x-4">
+          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="user-nombre" class="hover:text-neutral-100 hidden cursor-pointer"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.getElementById("menu-toggle").addEventListener("click", function () {
+        const mobileNav = document.getElementById("mobile-nav");
+        mobileNav.classList.toggle("hidden");
+      });
+  
+      const user = {
+        picture: "{{ user['picture'] if user else '' }}"
+      };
+  
+      if (user.picture) {
+        const btnLogin = document.getElementById("btn-login");
+        btnLogin.classList.add("hidden");
+  
+        const avatar = document.getElementById("user-avatar");
+        avatar.src = user.picture;
+        avatar.classList.remove("hidden");
+  
+        const userNombre = document.getElementById("user-nombre");
+        userNombre.classList.remove("hidden");
+      }
+    });
+  </script>
+  

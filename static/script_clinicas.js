@@ -50,18 +50,6 @@ if (sessionStorage.getItem("btnAgendar") == "true") {
     console.log("El botón Agendar no ha sido clicado.");  
 }
 document.addEventListener("DOMContentLoaded", async function () {
-/*    response = await fetch('/api/estado_autenticacion');
-    data = await response.json();
-    data.then(autenticado => {
-        console.log("Estado de autenticación:", autenticado);
-        if (autenticado) {
-            usuarioestaautenticado = true;
-        } else {
-            usuarioestaautenticado = false;
-        }
-    });
-    console.log("Estado de autenticación:", data.autenticado);
-    */
     const clinicasContainer = document.getElementById("clinicas-container");
     const paginacionContainer = document.getElementById("paginacion");
     const clinicasPorPagina = 3;

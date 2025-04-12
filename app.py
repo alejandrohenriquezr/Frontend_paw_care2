@@ -3,6 +3,7 @@ from authlib.integrations.flask_client import OAuth
 from flask_mail import Mail, Message
 from functools import wraps
 from urllib.parse import urlparse, parse_qs, urlencode
+from datetime import datetime
 import os
 import base64
 import requests
@@ -613,16 +614,115 @@ def favoritos():
 
 
 # 📌 Ruta de iniciar sesión
+#@app.route("/mis_citas")
+#@login_required
+#def mis_citas():
+#    user = session.get("user", None)
+    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
+#    session['next'] = request.full_path
+#    print(f"[INFO] next mis_citas: {request.full_path}")
+#    if not user:
+#        return redirect(url_for("login"))
+#    return render_template("mis_citas.html", user=user)
+
+# 📌 Ruta de Mis Citas
 @app.route("/mis_citas")
 #@login_required
 def mis_citas():
-    user = session.get("user", None)
+#    user = session.get("user")
+
     #si no hay usuario, entonces redirigimos a la página de inicio de sesión
     session['next'] = request.full_path
     print(f"[INFO] next mis_citas: {request.full_path}")
+    user = session.get("user", None)
+    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
     if not user:
         return redirect(url_for("login"))
-    return render_template("mis_citas.html", user=user)
+    # Leer reservas.csv
+    email = user.get("email")
+    df_reservas = pd.read_csv("data/reservas.csv", sep=";")
+    df_reservas = df_reservas[(df_reservas["correo_cliente"] == email) & (df_reservas["estado"] == 1)]
+
+    # Leer clinicas.csv y unir por id_clinica
+    df_clinicas = pd.read_csv("data/clinicas.csv", sep=";")
+    df_reservas = df_reservas.merge(df_clinicas[["id_clinica", "nombre", "direccion", "dpa"]], on="id_clinica", how="left")
+
+    # Leer clientes_mascotas.csv y unir por correo_cliente y mascota = id_clientes_mascotas
+    df_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    print(df_mascotas)
+    df_mascotas = df_mascotas[df_mascotas["correo_cliente"] == email]
+    print(df_mascotas)
+    df_reservas = df_reservas.merge(
+        df_mascotas[["id_clientes_mascotas", "nombre_mascota"]],
+        left_on="mascota",
+        right_on="id_clientes_mascotas",
+        how="left"
+    )
+
+    # Leer dpa.csv y unir por dpa para obtener Nombre_Comuna
+    df_dpa = pd.read_csv("data/dpa.csv", sep=";")
+    df_reservas = df_reservas.merge(
+        df_dpa[["id_dpa", "Nombre_Comuna"]],
+        left_on="dpa",
+        right_on="id_dpa",
+        how="left"
+    )
+
+    # Convertir columna fecha a datetime
+    df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format="%d-%m-%Y")
+    print(df_reservas)
+    # Convertir dataframe a lista de diccionarios
+    mis_citas = df_reservas.to_dict(orient="records")
+    if not user:
+        return redirect(url_for("login"))    
+    return render_template("mis_citas.html", user=user, mis_citas=mis_citas)
+
+
+@app.route('/cancelar_cita', methods=["POST"])
+#@login_required
+def cancelar_cita():
+    data = request.get_json(silent=True)
+    if data is None:
+        print("[ERROR] No se recibió un cuerpo JSON válido en /cancelar_cita")
+        return jsonify({"success": False, "error": "JSON inválido o vacío"}), 400    
+    print(f"[INFO] Datos recibidos en cancelar_cita: {data}")
+    user = session.get("user", None)
+    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
+    session['next'] = request.full_path
+    print(f"[INFO] next: {request.full_path}")
+    if not user:
+        return redirect(url_for("login"))    
+    #data = request.json
+    
+    id_clinica = int(data["id_clinica"])
+    correo_cliente = data["correo"]
+    fecha_original = data.get("fecha")
+
+    # 🛠 Convertir fecha del formato ISO a formato CSV (%d-%m-%Y)
+    fecha = datetime.strptime(fecha_original[:10], "%Y-%m-%d").strftime("%d-%m-%Y")
+    #pasamos fhea a formato %d-%m-%Y
+    #fecha = pd.to_datetime(fecha, format="%Y-%m-%d")
+
+    print(f"[INFO] Datos recibidos en cancelar_cita: {id_clinica}, {correo_cliente}, {fecha}")
+    try:
+        df = pd.read_csv("data/reservas.csv", sep=";")
+        print(f"[INFO] DataFrame cargado: {df.head()}")
+        mask = (
+            (df["id_clinica"] == id_clinica) &
+            (df["correo_cliente"] == correo_cliente) &
+            (df["fecha"] == fecha)
+        )
+        print(f"[INFO] Máscara de filtro: {mask}")
+
+        if mask.any():
+            df.loc[mask, "estado"] = -1
+            df.to_csv("data/reservas.csv", sep=";", index=False)
+            return jsonify({"success": True})
+        else:
+            return jsonify({"success": False, "error": "Reserva no encontrada."}), 404
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 

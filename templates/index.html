@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <title>Paw Care</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
     
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -222,37 +222,41 @@
           <i class="fa-solid fa-paw text-2xl"></i>
           <span class="ml-2 text-xl">PawCare</span>
         </div>
-
-        <!-- Navigation -->
-        <nav class="hidden md:flex items-center space-x-8">
-          <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'" >Mis Mascotas</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'" >Mis Citas</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'" >Favoritos</span>
+  
+        <!-- Botón hamburguesa móvil -->
+        <div class="md:hidden">
+          <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+  
+        <!-- Navegación principal -->
+        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
         </nav>
-
+  
+        <!-- Menú móvil desplegable -->
+        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </div>
+  
         <!-- Right Side -->
         <div class="flex items-center space-x-4">
-          <button class="p-2">
-            <i class="fa-regular fa-bell text-xl"></i>
-          </button>
-          <!-- Botón Iniciar Sesión (se muestra solo si no hay login) -->
-          <button  id="btn-login" onclick="window.location.href='iniciar_sesion'"  class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">
-            Iniciar Sesión
-          </button>
-          <!-- Avatar Usuario (oculto por defecto, se muestra si hay login) -->
+          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
           <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
-          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
-            <script>
-              document.write(nombreSeparado.join(" "));
-            </script>
-          </span>
-
+          <span id="user-nombre" class="hover:text-neutral-100 hidden cursor-pointer"></span>
         </div>
       </div>
     </div>
   </header>
-
+  
   <!-- Hero Section -->
   <section id="hero" class="pt-24 h-[800px] bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
     <div class="container mx-auto px-4">
@@ -455,6 +459,14 @@
               }
           });
       </script>
+
+<script>
+  // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+    const mobileNav = document.getElementById("mobile-nav");
+    mobileNav.classList.toggle("hidden");
+  });
+</script>
 
 
   </body>
