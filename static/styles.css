@@ -512,7 +512,7 @@ body { font-family: Arial, sans-serif; text-align: center; }
 
 .container {
     flex: 1; /* Ajusta el tamaño de los contenedores según sea necesario */
-    margin: 10px; /* Opcional: ajusta el margen entre los contenedores */
+    margin: 10px;
 }
 
 
@@ -540,4 +540,12 @@ body { font-family: Arial, sans-serif; text-align: center; }
   .user-avatar:hover {
     border: 3px solid #9ca3af; /* gris tailwind: gray-400 */
   }  
+
+
+  .custom-image {
+    width: 95%;
+    height: 95%;
     
+    object-fit: contain; /* Esto asegura que toda la imagen sea visible */
+    border-radius: 30px; /* Ajustar el valor necesidades */
+  }

@@ -21,7 +21,7 @@
   * {
     font-family: "Inter", sans-serif;
   }
-
+ 
 
 </style>
 
@@ -204,6 +204,14 @@
           },
           plugins: [],
         };
+
+  const nombre = "{{ user['name'] }}";
+  const nombreSeparado = nombre.split(" ");
+  // ahora para cada elemento del array, ponemos la primera letra en mayúscula y el resto de las letras en minuscula
+  for (let i = 0; i < nombreSeparado.length; i++) {
+    nombreSeparado[i] = nombreSeparado[i].charAt(0).toUpperCase() + nombreSeparado[i].slice(1).toLowerCase();
+  }
+
 </script>
 
 
@@ -233,7 +241,7 @@
         <!-- Navegación principal -->
         <nav id="main-nav" class="hidden md:flex items-center space-x-8">
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
         </nav>
@@ -251,10 +259,15 @@
           <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
           <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
           <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
-          <span id="user-nombre" class="hover:text-neutral-100 hidden cursor-pointer"></span>
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
+          </span>
         </div>
       </div>
     </div>
+  
   </header>
   
   <!-- Hero Section -->
@@ -369,21 +382,7 @@
 </div>
 
 <script>
-      /*
-      document.querySelector('button[name="btn_teleconsulta"]').addEventListener('click', async function() {
-        const selectComunas = document.getElementById('comunas');
-        selectComunas.name = 'especialidades_teleconsulta';
-        selectComunas.innerHTML = '<option value="">Seleccionar especialidad</option>';
-        try {
-          const response = await fetch('/api/especialidades_teleconsulta');
-          const options = await response.text();
-          selectComunas.innerHTML += options;
-        } catch (error) {
-          console.error('Error:', error);
-        }
-      });
-      */
-      document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const btnPresencial = document.querySelector('button[name="btn_presencial"]');
     const btnTeleconsulta = document.querySelector('button[name="btn_teleconsulta"]');
     const selectComunas = document.getElementById("comunas");
@@ -440,25 +439,25 @@
   });
 </script>
 
-    <script>
-          document.addEventListener("DOMContentLoaded", function() {
-              const user = {
-                  picture: "{{ user['picture'] if user else '' }}",
-              };
-              if (user.picture) {
-                      
-                  btnLogin = document.getElementById("btn-login");
-                  btnLogin.classList.add("hidden");
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+  const user = {
+  picture: "{{ user['picture'] if user else '' }}",
+  };
+if (user.picture) {
   
-                  const avatar = document.getElementById("user-avatar");
-                  avatar.src = user.picture;
-                  avatar.classList.remove("hidden");
-                  const userNombre = document.getElementById("user-nombre");
-                  userNombre.classList.remove("hidden");
-          
-              }
-          });
-      </script>
+  btnLogin = document.getElementById("btn-login");
+  btnLogin.classList.add("hidden");
+
+  const avatar = document.getElementById("user-avatar");
+  avatar.src = user.picture;
+  avatar.classList.remove("hidden");
+  const userNombre = document.getElementById("user-nombre");
+  userNombre.classList.remove("hidden");
+      
+  }
+});
+</script>
 
 <script>
   // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
