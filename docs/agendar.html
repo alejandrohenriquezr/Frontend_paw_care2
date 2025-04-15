@@ -73,15 +73,32 @@
               <i class="fa-solid fa-paw text-2xl"></i>
               <span class="ml-2 text-xl">PawCare</span>
             </div>
+          <!-- Botón hamburguesa móvil -->
 
-            <nav class="hidden md:flex items-center space-x-8">
-              <a href="index.html" class="hover:text">
-              <span class="hover:text-neutral-100 cursor-pointer">Inicio</span>
-              </a>
-              <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
-              <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
-              <span class="hover:text-neutral-100 cursor-pointer">Favoritos</span>
-            </nav>
+
+          <div class="md:hidden  md:flex items-center space-x-4" >
+            <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+
+          <!-- Navegación principal -->
+          <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+          </nav>
+
+
+    
+          <!-- Menú móvil desplegable -->
+          <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+            <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+          </div>
 
             <div class="flex items-center space-x-4">
               <button class="p-2 relative">
@@ -295,5 +312,13 @@
 
 
   </body>
+
+  <script>
+    // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
+      document.getElementById("menu-toggle").addEventListener("click", function () {
+      const mobileNav = document.getElementById("mobile-nav");
+      mobileNav.classList.toggle("hidden");
+    });
+  </script>  
 </html>
           
