@@ -1,4 +1,4 @@
-﻿id_especie_raza;id_especie;id_raza
+﻿id_especie_raza;id_raza;id_especie
 1;1;1
-2;1;2
-3;2;2
+2;2;2
+3;3;1

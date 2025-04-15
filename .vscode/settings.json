@@ -1,9 +1,17 @@
 {
     "livePreview.defaultPreviewPath": "/templates/index.html",
     "cSpell.words": [
+        "Ajusta",
+        "azul",
         "clinicas",
+        "intenso",
         "jsonify",
-        "obtener"
+        "leve",
+        "mascota",
+        "necesidades",
+        "obtener",
+        "redondo",
+        "seleccionado"
     ],
     "python.analysis.extraPaths": [
         "./app"

@@ -22,13 +22,30 @@ document.addEventListener("DOMContentLoaded", function () {
         btnProximas.classList.add("border-b-2", "border-neutral-700", "text-neutral-700");
         btnPasadas.classList.remove("border-b-2", "border-neutral-700", "text-neutral-700");
         btnPasadas.classList.add("text-neutral-500");
-    });
+        //ocultamos el botón evaluar_cita y mostramos el boton cancelar_cita
+        document.querySelectorAll(".evaluar_cita").forEach(btn => {
+          btn.style.display = "none";
+        });
+        document.querySelectorAll(".cancelar_cita").forEach(btn => {
+          btn.style.display = "block";
+        });      
+
+      });
   
     btnPasadas.addEventListener("click", () => {
         filtrarCitas(true);
       btnPasadas.classList.add("border-b-2", "border-neutral-700", "text-neutral-700");
       btnProximas.classList.remove("border-b-2", "border-neutral-700", "text-neutral-700");
       btnProximas.classList.add("text-neutral-500");
+
+      //ocultamos el botón cancelar_cita y mostramos el boton evaluar_cita
+      document.querySelectorAll(".cancelar_cita").forEach(btn => {
+        btn.style.display = "none";
+      });
+      document.querySelectorAll(".evaluar_cita").forEach(btn => {
+        btn.style.display = "block";
+      });      
+
     });
   
     // Por omisión: mostrar próximas citas
@@ -73,4 +90,41 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   });
+
   
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".confirmar_cita").forEach(btn => {
+      btn.addEventListener("click", async function () {
+        const confirmado = confirm("¿Estás seguro de que deseas confirmar esta cita?");
+        if (!confirmado) return;
+  
+        const id_reserva = this.dataset.id_reserva;
+        console.log("id_reserva=", id_reserva);
+        const res = await fetch('/confirmar_cita', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ id_reserva })
+        });
+  
+        const data = await res.json();
+        if (data.success) {
+          this.textContent = "Confirmada";
+          this.classList.remove("bg-red-500", "hover:bg-red-600");
+          this.classList.add("bg-green-200", "text-red-800");
+          this.disabled = true;
+          /*  
+          const statusSpan = this.closest(".datos_reserva").querySelector(".estado_cita");
+          if (statusSpan) {
+            statusSpan.textContent = "Eliminada";
+            statusSpan.classList.remove("bg-green-200", "text-green-800");
+            statusSpan.classList.add("bg-red-200", "text-red-800");
+          }
+            */
+        } else {
+          alert("Error al cancelar la cita.");
+        }
+      });
+    });
+  });

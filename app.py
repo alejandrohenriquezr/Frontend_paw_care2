@@ -1,9 +1,11 @@
-from flask import Flask, abort, redirect, url_for, session, request, jsonify, render_template, send_from_directory
+from flask import Flask, send_file, abort, redirect, url_for, session, request, jsonify, render_template, send_from_directory
 from authlib.integrations.flask_client import OAuth
 from flask_mail import Mail, Message
 from functools import wraps
 from urllib.parse import urlparse, parse_qs, urlencode
 from datetime import datetime
+from fpdf import FPDF
+
 import os
 import base64
 import requests
@@ -12,6 +14,7 @@ import jwt
 import pandas as pd
 import unicodedata
 import csv
+import io
 
 #configuración de la APP
 app = Flask(__name__)
@@ -138,42 +141,33 @@ def login_required(f):
 # 📌 Ruta de inicio de sesión con Google
 @app.route("/login")
 def login():
+    # si request.full_path contiene agendar
+    # entonces guardamos la ruta completa en la sesión
+    # y redirigimos a la ruta de login
+    #session.clear()
+    #session['next'] = request.full_path
+    #print(f"[INFO] next: {request.full_path}")
+    if request.full_path.startswith("/agendar"):
+        session['next'] = request.full_path
+    
     nonce = generate_nonce()
     session['nonce'] = nonce
-    #session['next'] = request.referrer or url_for('sitio_privado', _external=True)
-    #redirect_value = request.args.get('redirect')
-    #necesito guardar la url de origen
-    
-    #print(f"Valor de redirect en login es: {redirect_value}")
-    #no usaré esta línea, se supone que se creo al comienzo del código
-    #id_clinica = request.args.get('id_clinica')
-    #id_clinica = session.get('id_clinica')
-    #nombre_clinica = session.get('nombre_clinica')
-    #print(f"Valor de id_clinica en login es: {id_clinica}")
-    #print(f"Valor de nombre_clinica en login es: {nombre_clinica}")
      
     fecha = request.args.get('fecha')
     hora = request.args.get('hora')
-    #id_clientes_mascotas = request.args.get('id_clientes_mascotas')
     
     # Guardar los parámetros en la sesión
-    #session['redirect'] = redirect_value
-    #session['id_clinica'] = id_clinica
-    #session['id_clientes_mascotas'] = 'id_clientes_mascotas'
     session['fecha'] = fecha
     session['hora'] = hora
 
     session['fechaSeleccionada'] =fecha
     session['horaSeleccionada'] = hora
-    #session['mascotaSeleccionada'] = data.get('mascotaSeleccionada')
 
     redirect_uri = url_for('callback', _external=True)
-
-    
     return google.authorize_redirect(redirect_uri, nonce=nonce)
 
 
-# 📌 Ruta de callback (Google redirige aquí después de autenticación)
+# 📌 Ruta de | (Google redirige aquí después de autenticación)
 @app.route("/login/callback")
 def callback():
     token = google.authorize_access_token()
@@ -193,7 +187,7 @@ def callback():
     print(f"Ruta de redirección en el callback es: {next_path}")
     # Si no existe next_path, redirige al home o sitio privado
     if not next_path:
-        return redirect(url_for("sitio_privado"))
+        return redirect(url_for("mis_mascotas"))
 
     # Si empieza con /agendar, redirige con url_for para asegurar parámetros
     parsed = urlparse(next_path)
@@ -280,7 +274,7 @@ def authorize():
     if claims['nonce'] != session['nonce']:
         return 'Error: Nonce no coincide'
     # Procesar el token y la sesión del usuario
-    return redirect(url_for('sitio_privado', user=user))
+    return redirect(url_for('mis_mascotas', user=user))
 
 @app.route('/sitio_privado')
 def sitio_privado():
@@ -288,7 +282,137 @@ def sitio_privado():
     print(session.get("user"))
     if "user" not in session:
         return redirect(url_for("login"))
-    return render_template('sitio_privado.html', user=user)
+    return render_template('mis_mascotas.html', user=user)
+
+
+@app.route('/mis_mascotas')
+def mis_mascotas():
+    session['next'] = request.full_path
+    print(f"[INFO] next mis_mascotas: {request.full_path}")
+    user = session.get("user", None)
+
+    print(session.get("user"))
+    if not user:
+        return redirect(url_for("login"))    
+    email=user.get("email")
+    df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["correo_cliente"] == email)]
+
+    df_mis_mascotas["anos_edad"], df_mis_mascotas["meses_edad"] = zip(*df_mis_mascotas["fecha_nacimiento"].apply(calcular_edad))
+
+    #df_mis_mascotas["meses_edad"] = edad_meses
+
+    # Leer clinicas.csv y unir por id_clinica
+    df_especie_raza = pd.read_csv("data/especie_raza.csv", sep=";")
+    df_mis_mascotas = df_mis_mascotas.merge(df_especie_raza[["id_especie_raza", "id_especie", "id_raza"]], on="id_especie_raza", how="left")
+
+    df_razas= pd.read_csv("data/razas.csv", sep=";")
+    df_mis_mascotas = df_mis_mascotas.merge(df_razas[["id_raza", "nombre_raza"]], on="id_raza", how="left")
+
+    df_especies= pd.read_csv("data/especies.csv", sep=";")
+    df_mis_mascotas = df_mis_mascotas.merge(df_especies[["id_especie", "especie"]], on="id_especie", how="left")
+
+
+    # Convertir columna fecha a datetime
+    df_mis_mascotas["fecha_nacimiento"] = pd.to_datetime(df_mis_mascotas["fecha_nacimiento"], format="%d-%m-%Y")
+
+    print(df_mis_mascotas)
+    # Convertir dataframe a lista de diccionarios
+    mis_mascotas = df_mis_mascotas.to_dict(orient="records")
+
+    #######
+    ## Código para crear citas para la página mis_macotas
+    df_reservas = pd.read_csv("data/reservas.csv", sep=";")
+    df_reservas = df_reservas[(df_reservas["correo_cliente"] == email) & (df_reservas["estado"] == 1)]
+    
+    # Leer clinicas.csv y unir por id_clinica
+    df_clinicas = pd.read_csv("data/clinicas.csv", sep=";")
+    df_reservas = df_reservas.merge(df_clinicas[["id_clinica", "nombre", "direccion", "dpa"]], on="id_clinica", how="left")
+
+    # Leer clientes_mascotas.csv y unir por correo_cliente y mascota = id_clientes_mascotas
+    df_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    print(df_mascotas)
+    df_mascotas = df_mascotas[df_mascotas["correo_cliente"] == email]
+    print(df_mascotas)
+    df_reservas = df_reservas.merge(
+        df_mascotas[["id_clientes_mascotas", "nombre_mascota"]],
+        left_on="mascota",
+        right_on="id_clientes_mascotas",
+        how="left"
+    )
+
+    # Leer dpa.csv y unir por dpa para obtener Nombre_Comuna
+    df_dpa = pd.read_csv("data/dpa.csv", sep=";")
+    df_reservas = df_reservas.merge(
+        df_dpa[["id_dpa", "Nombre_Comuna"]],
+        left_on="dpa",
+        right_on="id_dpa",
+        how="left"
+    )
+
+    # Convertir columna fecha a datetime
+    df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format="%d-%m-%Y")
+
+    #ahora filtramos df_reservas para que solo contenga las reservas con fecha mayor o igual a hoy
+    hoy = datetime.now().strftime("%d-%m-%Y")
+    #ordenamos desde la fecha más actual a la mas vieja
+    df_reservas = df_reservas.sort_values(by=["fecha"], ascending=False)
+    df_reservas_pasadas=df_reservas
+    df_reservas = df_reservas[(df_reservas["fecha"] >= hoy)]
+    df_reservas_pasadas = df_reservas_pasadas[(df_reservas_pasadas["fecha"] < hoy)]
+    #eliminamos los 00:00:00 del campo fecha
+    df_reservas["fecha"] = df_reservas["fecha"].dt.strftime("%d-%m-%Y")
+    df_reservas_pasadas["fecha"] = df_reservas_pasadas["fecha"].dt.strftime("%d-%m-%Y")
+    #eliminamos los segundos a los campos hora
+    df_reservas["hora"] = df_reservas["hora"].str[:5]
+    df_reservas_pasadas["hora"] = df_reservas_pasadas["hora"].str[:5]
+
+    # Convertir dataframe a lista de diccionarios
+
+    mis_citas = df_reservas.to_dict(orient="records")
+    mis_citas_pasadas = df_reservas_pasadas.to_dict(orient="records")
+    print(df_reservas)
+
+   # PAGINACIÓN
+    page = request.args.get("page", default=1, type=int)
+    per_page = 5
+    start = (page - 1) * per_page
+    end = start + per_page
+    citas_paginadas = mis_citas_pasadas[start:end]
+    total_paginas = (len(mis_citas_pasadas) + per_page - 1) // per_page
+
+    return render_template("mis_mascotas.html", 
+                            user=user, 
+                            mis_mascotas=mis_mascotas, 
+                            mis_citas=mis_citas, 
+                            #mis_citas_pasadas=mis_citas_pasadas,
+                            mis_citas_pasadas=citas_paginadas,
+                            page=page,
+                            total_paginas=total_paginas
+                        )
+
+
+def calcular_edad(fecha_nacimiento):
+
+#hay que pasar fecha_nacimiento al mismo foromato de datetime.now()
+    fecha_nacimiento = pd.to_datetime(fecha_nacimiento, format="%d-%m-%Y")
+    # Obtener la fecha actual
+    fecha_actual = datetime.now()
+
+     # Calcular la diferencia en años y meses
+    edad_anos = fecha_actual.year - fecha_nacimiento.year
+    edad_meses = fecha_actual.month - fecha_nacimiento.month
+
+    # Ajustar los años y meses si es necesario
+    if edad_meses < 0:
+        edad_anos -= 1
+        edad_meses += 12
+
+    return edad_anos, edad_meses
+#
+#
+
+
 
 @app.route("/api/clinicas", methods=["GET"])
 def obtener_clinicas():
@@ -604,26 +728,23 @@ def iniciar_sesion():
 @app.route("/favoritos")
 #@login_required
 def favoritos():
-    user = session.get("user", None)
-    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
     session['next'] = request.full_path
-    print(f"[INFO] next: {request.full_path}")
+    print(f"[INFO] next favoritos: {request.full_path}")
+    user = session.get("user", None)
+
+    print(session.get("user"))
     if not user:
-        return redirect(url_for("login"))
+        return redirect(url_for("login"))    
     return render_template("favoritos.html", user=user)
 
-
-# 📌 Ruta de iniciar sesión
-#@app.route("/mis_citas")
-#@login_required
-#def mis_citas():
-#    user = session.get("user", None)
+    #user = session.get("user", None)
     #si no hay usuario, entonces redirigimos a la página de inicio de sesión
-#    session['next'] = request.full_path
-#    print(f"[INFO] next mis_citas: {request.full_path}")
-#    if not user:
-#        return redirect(url_for("login"))
-#    return render_template("mis_citas.html", user=user)
+    #session['next'] = request.full_path
+    #print(f"[INFO] next: {request.full_path}")
+    #if not user:
+    #    return redirect(url_for("login"))
+    #return render_template("favoritos.html", user=user)
+
 
 # 📌 Ruta de Mis Citas
 @app.route("/mis_citas")
@@ -641,7 +762,11 @@ def mis_citas():
     # Leer reservas.csv
     email = user.get("email")
     df_reservas = pd.read_csv("data/reservas.csv", sep=";")
-    df_reservas = df_reservas[(df_reservas["correo_cliente"] == email) & (df_reservas["estado"] == 1)]
+    df_reservas = df_reservas[(df_reservas["correo_cliente"] == email) & (df_reservas["estado"] >= 0)]
+
+    #si el campo estado==1 lo cambiamos por Confirmada, si es -1 lo cambiamos por Cancelada, si es 0 lo cambiamos por Confirmar
+    df_reservas["estado"] = df_reservas["estado"].replace({1: "Confirmada", -1: "Cancelada", 0: "Confirmar"})
+
 
     # Leer clinicas.csv y unir por id_clinica
     df_clinicas = pd.read_csv("data/clinicas.csv", sep=";")
@@ -670,6 +795,7 @@ def mis_citas():
 
     # Convertir columna fecha a datetime
     df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format="%d-%m-%Y")
+    df_reservas = df_reservas.sort_values(by=["fecha"], ascending=False)
     print(df_reservas)
     # Convertir dataframe a lista de diccionarios
     mis_citas = df_reservas.to_dict(orient="records")
@@ -724,6 +850,93 @@ def cancelar_cita():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
 
+
+
+@app.route('/confirmar_cita', methods=["POST"])
+#@login_required
+def confirmar_cita():
+    data = request.get_json(silent=True)
+    if data is None:
+        print("[ERROR] No se recibió un cuerpo JSON válido en /confirmar_cita")
+        return jsonify({"success": False, "error": "JSON inválido o vacío"}), 400    
+    print(f"[INFO] Datos recibidos en confirmar_cita: {data}")
+    user = session.get("user", None)
+    #si no hay usuario, entonces redirigimos a la página de inicio de sesión
+    session['next'] = request.full_path
+    print(f"[INFO] next: {request.full_path}")
+    if not user:
+        return redirect(url_for("login"))    
+    
+    id_cita = int(data["id_cita"])
+
+
+    print(f"[INFO] Datos recibidos en cancelar_cita: {id_cita}")
+    try:
+        df = pd.read_csv("data/reservas.csv", sep=";")
+        print(f"[INFO] DataFrame cargado: {df.head()}")
+        mask = (
+            (df["id_reserva"] == id_cita)
+        )
+        print(f"[INFO] Máscara de filtro: {mask}")
+
+        if mask.any():
+            df.loc[mask, "estado"] = 1
+            df.to_csv("data/reservas.csv", sep=";", index=False)
+            return jsonify({"success": True})
+        else:
+            return jsonify({"success": False, "error": "Reserva no encontrada."}), 404
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/receta', methods=["GET"])
+#@login_required
+def receta():
+    user = session.get("user", None)
+    if not user:
+        session['next'] = request.full_path
+        return redirect(url_for("login"))
+
+    # Obtener id de la receta desde la URL
+    id_reserva = request.args.get("id_cita", type=int)
+    if not id_reserva:
+        return "ID de reserva no especificado", 400
+
+    try:
+        df = pd.read_csv("data/reservas.csv", sep=";")
+
+        # Buscar la reserva correspondiente
+        reserva = df[df["id_reserva"] == id_reserva]
+
+        if reserva.empty:
+            return "Reserva no encontrada", 404
+
+        receta = reserva.iloc[0].get("receta")
+        if not receta or receta.strip() == "":
+            return "No hay receta registrada para esta cita", 404
+
+        # Crear PDF en memoria
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.multi_cell(0, 10, receta)
+
+        pdf_output = io.BytesIO()
+        pdf.output(pdf_output)
+        pdf_output.seek(0)
+
+        # Devolver el PDF como archivo descargable
+        return send_file(
+            pdf_output,
+            mimetype="application/pdf",
+            download_name=f"receta_{id_reserva}.pdf",
+            as_attachment=True
+        )
+
+    except Exception as e:
+        print(f"[ERROR] Error al generar receta: {e}")
+        return "Error interno del servidor", 500
 
 
 if __name__ == "__main__":

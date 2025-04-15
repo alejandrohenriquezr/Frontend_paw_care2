@@ -205,7 +205,7 @@
           plugins: [],
         };
 
-        const nombre = "{{ user['name'] }}";
+  const nombre = "{{ user['name'] }}";
   const nombreSeparado = nombre.split(" ");
   // ahora para cada elemento del array, ponemos la primera letra en mayúscula y el resto de las letras en minuscula
   for (let i = 0; i < nombreSeparado.length; i++) {
@@ -236,7 +236,7 @@
         <nav class="hidden md:flex items-center space-x-8">
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'" >Inicio</span>
           <span class="hover:text-neutral-100 cursor-pointer">Mis Mascotas</span>
-          <span class="hover:text-neutral-100 cursor-pointer">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'" >Favoritos</span>
         </nav>
 
