@@ -49,50 +49,47 @@
 
 </head>
 
-              <body class="h-full text-base-content">
-                <div id="root" class="min-h-screen bg-[#E8EFF1]">
-                  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
-                    <div class="container mx-auto px-4">
-                      <div class="flex items-center justify-between h-16">
-                        <!-- Logo -->
-                        <div class="flex items-center">
-                          <i class="fa-solid fa-paw text-2xl"></i>
-                          <span class="ml-2 text-xl">PawCare</span>
-                        </div>
-                  
-                        <!-- Botón hamburguesa móvil -->
-                        <div class="md:hidden">
-                          <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
-                            <i class="fas fa-bars"></i>
-                          </button>
-                        </div>
-                  
-                        <!-- Navegación principal -->
-                        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
-                          <span class="hover:text-neutral-100 cursor-pointer" >Mis Citas</span>
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
-                        </nav>
-                  
-                        <!-- Menú móvil desplegable -->
-                        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
-                          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
-                        </div>
-                  
-                        <!-- Right Side -->
-                        <div class="flex items-center space-x-4">
-                          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
-                          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
-                          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
-                          <span id="user-nombre" class="hover:text-neutral-100 hidden cursor-pointer"></span>
-                        </div>
-                      </div>
-                    </div>
-                  </header>
+<body class="h-full text-base-content">
+  <div id="root" class="min-h-screen bg-[#E8EFF1]">
+  <!-- Header -->
+  <header id="header" class="fixed w-full bg-[#5A8F99] text-white border-b border-[#B0C4C9] z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <i class="fa-solid fa-paw text-2xl"></i>
+          <span class="ml-2 text-xl">PawCare</span>
+        </div>
+
+        <!-- Navegación principal -->
+        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href=''">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </nav>
+  
+        <!-- Menú móvil desplegable -->
+        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href=''">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </div>
+
+        <!-- Right Side -->
+        <div class="flex items-center space-x-4">
+          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
                 
   <main id="appointments" class="pt-24 pb-16">
     <div class="container mx-auto px-4">
@@ -128,7 +125,19 @@
           {% for cita in mis_citas %}
             <div class="bg-[#D8E5E8] p-4 rounded-lg cita-item" data-fecha="{{ cita['fecha'].strftime('%Y-%m-%d') }}">
               <div class="flex items-center justify-between mb-3">
-                <span class="bg-neutral-700 text-white px-3 py-1 rounded-full text-sm">Confirmada</span>
+                {% if cita['estado'] == 'Confirmar' %}
+                <button 
+                class="confirmar_cita bg-blue-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                data-id_reserva="{{ cita.id_reserva }}"
+                >Confirmar
+                </button>  
+                {% elif cita['estado'] == 'Confirmada' %}
+                  <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Confirmada</span>
+                {% elif cita['estado'] == 'Cancelada' %}
+                  <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">Cancelada</span>
+                {% endif %}
+                
+                
                 <span class="text-neutral-600 fecha">{{ cita['fecha'].strftime('%d de %B, %Y') }} - {{ cita['hora'] }}</span>
               </div>
               <div class="grid md:grid-cols-2 gap-4">
@@ -145,7 +154,15 @@
                   data-correo="{{ cita.correo_cliente }}"
                   data-fecha="{{ cita.fecha }}"
                   >Cancelar Cita</button>
-                </div>
+                
+                  <button 
+                  class="evaluar_cita bg-blue-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                  data-id_clinica="{{ cita.id_clinica }}"
+                  data-correo="{{ cita.correo_cliente }}"
+                  data-fecha="{{ cita.fecha }}"
+                  >Evalúa Cita
+                  </button>
+                </div>              
               </div>
             </div>
           {% endfor %}
