@@ -53,6 +53,13 @@ app.config['MAIL_USERNAME'] = 'alhen1970@gmail.com'
 app.config['MAIL_PASSWORD'] = 'ptjt fgco uoia jgyx'
 
 mail = Mail(app)
+# Detecta si está en Render o en local
+RENDER = os.environ.get('RENDER', False)
+
+if RENDER:
+    REDIRECT_URI = "https://paw-care-app.onrender.com/login/callback"
+else:
+    REDIRECT_URI = "http://127.0.0.1:5000/login/callback"
 
 # Configuración de OAuth
 def get_google_provider_cfg():
@@ -70,7 +77,8 @@ google = oauth.register(
     access_token_params=None,
     refresh_token_url=None,
     #redirect_uri="http://127.0.0.1:5000/login/callback",
-    redirect_uri='https://paw-care-app.onrender.com/callback',
+    #redirect_uri='https://paw-care-app.onrender.com/callback',
+    redirect_uri=REDIRECT_URI,
     client_kwargs={"scope": "openid email profile"},
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
