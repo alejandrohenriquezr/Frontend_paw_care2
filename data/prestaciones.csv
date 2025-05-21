@@ -1,0 +1,71 @@
+﻿id_prestacion;id_especialidad;prestacion
+1;1;Diagnóstico y tratamiento de enfermedades infecciosas
+2;1;Manejo de enfermedades metabólicas
+3;1;Tratamiento de enfermedades respiratorias
+4;1;Control de enfermedades cardiovasculares
+5;1;Manejo de enfermedades renales
+6;2;Atención de emergencias por accidentes
+7;2;Tratamiento de intoxicaciones
+8;2;Manejo de shock y trauma
+9;2;Reanimación cardiopulmonar
+10;2;Tratamiento de heridas graves
+11;3;Cirugía ortopédica
+12;3;Cirugía de tejidos blandos
+13;3;Cirugía neurológica
+14;3;Cirugía reconstructiva
+15;3;Cirugía laparoscópica
+16;4;Diagnóstico y tratamiento de alergias cutáneas
+17;4;Manejo de infecciones de la piel
+18;4;Tratamiento de enfermedades autoinmunes de la piel
+19;4;Terapia para dermatitis
+20;4;Tratamiento de tumores cutáneos
+21;5;Rehabilitación postoperatoria
+22;5;Terapia física para lesiones musculares
+23;5;Hidroterapia
+24;5;Electroterapia
+25;5;Masajes terapéuticos
+26;6;Diagnóstico y tratamiento de cataratas
+27;6;Manejo de glaucoma
+28;6;Tratamiento de úlceras corneales
+29;6;Cirugía ocular
+30;6;Terapia para enfermedades retinianas
+31;7;Quimioterapia
+32;7;Radioterapia
+33;7;Cirugía oncológica
+34;7;Diagnóstico y tratamiento de tumores
+35;7;Manejo paliativo del cáncer
+36;8;Radiografías
+37;8;Ecografías
+38;8;Tomografía computarizada (TC)
+39;8;Resonancia magnética (RM)
+40;8;Estudios contrastados
+41;9;Planes de alimentación personalizados
+42;9;Manejo de enfermedades nutricionales
+43;9;Asesoramiento en dietas especiales
+44;9;Suplementación nutricional
+45;9;Control de peso
+46;10;Diagnóstico y tratamiento de diabetes
+47;10;Manejo de enfermedades tiroideas
+48;10;Tratamiento de enfermedades hormonales
+49;10;Terapia para enfermedades suprarrenales
+50;10;Control de enfermedades metabólicas
+51;11;Diagnóstico y tratamiento de problemas de comportamiento
+52;11;Terapia para ansiedad y estrés
+53;11;Manejo de agresividad
+54;11;Modificación de conductas
+55;11;Asesoramiento en socialización
+56;12;Diagnóstico y tratamiento de enfermedades digestivas
+57;12;Manejo de enfermedades hepáticas
+58;12;Tratamiento de enfermedades pancreáticas
+59;12;Terapia para enfermedades intestinales
+60;12;Manejo de vómitos y diarreas crónicas
+61;13;Manejo de enfermedades crónicas en animales mayores
+62;13;Terapia para artritis y enfermedades articulares
+63;13;Control de enfermedades degenerativas
+64;13;Asesoramiento en cuidados paliativos
+65;13;Evaluación geriátrica integral
+66;14;Planes de alimentación basados en alimentos naturales
+67;14;Asesoramiento en dietas crudas
+68;14;Suplementación con productos naturales
+69;14;Manejo de alergias alimentarias
+70;14;Evaluación de la calidad de los alimentos naturales

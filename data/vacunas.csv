@@ -1,5 +1,5 @@
-id_vacuna;vacuna
-1;Antiparasitario
-2;Tipo 2
-3;Tipo 3
-4;Tipo 4
+id_vacuna;nombre_vacuna;frecuencia_meses
+1;Antiparasitario;6
+2;Tipo 2;12
+3;Tipo 3;6
+4;Tipo 4;12

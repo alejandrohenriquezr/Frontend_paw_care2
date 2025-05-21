@@ -61,6 +61,27 @@
           };
   </script>
 
+  <script>
+    async function fetchStaffClinica() {
+    const response = await fetch('/api/staff_clinica');
+    const data = await response.json();
+    console.log(data); // Aquí puedes ver los datos en la consola
+    // Procesar los datos y utilizarlos según tus necesidades
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+        const btnFecha = document.getElementById('btnfecha');
+        btnFecha.addEventListener('click', fetchStaffClinica);
+    });
+
+    const staffData = {{ df_staff_json | tojson }};
+    
+    console.log(staffData); // Verifica los datos en la consola
+  </script>
+
+  <script src="static/script_clinicas.js">
+
+</script>
 </head>
 
   <body class="h-full text-base-content">
@@ -120,13 +141,17 @@
         <div class="container mx-auto px-">
           <section id="booking-header" class="py-18">
             <div id="agendar_resultados" class="container">
-                <script src="static/script_clinicas.js"></script>
-                <!-- 🔥 Aquí se insertan los datos de la clínica -->
+
+ <!-- Este script debe mostrar los resultados de la búsqueda de clínicas -->
+              <!-- 🔥 Aquí se insertan los datos de la clínica -->
             </div>  
             <!-- Formulario de selección de fecha y hora -->
             <div id="form-container" class="container mt-4">
+              
+              <div id="horas-container" class="flex flex-wrap gap-6 mt-6"></div>
 
-              </div>
+
+            </div>
           </section>
         </div>
 
@@ -289,6 +314,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   
   <script>
+  
+
     window.addEventListener("load", function() {
         const urlParams = new URLSearchParams(window.location.search);
         const ac = urlParams.get('ac');
@@ -319,6 +346,10 @@
       const mobileNav = document.getElementById("mobile-nav");
       mobileNav.classList.toggle("hidden");
     });
-  </script>  
+
+    
+  </script>
+  
+  
 </html>
           
