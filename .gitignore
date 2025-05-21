@@ -1,0 +1,11 @@
+# Ignorar el entorno virtual
+venv/
+
+# Ignorar credenciales sensibles
+static/credenciales_pawcare_calendar.json
+
+# Otros archivos opcionales a ignorar
+__pycache__/
+*.pyc
+.env
+
