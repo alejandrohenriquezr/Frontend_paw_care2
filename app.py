@@ -1,5 +1,6 @@
 from flask import Flask, send_file, abort, redirect, url_for, session, request, jsonify, render_template, send_from_directory
 from authlib.integrations.flask_client import OAuth
+from authlib.common.security import generate_token
 from flask_mail import Mail, Message
 from functools import wraps
 from urllib.parse import urlparse, parse_qs, urlencode
@@ -60,6 +61,12 @@ if RENDER:
     REDIRECT_URI = "https://paw-care-app.onrender.com/login/callback"
 else:
     REDIRECT_URI = "http://127.0.0.1:5000/login/callback"
+
+
+class Config:
+    # otras configuraciones...
+    SESSION_COOKIE_SECURE = os.environ.get("RENDER") == "true"
+
 
 # Configuración de OAuth
 def get_google_provider_cfg():
@@ -190,7 +197,9 @@ def login():
     
     nonce = generate_nonce()
     session['nonce'] = nonce
-     
+    state = generate_token()  # Genera un token seguro
+    session['oauth_state'] = state  # Guárdalo en la sesión
+
     fecha = request.args.get('fecha')
     hora = request.args.get('hora')
     id_veterinario = request.args.get('id_veterinario')
@@ -214,6 +223,13 @@ def login():
 # 📌 Ruta de | (Google redirige aquí después de autenticación)
 @app.route("/login/callback")
 def callback():
+    # Revisa que el state recibido sea igual al almacenado
+    stored_state = session.pop("oauth_state", None)
+    received_state = request.args.get("state")
+
+    if stored_state != received_state:
+        return "Error: CSRF state no coincide", 400
+
     token = google.authorize_access_token()
     nonce = session.pop("nonce", None)
 
