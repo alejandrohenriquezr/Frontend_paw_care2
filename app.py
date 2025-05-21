@@ -69,7 +69,8 @@ google = oauth.register(
     access_token_url='https://www.googleapis.com/oauth2/v4/token',
     access_token_params=None,
     refresh_token_url=None,
-    redirect_uri="http://127.0.0.1:5000/login/callback",
+    #redirect_uri="http://127.0.0.1:5000/login/callback",
+    redirect_uri='https://paw-care-app.onrender.com/callback',
     client_kwargs={"scope": "openid email profile"},
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
