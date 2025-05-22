@@ -13,6 +13,7 @@ from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.units import inch, cm
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from flask_session import Session
 
 # Para Transbank
 #from flask import Flask, render_template, redirect, url_for, request
@@ -44,9 +45,11 @@ import pytz
 #configuración de la APP
 app = Flask(__name__)
 app.config.from_object(Config)
-app.secret_key = os.urandom(24)
-app.config["SESSION_COOKIE_SECURE"] = app.config["SESSION_COOKIE_SECURE"]
-app.config["SESSION_COOKIE_HTTPONLY"] = True
+Session(app)  # FALTA ESTA LÍNEA
+#app.secret_key = os.urandom(24)
+#app.secret_key = app.config["SECRET_KEY"]
+#app.config["SESSION_COOKIE_SECURE"] = app.config["SESSION_COOKIE_SECURE"]
+#app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 #Configuración del correo
