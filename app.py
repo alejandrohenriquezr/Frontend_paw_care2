@@ -253,7 +253,8 @@ def callback():
     print(f"Ruta de redirección en el callback es: {next_path}")
     # Si no existe next_path, redirige home
     if not next_path:
-        return redirect(url_for("/"))
+        #return redirect(url_for("/"))
+        return redirect(url_for("home"))
 
     # Si empieza con /agendar, redirige con url_for para asegurar parámetros
     parsed = urlparse(next_path)
