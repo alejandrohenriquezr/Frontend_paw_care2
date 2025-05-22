@@ -500,7 +500,13 @@ def mis_mascotas():
     df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
     df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["correo_cliente"] == email)]
 
-    df_mis_mascotas["anos_edad"], df_mis_mascotas["meses_edad"] = zip(*df_mis_mascotas["fecha_nacimiento"].apply(calcular_edad))
+    if not df_mis_mascotas.empty:
+        df_mis_mascotas["anos_edad"], df_mis_mascotas["meses_edad"] = zip(
+            *df_mis_mascotas["fecha_nacimiento"].apply(calcular_edad)
+        )
+    else:
+        df_mis_mascotas["anos_edad"] = []
+        df_mis_mascotas["meses_edad"] = []
 
     #df_mis_mascotas["meses_edad"] = edad_meses
 
