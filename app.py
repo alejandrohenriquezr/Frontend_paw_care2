@@ -45,6 +45,9 @@ import pytz
 app = Flask(__name__)
 app.config.from_object(Config)
 app.secret_key = os.urandom(24)
+app.config["SESSION_COOKIE_SECURE"] = app.config["SESSION_COOKIE_SECURE"]
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 #Configuración del correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -196,7 +199,7 @@ def login():
     session['nonce'] = nonce
     state = generate_token()  # Genera un token seguro
     session['oauth_state'] = state  # Guárdalo en la sesión
-
+    
     fecha = request.args.get('fecha')
     hora = request.args.get('hora')
     id_veterinario = request.args.get('id_veterinario')
@@ -214,7 +217,7 @@ def login():
     else:
         session['id_clinica'] = id_clinica
     redirect_uri = url_for('callback', _external=True)
-    return google.authorize_redirect(redirect_uri, nonce=nonce)
+    return google.authorize_redirect(redirect_uri, state=state, nonce=nonce)
 
 
 # 📌 Ruta de | (Google redirige aquí después de autenticación)
