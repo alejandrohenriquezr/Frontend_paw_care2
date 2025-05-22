@@ -63,9 +63,6 @@ else:
     REDIRECT_URI = "http://127.0.0.1:5000/login/callback"
 
 
-class Config:
-    # otras configuraciones...
-    SESSION_COOKIE_SECURE = os.environ.get("RENDER") == "true"
 
 
 # Configuración de OAuth
