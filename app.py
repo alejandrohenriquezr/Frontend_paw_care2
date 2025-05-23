@@ -95,7 +95,7 @@ google = oauth.register(
 
 # 📌 Ruta principal
 @app.route("/")
-def home():
+def index():
     comuna = request.args.get("comuna", "")
     if comuna:
         session["comuna"] = comuna
@@ -254,7 +254,7 @@ def callback():
     # Si no existe next_path, redirige home
     if not next_path:
         #return redirect(url_for("/"))
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
 
     # Si empieza con /agendar, redirige con url_for para asegurar parámetros
     parsed = urlparse(next_path)
@@ -289,7 +289,7 @@ def callback():
 def dashboard():
     user = session.get("user")
     if not user:
-        return redirect(url_for("home"), user=user)
+        return redirect(url_for("index"), user=user)
     
     return f"Bienvenido {user['name']} ({user['email']})"
 
@@ -479,13 +479,13 @@ def authorize():
     # Procesar el token y la sesión del usuario
     return redirect(url_for('mis_mascotas', user=user))
 
-@app.route('/sitio_privado')
-def sitio_privado():
-    user = session.get("user")
-    print(session.get("user"))
-    if "user" not in session:
-        return redirect(url_for("login"))
-    return render_template('mis_mascotas.html', user=user)
+#@app.route('/mis_mascotas')
+#def mis_mascotas():
+#    user = session.get("user")
+#    print(session.get("user"))
+#    if "user" not in session:
+#        return redirect(url_for("login"))
+#    return render_template('mis_mascotas.html', user=user)
 
 
 @app.route('/mis_mascotas')
@@ -734,7 +734,7 @@ def remover_tildes(texto):
 @app.route("/cerrar_sesion")
 def cerrar_sesion():
     session.clear()
-    return redirect(url_for("home"))
+    return redirect(url_for("index"))
 
 
 @app.route("/api/reservas", methods=["GET"])

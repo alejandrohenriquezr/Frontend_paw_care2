@@ -48,6 +48,15 @@
             plugins: [],
           };
 
+
+  const nombre = "{{ user['name'] }}";
+  const nombreSeparado = nombre.split(" ");
+  // ahora para cada elemento del array, ponemos la primera letra en mayúscula y el resto de las letras en minuscula
+  for (let i = 0; i < nombreSeparado.length; i++) {
+    nombreSeparado[i] = nombreSeparado[i].charAt(0).toUpperCase() + nombreSeparado[i].slice(1).toLowerCase();
+  }
+
+
   </script>
     <script>
 
@@ -235,7 +244,7 @@
         <!-- Navegación principal -->
         <nav id="main-nav" class="hidden md:flex items-center space-x-8">
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='sitio_privado'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
         </nav>
@@ -253,7 +262,11 @@
           <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
           <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
           <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
-          <span id="user-nombre" class="hover:text-neutral-100 hidden cursor-pointer"></span>
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
+          </span>
         </div>
       </div>
     </div>
