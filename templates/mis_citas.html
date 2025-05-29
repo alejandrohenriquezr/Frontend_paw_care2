@@ -178,7 +178,11 @@
                   <h3 class="text-lg mb-2 nombre_clinica">{{ cita['nombre'] }}</h3>
                   <h4 class="text-lg mb-2 nombre_veterinario">{{ cita['nombres'] }} {{ cita['apellidos'] }}</h4>
                   <p class="text-neutral-600"><i class="fa-solid fa-location-dot mr-2"></i><span class="direccion">{{ cita['direccion'] }}, {{ cita['Nombre_Comuna'] }}</span></p>
-                  <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i><span class="nombre_mascota">{{ cita['nombre_mascota'] }}</span></p>
+                  <p class="text-neutral-600"><i class="fa-solid fa-paw mr-2"></i><span class="nombre_mascota">
+                    {{ "Nueva mascota" if (not cita['nombre_mascota']) or (cita['nombre_mascota'] in ['nan', 'NaN', 'None']) else cita['nombre_mascota'] }}
+
+
+                  </span></p>
                 </div>
                 <div class="flex items-end justify-end gap-3">
                 <!--  <button class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg">Ver Detalles</button> -->

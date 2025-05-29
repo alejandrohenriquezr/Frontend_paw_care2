@@ -47,18 +47,10 @@
             },
             plugins: [],
           };
-
-
-  const nombre = "{{ user['name'] }}";
-  const nombreSeparado = nombre.split(" ");
-  // ahora para cada elemento del array, ponemos la primera letra en mayúscula y el resto de las letras en minuscula
-  for (let i = 0; i < nombreSeparado.length; i++) {
-    nombreSeparado[i] = nombreSeparado[i].charAt(0).toUpperCase() + nombreSeparado[i].slice(1).toLowerCase();
-  }
-
-
   </script>
-    <script>
+
+
+<script>
 
       window.onload = function() {
         sessionStorage.clear();
@@ -120,6 +112,18 @@
             document.getElementById('comunas').innerHTML = options;
         }
 
+        document.addEventListener("DOMContentLoaded", function() {
+          const nombre = "{{ user['name'] if user else '' }}";
+          if (nombre) {
+            const nombreSeparado = nombre.split(" ").map(p =>
+              p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
+            );
+            const target = document.getElementById("nombre-usuario");
+            if (target) {
+              target.innerText = nombreSeparado.join(" ");
+            }
+          }
+        });
 
         document.addEventListener("DOMContentLoaded", function() {
           
@@ -262,11 +266,11 @@
           <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
           <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
           <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="nombre-usuario"></span>
           <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
-            <script>
-              document.write(nombreSeparado.join(" "));
-            </script>
+            
           </span>
+          
         </div>
       </div>
     </div>

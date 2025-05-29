@@ -13,9 +13,9 @@ let id_veterinario_seleccionado = urlParams.get("id_veterinario") || "";
 let ultimoBtnSeleccionado = null;
 
 sessionStorage.setItem("id_veterinario_seleccionado", id_veterinario_seleccionado);
-
-
 console.log("id_veterinario_seleccionado=", id_veterinario_seleccionado);
+
+
 //si la variable id_clinica existe en la url y es distinta de vacio, entonces almacenarla en la variable de sesion id_clinica
 if (fechaSeleccionada == null || fechaSeleccionada == "") {   
     const urlParams = new URLSearchParams(window.location.search);
@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             paginacionContainer.appendChild(boton);
         }
     }
-
+    actualizarTextoBotonAgendar();
     //mostrarClinicas();
 });
 
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // 📌 Formulario f1
     const formHTML = `
         <div id="f1" class="mt-4 p-4 border rounded bg-gray-100">
-            <div id="fechas-container" class="flex space-x-2 mb-4"></div>
+            <div id="fechas-container" class="w-full"></div>
             <div id="horas-container" class="hidden flex space-x-2 mt-2"></div>
             <button id="btn-agendar" class="mt-4 px-6 py-3 rounded-full bg-green-500 text-white"></button>
         </div>
@@ -158,13 +158,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnAgendar = document.getElementById("btn-agendar");
     btnAgendar.disabled = true;
     usuarioAutenticado().then(autenticado => {
+        actualizarTextoBotonAgendar();
         console.log("Estado de autenticación3:", autenticado);
-        if (autenticado) {
+        /*if (autenticado) {
             btnAgendar.textContent = "Pagar Cita";
         } else {
             btnAgendar.textContent = "Iniciar Sesión para Agendar";
             btnAgendar.blackgroundColor = "bg-gray-400";
-        }
+        }*/
     });
 
     if (fecha==null || hora==null){
@@ -202,6 +203,7 @@ document.addEventListener("DOMContentLoaded", function () {
             btnFecha.classList.add("bg-blue-500");
             //guardar la fecha seleccionada en la variable de sesión fecha
             sessionStorage.setItem("fechaSeleccionada", fechaValor);
+            actualizarTextoBotonAgendar();
             console.log("Fecha seleccionada:", sessionStorage.getItem("fechaSeleccionada"));
             //alert("La fecha seleccionada es: " + fechaValor);
             // 📌 Generar Horas Disponibles
@@ -306,6 +308,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     } else {
                         btnHora.addEventListener("click", () => {
+                            sessionStorage.setItem("id_veterinario", vet.id_veterinario);
+                            sessionStorage.setItem("horaSeleccionada", horaTexto);
+                            actualizarEstadoBotonAgendar();
+                            actualizarTextoBotonAgendar();
                             if (fecha_almacenada === fechaSeleccionada && hora_almacenada === horaTexto) {
                                 btnHora.classList.add("bg-gray-400", "cursor-not-allowed");
                                 btnHora.disabled = true;
@@ -322,10 +328,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                                 // 🔁 Guardamos esta como la última hora seleccionada
                                 ultimoBtnSeleccionado = btnHora;                                
-                                                                sessionStorage.setItem("horaSeleccionada", horaTexto);
-                                                                sessionStorage.setItem("id_veterinario", vet.id_veterinario);
-                                                                console.log("Hora seleccionada:", horaTexto);
-                                                            }
+                                sessionStorage.setItem("horaSeleccionada", horaTexto);
+                                sessionStorage.setItem("id_veterinario", vet.id_veterinario);
+                                console.log("Hora seleccionada:", horaTexto);
+                            }
 
                         usuarioAutenticado().then(autenticado => {
                             if (autenticado) {
@@ -380,7 +386,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     mostrarPagina(0); // Cargar la primera página
-}
+    }
    
     
     async function insertarCampoMascotas() {
@@ -400,7 +406,19 @@ document.addEventListener("DOMContentLoaded", function () {
         //divMascotas.insertAdjacentElement("afterend", divSelectEspecialidadPrestacionPrecios);
         //almacenar la mascota seleccionada en la variable de sesión mascota
         const mascotas = document.getElementById("mis_mascotas");
+        mascotaSeleccionada = mascotas.value;
+        fetch('/almacenar_mascota', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                mascotaSeleccionada: mascotaSeleccionada
+            })
+        });
+
         mascotas.addEventListener("change", function () {
+            
             mascotaSeleccionada = mascotas.value;
             sessionStorage.setItem("mascotaSeleccionada", mascotaSeleccionada);
             console.log("Mascota seleccionada:", sessionStorage.getItem("mascotaSeleccionada"));
@@ -414,11 +432,190 @@ document.addEventListener("DOMContentLoaded", function () {
                     mascotaSeleccionada: mascotaSeleccionada
                 })
             });
+            const valor = mascotaSeleccionada;
+            let contenedor = document.getElementById('campos-nueva-mascota');
+        
+            // Si no existe el contenedor, lo creamos y lo agregamos después del select
+            if (!contenedor) {
+                contenedor = document.createElement('div');
+                contenedor.id = 'campos-nueva-mascota';
+                contenedor.className = 'w-full';
+        
+                // insertarlo justo después del select
+                const selectMascotas = document.getElementById('mis_mascotas');
+                selectMascotas.parentNode.insertBefore(contenedor, selectMascotas.nextSibling);
+            }
+        
+            contenedor.innerHTML = ''; // limpiar contenido previo
 
+            if (valor === '999') {
+                guardarCamposNuevaMascotaEnSesion();
+
+                fetch('/api/especies')
+                    .then(res => res.json())
+                    .then(especies => {
+                        contenedor.innerHTML = `
+                            <input type="text" id="nombre_mascota" placeholder="Nombre de la mascota" class="input" />
+                            <input type="date" id="fecha_nacimiento" class="input" />
+                            <select id="sexo_mascota" class="input">
+                                <option value="">Sexo</option>
+                                <option value="Macho">Macho</option>
+                                <option value="Hembra">Hembra</option>
+                            </select>
+                            <input type="number" step="0.1" min="0" max="1000" id="peso_mascota" placeholder="Peso (kg)" class="input" />
+                            <select id="especie_mascota" class="input">
+                                <option value="">Selecciona especie</option>
+                                ${especies.map(e => `<option value="${e.id_especie}">${e.especie}</option>`).join('')}
+                            </select>
+                            <select id="raza_mascota" class="input" disabled><option value="">Selecciona una especie primero</option></select>
+                        `;
+        
+                        document.getElementById('especie_mascota').addEventListener('change', function () {
+                            const id_especie = this.value;
+                            fetch(`/api/razas?id_especie=${id_especie}`)
+                                .then(res => res.json())
+                                .then(razas => {
+                                    const razaSelect = document.getElementById('raza_mascota');
+                                    razaSelect.innerHTML = razas.map(r => `<option value="${r.id_especie_raza}">${r.nombre_raza}</option>`).join('');
+                                    razaSelect.disabled = false;
+                                });
+                        });
+        
+                        ['nombre_mascota', 'fecha_nacimiento', 'sexo_mascota', 'peso_mascota'].forEach(id => {
+                            document.getElementById(id).addEventListener('change', () => {
+                                fetch('/api/sesion/nueva_mascota', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        campo: id,
+                                        valor: document.getElementById(id).value
+                                    })
+                                });
+                            });
+                        });
+        
+                        document.getElementById('especie_mascota').addEventListener('change', () => {
+                            fetch('/api/sesion/nueva_mascota', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    campo: 'especie_mascota',
+                                    valor: document.getElementById('especie_mascota').value
+                                })
+                            });
+                        });
+        
+                        document.getElementById('raza_mascota').addEventListener('change', () => {
+                            fetch('/api/sesion/nueva_mascota', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    campo: 'raza_mascota',
+                                    valor: document.getElementById('raza_mascota').value
+                                })
+                            });
+                        });
+                    });
+            } else {
+                contenedor.innerHTML = '';
+            }
 
         });
         return divCamposSelect;
     }
+    document.getElementById('mis_mascotas').addEventListener('change', function () {
+    const valor = this.value;
+    sessionStorage.setItem("mascotaSeleccionada", valor);  // <-- justo donde haces `valor = this.value`
+
+    let contenedor = document.getElementById('campos-nueva-mascota');
+
+    // Si no existe el contenedor, lo creamos y lo agregamos después del select
+    if (!contenedor) {
+        contenedor = document.createElement('div');
+        contenedor.id = 'campos-nueva-mascota';
+        contenedor.className = 'grid grid-cols-2 gap-4 mt-4';
+
+        // insertarlo justo después del select
+        const selectMascotas = document.getElementById('mis_mascotas');
+        selectMascotas.parentNode.insertBefore(contenedor, selectMascotas.nextSibling);
+    }
+
+    contenedor.innerHTML = ''; // limpiar contenido previo
+
+    if (valor === '999') {
+        guardarCamposNuevaMascotaEnSesion();
+
+        fetch('/api/especies')
+            .then(res => res.json())
+            .then(especies => {
+                contenedor.innerHTML = `
+                    <input type="text" id="nombre_mascota" placeholder="Nombre de la mascota" class="input" />
+                    <input type="date" id="fecha_nacimiento" class="input" />
+                    <select id="sexo_mascota" class="input">
+                        <option value="">Sexo</option>
+                        <option value="Macho">Macho</option>
+                        <option value="Hembra">Hembra</option>
+                    </select>
+                    <input type="number" step="0.1" min="0" max="1000" id="peso_mascota" placeholder="Peso (kg)" class="input" />
+                    <select id="especie_mascota" class="input">
+                        <option value="">Selecciona especie</option>
+                        ${especies.map(e => `<option value="${e.id_especie}">${e.especie}</option>`).join('')}
+                    </select>
+                    <select id="raza_mascota" class="input" disabled><option value="">Selecciona una especie primero</option></select>
+                `;
+
+                document.getElementById('especie_mascota').addEventListener('change', function () {
+                    const id_especie = this.value;
+                    fetch(`/api/razas?id_especie=${id_especie}`)
+                        .then(res => res.json())
+                        .then(razas => {
+                            const razaSelect = document.getElementById('raza_mascota');
+                            razaSelect.innerHTML = razas.map(r => `<option value="${r.id_raza}">${r.raza}</option>`).join('');
+                            razaSelect.disabled = false;
+                        });
+                });
+
+
+                document.getElementById('especie_mascota').addEventListener('change', () => {
+                    fetch('/api/sesion/nueva_mascota', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            campo: 'especie_mascota',
+                            valor: document.getElementById('especie_mascota').value
+                        })
+                    });
+                });
+ 
+                document.getElementById('raza_mascota').addEventListener('change', () => {
+                    fetch('/api/sesion/nueva_mascota', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            campo: 'raza_mascota',
+                            valor: document.getElementById('raza_mascota').value
+                        })
+                    });
+
+                });
+                ['nombre_mascota', 'fecha_nacimiento', 'sexo_mascota', 'peso_mascota', 'raza_mascota'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => {
+                        fetch('/api/sesion/nueva_mascota', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                campo: id,
+                                valor: document.getElementById(id).value
+                            })
+                        });
+                    });
+                });
+
+            });
+    } else {
+        contenedor.innerHTML = '';
+    }
+});
 
     // 📌 Verificar autenticación en Google
     async function usuarioAutenticado() {
@@ -426,8 +623,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const response = await fetch('/api/estado_autenticacion');
             const data = await response.json();
             console.log("Estado de autenticación5:", data.autenticado);
+            sessionStorage.setItem("usuarioAutenticado", data.autenticado);
 
             insertarCampoMascotas();
+            
             return data.autenticado;
         } catch (error) {
             console.error('Error al verificar la autenticación:', error);
@@ -436,97 +635,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // 📌 Evento de agendar
-    btnAgendar.addEventListener("click", function () {
-        const fechaSeleccionada = document.querySelector("#fechas-container .bg-blue-500")?.dataset.fecha;
-        const id_veterinario = sessionStorage.getItem("id_veterinario");
-        //si variable de sesion horaSeleccinada no es null o vacia, entonces usarla
-        //if (sessionStorage.getItem("horaSeleccionada") != null || sessionStorage.getItem("horaSeleccionada") != "") {       
-        //    horaSeleccionada = sessionStorage.getItem("horaSeleccionada");
-        //} else { 
-        //horaSeleccionada = document.querySelector("#horas-container .bg-blue-500")?.dataset.hora;
-        /*nombre_boton= document.querySelector("#horas-container .bg-blue-500")?.id;
-        console.log("nombre_boton:", nombre_boton);
-        id_veterinario = nombre_boton.split(".")[1];
-        console.log("id_veterinario en la hora seleccionada:", id_veterinario);
-        fecha=nombre_boton.split(".")[3];
-        hora=nombre_boton.split(".")[5];
-        */
-        //}
-        const mascotas = document.getElementById("mis_mascotas");
-
-        const precio= document.getElementById("precio").value;
-        console.log("precio:", precio);
-        fetch('/almacenar_precio', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ precio: precio })
-            })
-            .then(response => response.json())
-            .then(data => {
-            console.log('Respuesta del servidor:', data);
-            // podrías redirigir si quieres
-            // window.location.href = data.url_redireccion;
-            });
-        //le entregamos precio a app.py
-
-        //si el precio es distinto de 0, entonces lo guardamos en la variable de sesión precio
-        if (precio != 0) {
-            sessionStorage.setItem("precio", precio);
-            console.log("precio guardado en la variable de sesión:", sessionStorage.getItem("precio"));
-        } else {
-            sessionStorage.setItem("precio", 0);
-            console.log("precio guardado en la variable de sesión:", sessionStorage.getItem("precio"));
-        }
-
-        console.log("id_veterinario en la hora seleccionada:", id_veterinario, ", Fecha seleccionada final:", fecha, ", Hora seleccionada: final", hora);
-
-        if (!fecha || !hora) {
-            alert("Por favor, selecciona una fecha y una hora.");
-            return;
-        }
-        mascotaSeleccionada = mascotas.value;
-        sessionStorage.setItem("mascotaSeleccionada", mascotaSeleccionada);
-        console.log("Mascota seleccionada:", sessionStorage.getItem("mascotaSeleccionada"));
-        //debo gardar la mascota seleccionada en una variable sesión y entrregarla a python
-        fetch('/guardar_datos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                mascotaSeleccionada: mascotaSeleccionada
-            })
-        });
-
-        // 🔹 Construcción de URL con variables
-        const parametros = new URLSearchParams({
-            id_clinica: id_clinica,
-            fecha: fecha,
-            mascota: mascotas.value,
-            hora: hora,
-            id_veterinario: id_veterinario,
-            precio: precio,
-            acc:1
-        }).toString();
-
-        usuarioAutenticado().then(autenticado => {
-            console.log("Estado de autenticación6:", autenticado);
-            if (autenticado) {
-                sessionStorage.setItem("btnAgendar", true);
-                //ejecutamos la función pagar() en python
-                //fetch('/pagar');
-
-
-                //window.location.href = `agendar?ac=1&${parametros}`;
-                window.location.href = `/api/pagar`;
-            } else {
-                window.location.href = `login?redirect=agendar&${parametros}`;
-            }
-        });
-    });
-
+    
     // 📌 Restaurar selección si el usuario regresa después del login
     fechaGuardada = urlParams.get("fecha");
     if (!fechaGuardada) {
@@ -549,8 +658,125 @@ document.addEventListener("DOMContentLoaded", function () {
     if (horaGuardada) {
         console.log("activando borton hora ", hora2);
         document.querySelector(`[data-hora="${hora2}:00"]`)?.click();
+    
     }
+
+    function actualizarEstadoBotonAgendar() {
+        const autenticado = sessionStorage.getItem("usuarioAutenticado") === "true";
+        const horaSeleccionada = sessionStorage.getItem("horaSeleccionada");
+        //const precio = document.getElementById("precio")?.value || 0;
+        const precioVisible = sessionStorage.getItem("precio_visible");
+        if (precioVisible == null || precioVisible == "") {
+            const mostrandoPrecio = false;
+        }else{
+            const mostrandoPrecio = true
+        }    
+        const btnAgendar = document.getElementById("btn-agendar");
+        
+        if (autenticado && horaSeleccionada && mostrandoPrecio) {   
+            btnAgendar.disabled = false;
+            btnAgendar.classList.remove("bg-gray-400");
+            btnAgendar.classList.add("bg-green-500");
+
+        } else {
+            btnAgendar.disabled = true;
+            btnAgendar.classList.add("bg-gray-400");
+            btnAgendar.classList.remove("bg-green-500");
+            
+        }
+    }
+    actualizarTextoBotonAgendar();
 });
+
+function verificarHabilitacionBoton() {
+    const precio = parseFloat(document.getElementById("precio")?.value || 0);
+    const hora = sessionStorage.getItem("horaSeleccionada");
+    const usuarioAutenticado = sessionStorage.getItem("usuarioAutenticado") === "true";
+
+    const btn = document.getElementById("btn-agendar");
+
+    
+    // Comprobamos que se esté mostrando un precio distinto de vacío o cero
+    // si existe la variable de sección precio_visible y es distinta de 0
+    const precio_formateado = sessionStorage.getItem("precio_formateado");
+    
+    console.log("precio_formateado:", precio_formateado);
+    // entonces creamos ma variable mostrando precio con true, en cado contratio la creamos con false
+    if (precio_formateado == null || precio_formateado == "") {
+        const mostrandoPrecio = false;
+    }else{
+        const mostrandoPrecio = true;
+    }
+
+    //const mostrandoPrecio = precioVisible && precioVisible !== "$0" && precioVisible !== "";
+    console.log("mostrandoPrecio:", mostrandoPrecio);
+    console.log("usuarioAutenticado:", usuarioAutenticado);
+    console.log("hora:", hora);
+    console.log("precio:", precio);
+    if (usuarioAutenticado && hora && (precio > 0)) {
+        console.log("Habilitamos el botón agendar.");
+        btn.disabled = false;
+        btn.classList.remove("opacity-50", "cursor-not-allowed");
+        btn.removeEventListener("click", handleAgendarClick);
+        btn.addEventListener("click", handleAgendarClick);
+    } else {
+        console.log("Deshabilitamos el botón agendar.");
+        btn.disabled = true;
+        btn.classList.add("opacity-50", "cursor-not-allowed");
+    }
+
+    function handleAgendarClick() {
+        const horaSeleccionada = document.querySelector(".btn-hora.active");
+        const valorTexto = document.getElementById("precio")?.textContent || "";
+        const valorNumerico = parseFloat(valorTexto.replace(/[^\d.]/g, ""));
+        guardarCamposNuevaMascotaEnSesion();
+
+        if (!usuarioAutenticado) {
+          $("#modal-login").modal("show");
+          return;
+        }
+      
+        if (horaSeleccionada && valorNumerico > 0) {
+          console.log("Redirigiendo a /api/pagar");
+          window.location.href = "/api/pagar";
+        }
+      }
+    return true;
+}
+
+function actualizarTextoBotonAgendar() {
+    const btnAgendar = document.getElementById("btn-agendar");
+    const fecha = sessionStorage.getItem("fechaSeleccionada");
+    const hora = sessionStorage.getItem("horaSeleccionada");
+    const especialidad = document.getElementById("selectEspecialidad")?.value;
+    const precio = parseFloat(document.getElementById("precio")?.value || 0);
+    const autenticado = sessionStorage.getItem("usuarioAutenticado") === "true";
+    const precio_formateado = sessionStorage.getItem("precio_formateado");
+    if (precio_formateado == null || precio_formateado == "") {
+        mostrandoPrecio = false;
+    }else{
+        mostrandoPrecio = true;
+    }    
+    btnAgendar.classList.add("bg-gray-400");
+    btnAgendar.classList.remove("bg-green-500");
+    btnAgendar.disabled = true;
+    if (!fecha) {
+        btnAgendar.textContent = "Paso 1: Selecciona una fecha";
+    } else if (!hora) {
+        btnAgendar.textContent = "Paso 2: Selecciona una hora";
+    } else if (!especialidad || especialidad === "0") {
+
+        btnAgendar.textContent = "Paso 3: Selecciona una especialidad";
+    } else if (mostrandoPrecio) {
+        btnAgendar.textContent = "Paso 4: Pagar cita";
+        btnAgendar.classList.remove("bg-gray-400");
+        btnAgendar.classList.add("bg-green-500");
+        btnAgendar.disabled = false;
+    } else {
+        btnAgendar.textContent = "Iniciar Sesión para Agendar";
+    }
+}
+
 
 // Función para verificar si una hora está bloqueada
 async function esHoraBloqueada(id_clinica, fecha, hora, id_veterinario) {
@@ -646,7 +872,7 @@ async function obtenerMascotas() {
     divMascotas.id = 'mis_mascotas_container';
     //divMascotas.className = 'mt-4 p-4 border rounded bg-gray-100';
     //divMascotas.className = 'flex flex-col md:flex-row gap-6';
-    divMascotas.className = 'flex space-x-2 mt-2';
+    divMascotas.className = 'w-full';
     
   
     const selectMascotas = document.createElement('select');
@@ -728,7 +954,7 @@ async function obtenerMascotas() {
     selectEspecialidad.addEventListener('change', async function () {
         const id_especialidad = selectEspecialidad.value;
         console.log("id_especialidad=", id_especialidad); // Verifica el contenido de df_precios
-    
+        actualizarTextoBotonAgendar();
         // Eliminar el selectprestaciones si ya existe
         let oldSelect = document.getElementById('selectprestaciones');
         if (oldSelect) {
@@ -786,11 +1012,26 @@ async function obtenerMascotas() {
             divValor.className = 'px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]';
             //el precio es igual al valor de la prestacion seleccionada
             const precio = df_prestaciones[0].valor;
+            fetch('/almacenar_precio', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ precio: precio })
+                })
+                .then(response => response.json())
+                .then(data => {
+                console.log('Respuesta del servidor:', data);
+                // podrías redirigir si quieres
+                // window.location.href = data.url_redireccion;
+                });
+            verificarHabilitacionBoton()
             // mostramos el precio con formato de punto para separaciónb de miles
             // y sin decimales
             const precio_formateado = new Intl.NumberFormat('es-CL', { minimumFractionDigits: 0 }).format(precio);
             
             divValor.textContent = 'Valor: $' + precio_formateado;
+            sessionStorage.setItem("precio_formateado", precio_formateado);
             divMascotas.appendChild(divValor);
             //Agregamos un campo oculto llamado precio con el valor de precio
             const inputPrecio = document.createElement('input');
@@ -799,6 +1040,8 @@ async function obtenerMascotas() {
             inputPrecio.name = 'precio';
             inputPrecio.value = precio;
             divMascotas.appendChild(inputPrecio);
+            verificarHabilitacionBoton();
+            actualizarTextoBotonAgendar();
 
         }
         //si selectprestaciones cambia, entonces Obtenermos el valor desde df_prestaciones (campo valor del js), donde el id_prestacion es igual al valor del selectprestaciones
@@ -837,13 +1080,14 @@ async function obtenerMascotas() {
                 
                 divValor.textContent = 'Valor: $' + precio_formateado;
                 divMascotas.appendChild(divValor);
-
+                sessionStorage.setItem("precio_formateado", precio_formateado);
                 const inputPrecio = document.createElement('input');
                 inputPrecio.type = 'hidden';
                 inputPrecio.id = 'precio';
                 inputPrecio.name = 'precio';
                 inputPrecio.value = precio;
                 divMascotas.appendChild(inputPrecio);
+                verificarHabilitacionBoton();
             }
         });
         
@@ -887,3 +1131,77 @@ async function obtenerMascotas() {
     //divCampos.appendChild(divEspecialidad);
     return divEspecialidad;
   }    
+
+  document.addEventListener("click", function (event) {
+    if (event.target && event.target.id === "btn-agendar") {
+        console.log("Botón Agendar clicado");
+        const fechaSeleccionada = document.querySelector("#fechas-container .bg-blue-500")?.dataset.fecha;
+        const id_veterinario = sessionStorage.getItem("id_veterinario");
+
+        const mascotas = document.getElementById("mis_mascotas");
+
+        const precio= document.getElementById("precio").value;
+        //actualizarEstadoBotonAgendar();
+        console.log("precio:", precio);
+        
+        //le entregamos precio a app.py
+
+        //si el precio es distinto de 0, entonces lo guardamos en la variable de sesión precio
+        if (precio != 0) {
+            sessionStorage.setItem("precio", precio);
+            console.log("precio guardado en la variable de sesión:", sessionStorage.getItem("precio"));
+        } else {
+            sessionStorage.setItem("precio", 0);
+            console.log("precio guardado en la variable de sesión:", sessionStorage.getItem("precio"));
+        }
+
+        console.log("id_veterinario en la hora seleccionada:", id_veterinario, ", Fecha seleccionada final:", fecha, ", Hora seleccionada: final", hora);
+
+        mascotaSeleccionada = mascotas.value;
+        sessionStorage.setItem("mascotaSeleccionada", mascotaSeleccionada);
+        console.log("Mascota seleccionada:", sessionStorage.getItem("mascotaSeleccionada"));
+
+
+        // 🔹 Construcción de URL con variables
+        const parametros = new URLSearchParams({
+            id_clinica: id_clinica,
+            fecha: fecha,
+            mascota: mascotas.value,
+            hora: hora,
+            id_veterinario: id_veterinario,
+            precio: precio,
+            acc:1
+        }).toString();
+        window.location.href = '/api/pagar';
+        /*
+        usuarioAutenticado().then(autenticado => {
+            console.log("Estado de autenticación6:", autenticado);
+            if (autenticado) {
+                sessionStorage.setItem("btnAgendar", true);
+                //ejecutamos la función pagar() en python
+                //fetch('/pagar');
+
+
+                //window.location.href = `agendar?ac=1&${parametros}`;
+                window.location.href = '/api/pagar';
+            } else {
+                window.location.href = 'login?redirect=agendar&${parametros}';
+            }
+        });*/
+    }
+});
+
+
+function guardarCamposNuevaMascotaEnSesion() {
+    const campos = ['nombre_mascota', 'fecha_nacimiento', 'sexo_mascota', 'peso_mascota', 'especie_mascota', 'raza_mascota'];
+    campos.forEach(campo => {
+        const el = document.getElementById(campo);
+        if (el && el.value) {
+            fetch('/api/sesion/nueva_mascota', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ campo: campo, valor: el.value })
+            });
+        }
+    });
+}

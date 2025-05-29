@@ -138,7 +138,7 @@ def guardar_datos():
     id_clinica = session.get('id_clinica')
     session['fechaSeleccionada'] = data.get('fechaSeleccionada')
     session['horaSeleccionada'] = data.get('horaSeleccionada')
-    session['mascotaSeleccionada'] = data.get('mascotaSeleccionada')
+    #session['mascotaSeleccionada'] = data.get('mascotaSeleccionada')
     #if existe id_clinica, entonces, buscamos el nombre de la clinica en la tabla data/clinicas y lo guardamos en la variabla nombre_clinica
     #print("id_clinica: ", id_clinica)
     if id_clinica is not None:
@@ -163,6 +163,14 @@ def guardar_datos():
 
     #return 'Datos guardados en la sesión', 200
 
+# Guardar datos que provienen de JS en la sesión de python
+#@app.route('/guardar_mascota', methods=['POST'])
+#def guardar_mascota():
+#    data = request.json
+
+#    session['mascotaSeleccionada'] = data.get('mascotaSeleccionada')
+#    return jsonify({'mascotaSeleccionada': data.get('mascotaSeleccionada')}), 200
+    #return 'Datos guardados en la sesión', 200
 
 
 
@@ -202,6 +210,8 @@ def login():
     session['nonce'] = nonce
     state = generate_token()  # Genera un token seguro
     session['oauth_state'] = state  # Guárdalo en la sesión
+    print(f"[INFO] LOGIN oauth_state: {state}")
+    
     
     fecha = request.args.get('fecha')
     hora = request.args.get('hora')
@@ -227,8 +237,11 @@ def login():
 @app.route("/login/callback")
 def callback():
     # Revisa que el state recibido sea igual al almacenado
+    #stored_state = session.pop("oauth_state", None)
     stored_state = session.pop("oauth_state", None)
+    print(f"[INFO] stored_state: {stored_state}")
     received_state = request.args.get("state")
+    print(f"[INFO] received_state: {received_state}")
 
     if stored_state != received_state:
         return "Error: CSRF state no coincide", 400
@@ -571,7 +584,8 @@ def mis_mascotas():
         how="left"
     )
     # Convertir columna fecha a datetime
-    df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format="%d-%m-%Y")
+    #df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format="%d-%m-%Y")
+    df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format='mixed', dayfirst=True)
 
     #ahora filtramos df_reservas para que solo contenga las reservas con fecha mayor o igual a hoy
     hoy = datetime.now().strftime("%d-%m-%Y")
@@ -821,6 +835,50 @@ def insert_reservation():
     nombre_cliente = session.get('user')['name']
     id_veterinario = session.get('id_veterinario')
     mascotaSeleccionada = session.get('mascotaSeleccionada')
+    
+    #si mascotaseleccionada==999, entonces la insertamos en la tabla clientes_mascotas
+    #y después insertamos la reserva, ya que primero debemos actualizar el valor de mascotaSeleccionada
+    print("en insertar reserva mascotaSeleccionada=", mascotaSeleccionada)
+    print("los parametros de nueva_mascota son", session.get('nueva_mascota'))
+    if mascotaSeleccionada == '999':
+        with open('data/clientes_mascotas.csv', 'r') as f:
+            reader = csv.DictReader(f, delimiter=';')
+            clientes_mascotas = list(reader)
+        clientes_mascotas_df = pd.DataFrame(clientes_mascotas)
+        clientes_mascotas_df['id_clientes_mascotas'] = clientes_mascotas_df['id_clientes_mascotas'].astype(int)
+        max_id_clientes_mascotas = clientes_mascotas_df['id_clientes_mascotas'].max()
+        mascotaSeleccionada= max_id_clientes_mascotas + 1
+        session['mascotaSeleccionada'] = mascotaSeleccionada
+        #Almacenamos max_id_reserva en una variable de seción
+        session['max_id_clientes_mascotas'] = int(max_id_clientes_mascotas)
+        #obtenemos el nombre de la mascota desde la variable de sesion
+        
+        nombre_mascota = session.get('nueva_mascota').get('nombre_mascota')
+        #obtenemos la especie y raza de la mascota desde las variables de sesion
+        id_especie_raza = session.get('nueva_mascota').get('raza_mascota')
+        #obtenemos la fecha de nacimiento de la mascota desde la variable de sesion
+        fecha_nacimiento = session.get('nueva_mascota').get('fecha_nacimiento')
+        #pasamos fecha_nacimiento a formato dd/mm/aaaa sin horas
+        #fecha_nacimiento = pd.to_datetime(fecha_nacimiento, format="%d-%m-%Y").strftime("%d-%m-%Y")
+        #fecha_nacimiento = pd.to_datetime(fecha_nacimiento, format='mixed', dayfirst=True)
+        #obtenemos el sexo
+        sexo = session.get('nueva_mascota').get('sexo_mascota')
+        peso= session.get('nueva_mascota').get('peso_mascota')
+        new_mascota = {
+            'id_reservaid_clientes_mascotas': (max_id_clientes_mascotas + 1),
+            'correo_cliente': correo_cliente,
+            'nombre_mascota': nombre_mascota,
+            'fecha_nacimiento': fecha_nacimiento,
+            'sexo': sexo,
+            #transformamos peso a decimal con un decimal
+            'peso': float(peso) if peso else 0.0,  # Aseguramos que peso sea un número
+            'id_especie_raza': int(id_especie_raza)
+        }
+        # Append the new reservation to the CSV file
+        with open('data/clientes_mascotas.csv', 'a', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=new_mascota.keys(), delimiter=';')
+            writer.writerow(new_mascota)
+    
     fechaSeleccionada = session.get('fechaSeleccionada')
     precio = session.get('precio') 
     print(f"Precio: {precio}")
@@ -882,6 +940,8 @@ def insert_reservation():
     with open('data/reservas.csv', 'a', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=new_reservation.keys(), delimiter=';')
         writer.writerow(new_reservation)
+    
+
 
     #retornamos un código 200
     #return jsonify({"message": "Reserva creada", "session_id": session_id}), 200
@@ -1033,6 +1093,8 @@ def mis_citas():
         right_on="id_clientes_mascotas",
         how="left"
     )
+    #si la mascota de df_reservas no existe en df_mascotas, entonces al campo nombre mascota le ponemos "Nueva Mascotta"
+    df_reservas["nombre_mascota"] = df_reservas["nombre_mascota"].fillna("Nueva Mascota")
 
     # Leer dpa.csv y unir por dpa para obtener Nombre_Comuna
     df_dpa = pd.read_csv("data/dpa.csv", sep=";")
@@ -1340,7 +1402,10 @@ def especialidades_clinica():
 
     id_clinica = session.get('id_clinica')
     id_veterinario = request.args.get('id_veterinario')
-
+    #si id_veterinario es vacio o nulo, le asignamos el valor de la variable de sesion id_veterinario
+    if not id_veterinario:
+        id_veterinario = session.get('id_veterinario')
+    
     # Leer los datos
     veterinario_prestaciones = pd.read_csv("data/veterinario_prestaciones.csv", sep=";")
     veterinario_prestaciones = veterinario_prestaciones[veterinario_prestaciones['id_veterinario'] == int(id_veterinario)]
@@ -1554,9 +1619,14 @@ def cita_pagada():
     direccion_clinica = df_clinica.iloc[0]["direccion"]
     session['nombre_clinica'] = nombre_clinica
     session['direccion_clinica'] = direccion_clinica
-    df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
-    df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["id_clientes_mascotas"] == id_mascota)]
-    nombre_mascota = df_mis_mascotas.iloc[0]["nombre_mascota"]
+    #si id_mascota != 999
+    #si id_mascota es 999, entonces no hay mascota seleccionada
+    if id_mascota != 999:
+        df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+        df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["id_clientes_mascotas"] == id_mascota)]
+        nombre_mascota = df_mis_mascotas.iloc[0]["nombre_mascota"]
+    else:
+        nombre_mascota = "Nueva mascota"
     session['nombre_mascota'] = nombre_mascota
     df_veterinario = pd.read_csv("data/staff.csv", sep=";")
     df_veterinario = df_veterinario[(df_veterinario["id_veterinario"] == id_veterinario)]
@@ -1873,6 +1943,49 @@ def descarga_diagnostico(id_cita):
 
     filename = f"diagnostico_{id_cita}.pdf"
     return send_file(buffer, as_attachment=True, download_name=filename, mimetype="application/pdf")
+
+
+@app.route('/api/especies')
+def api_especies():
+    df = pd.read_csv('data/especies.csv', sep=";")
+    return jsonify(df.to_dict(orient='records'))
+
+@app.route('/api/razas')
+def api_razas():
+    id_especie = request.args.get('id_especie')
+    print("[DEBUG] id_especie:", id_especie)
+    especie_raza = pd.read_csv('data/especie_raza.csv', sep=";")
+    # Filtramos df_join por id_especie
+    if not id_especie:
+        return jsonify({"error": "id_especie is required"}), 400
+    especie_raza = especie_raza[especie_raza['id_especie'] == int(id_especie)]
+
+    df_razas = pd.read_csv('data/razas.csv', sep=";")
+
+    especie_raza = especie_raza.merge(
+        df_razas,
+        left_on="id_raza",
+        right_on="id_raza",
+        how="left"
+    )
+    print("[DEBUG] especie_raza:", especie_raza)
+    #ids = df_join[df_join['id_especie'] == int(id_especie)]['id_raza']
+    #razas = df_razas[df_razas['id_raza'].isin(ids)]
+    return jsonify(especie_raza.to_dict(orient='records'))
+
+@app.route('/api/sesion/nueva_mascota', methods=['POST'])
+def guardar_nueva_mascota():
+    datos = request.get_json()
+    campo = datos['campo']
+    valor = datos['valor']
+    if 'nueva_mascota' not in session:
+        session['nueva_mascota'] = {}
+    session['nueva_mascota'][campo] = valor
+    session.modified = True
+    #imprimir todo el contenido de session['nueva_mascota']
+    print("[DEBUG] Nueva mascota en sesión:", session['nueva_mascota'])
+    return jsonify({"estado": "ok"})
+
 
 if __name__ == "__main__":
     app.run(debug=True)
