@@ -450,13 +450,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (valor === '999') {
                 guardarCamposNuevaMascotaEnSesion();
+                //en este punto debo crear una nueva variable de sesion en py que se llame crear_mascota con valor 1
+                
+                fetch('/api/crea_variable_sesion_mascota', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        crear_mascota: 1
+                    })
+                }
+                )
+                //y luego hacer un fetch a la api /api/especies para obtener las especies
+                //y luego crear los campos para crear una nueva mascota
+
 
                 fetch('/api/especies')
                     .then(res => res.json())
                     .then(especies => {
-                        contenedor.innerHTML = `
+                        contenedor.innerHTML = 
+                        //insertamos un campo oculto llamado crear_mascota con el valor 1
+
+                        `
+                            <input type="hidden" id="crear_mascota" value="1" />
                             <input type="text" id="nombre_mascota" placeholder="Nombre de la mascota" class="input" />
                             <input type="date" id="fecha_nacimiento" class="input" />
+                            
+
                             <select id="sexo_mascota" class="input">
                                 <option value="">Sexo</option>
                                 <option value="Macho">Macho</option>
@@ -598,7 +619,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                 });
-                ['nombre_mascota', 'fecha_nacimiento', 'sexo_mascota', 'peso_mascota', 'raza_mascota'].forEach(id => {
+                ['nombre_mascota', 'fecha_nacimiento', 'sexo_mascota', 'peso_mascota', 'raza_mascota', 'especie_mascota'].forEach(id => {
                     document.getElementById(id).addEventListener('change', () => {
                         fetch('/api/sesion/nueva_mascota', {
                             method: 'POST',

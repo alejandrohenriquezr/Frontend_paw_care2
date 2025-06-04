@@ -238,7 +238,7 @@ def login():
 def callback():
     # Revisa que el state recibido sea igual al almacenado
     #stored_state = session.pop("oauth_state", None)
-    stored_state = session.pop("oauth_state", None)
+    stored_state = session.pop("oauth_state")
     print(f"[INFO] stored_state: {stored_state}")
     received_state = request.args.get("state")
     print(f"[INFO] received_state: {received_state}")
@@ -536,7 +536,7 @@ def mis_mascotas():
 
 
     # Convertir columna fecha a datetime
-    df_mis_mascotas["fecha_nacimiento"] = pd.to_datetime(df_mis_mascotas["fecha_nacimiento"], format="%d-%m-%Y")
+    df_mis_mascotas["fecha_nacimiento"] = pd.to_datetime(df_mis_mascotas["fecha_nacimiento"], format='mixed', dayfirst=True)
 
     #print(df_mis_mascotas)
     # Convertir dataframe a lista de diccionarios
@@ -630,7 +630,7 @@ def mis_mascotas():
 def calcular_edad(fecha_nacimiento):
 
 #hay que pasar fecha_nacimiento al mismo foromato de datetime.now()
-    fecha_nacimiento = pd.to_datetime(fecha_nacimiento, format="%d-%m-%Y")
+    fecha_nacimiento = pd.to_datetime(fecha_nacimiento, format='mixed', dayfirst=True)
     # Obtener la fecha actual
     fecha_actual = datetime.now()
 
@@ -840,13 +840,19 @@ def insert_reservation():
     #y después insertamos la reserva, ya que primero debemos actualizar el valor de mascotaSeleccionada
     print("en insertar reserva mascotaSeleccionada=", mascotaSeleccionada)
     print("los parametros de nueva_mascota son", session.get('nueva_mascota'))
-    if mascotaSeleccionada == '999':
-        with open('data/clientes_mascotas.csv', 'r') as f:
+    print("[DEBUG] el valor de crear_nueva_mascota es: ", session['crear_nueva_mascota'])
+    if session['crear_nueva_mascota'] == 1:
+        with open('data/clientes_mascotas.csv', 'r', encoding='utf-8-sig') as f:
             reader = csv.DictReader(f, delimiter=';')
             clientes_mascotas = list(reader)
+        
         clientes_mascotas_df = pd.DataFrame(clientes_mascotas)
-        clientes_mascotas_df['id_clientes_mascotas'] = clientes_mascotas_df['id_clientes_mascotas'].astype(int)
-        max_id_clientes_mascotas = clientes_mascotas_df['id_clientes_mascotas'].max()
+        print("Columnas detectadas:", clientes_mascotas_df.columns.tolist())  # Debug
+        #clientes_mascotas_df['id_clientes_mascotas'] = clientes_mascotas_df['id_clientes_mascotas'].astype(int)
+        clientes_mascotas_df['id_clientes_mascotas'] = pd.to_numeric(clientes_mascotas_df['id_clientes_mascotas'], errors='coerce')
+
+        max_id_clientes_mascotas = int(clientes_mascotas_df['id_clientes_mascotas'].max(skipna=True) or 0)
+
         mascotaSeleccionada= max_id_clientes_mascotas + 1
         session['mascotaSeleccionada'] = mascotaSeleccionada
         #Almacenamos max_id_reserva en una variable de seción
@@ -1986,6 +1992,15 @@ def guardar_nueva_mascota():
     print("[DEBUG] Nueva mascota en sesión:", session['nueva_mascota'])
     return jsonify({"estado": "ok"})
 
+@app.route('/api/crea_variable_sesion_mascota', methods=['POST'])
+def crea_variable_sesion_mascota():
+    datos = request.get_json()
+    if 'crear_nueva_mascota' not in session:
+        session['crear_nueva_mascota'] = datos['crear_mascota']
+    session.modified = True
+    #imprimir todo el contenido de session['nueva_mascota']
+    print("[DEBUG] crear_nueva_mascota:", session['crear_nueva_mascota'])
+    return jsonify({"estado": "ok"})
 
 if __name__ == "__main__":
     app.run(debug=True)
