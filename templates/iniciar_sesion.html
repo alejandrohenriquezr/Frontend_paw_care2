@@ -123,7 +123,7 @@
         <!-- Navegación principal -->
         <nav id="main-nav" class="hidden md:flex items-center space-x-8">
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" >Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
         </nav>
@@ -133,7 +133,7 @@
         <!-- Menú móvil desplegable -->
         <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" >Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
         </div>
@@ -171,19 +171,20 @@
           <div class="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto">
             <!-- Tabs -->
             <div class="flex mb-6 border-b">
-              <button class="px-4 py-2 text-[#5A8F99] border-b-2 border-[#5A8F99]">
+              <button  id="usuario" class="px-4 py-2 text-neutral-500 hover:text-[#5A8F99]">
                 Mi Espacio PawCare
               </button>
-              <button class="px-4 py-2 text-neutral-500 hover:text-[#5A8F99]">
+              <button  id="profesional" class="px-4 py-2 text-neutral-500 hover:text-[#5A8F99]">
                 Soy Profesional PawCare
               </button>
             </div>
 
             <div id="client-login" class="space-y-6">
+              <input type="hidden" id="tipo_usuario" name="tipo_usuario" value="usuario">
               <h2 class="text-2xl text-[#2E2E2E]">Iniciar Sesión</h2>
 
               <!-- Social Login -->
-              <button  onclick="window.location.href='/login'" class="w-full px-4 py-2 border border-neutral-300 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors">
+              <button id="boton_login" onclick="window.location.href='/login'" class="w-full px-4 py-2 border border-neutral-300 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors">
                 <i class="fa-brands fa-google"></i>
                 <span>Continuar con Google</span>
               </button>
@@ -317,6 +318,48 @@
     }
   });
 </script>
+
+<script>
+  // Lógica para cambiar entre usuario y profesional
+  let tipoSeleccionado = "usuario";
+
+  function destacarBoton(tipo) {
+    const botonUsuario = document.getElementById("usuario");
+    const botonProfesional = document.getElementById("profesional");
+
+    if (tipo === "usuario") {
+      botonUsuario.className = "px-4 py-2 text-[#5A8F99] font-bold border-b-2 border-[#5A8F99]";
+      botonProfesional.className = "px-4 py-2 text-neutral-500 hover:text-[#5A8F99]";
+    } else {
+      botonProfesional.className = "px-4 py-2 text-[#5A8F99] font-bold border-b-2 border-[#5A8F99]";
+      botonUsuario.className = "px-4 py-2 text-neutral-500 hover:text-[#5A8F99]";
+    }
+  }
+
+
+
+  document.getElementById("usuario").addEventListener("click", function () {
+    tipoSeleccionado = "usuario";
+    document.getElementById("tipo_usuario").value = "usuario";
+    destacarBoton("usuario");
+  });
+
+  document.getElementById("profesional").addEventListener("click", function () {
+    tipoSeleccionado = "profesional";
+    document.getElementById("tipo_usuario").value = "profesional";
+    destacarBoton("profesional");
+  });
+
+  document.getElementById("boton_login").addEventListener("click", function () {
+    // Guardar en sessionStorage para que se recuerde al volver de /login/callback
+    sessionStorage.setItem("tipo_usuario", tipoSeleccionado);
+    window.location.href = "/login?tipo=" + tipoSeleccionado;
+  });
+
+  // Activar estilo inicial por defecto
+  destacarBoton("usuario");
+</script>
+
 
   </body>
   <script>

@@ -310,6 +310,20 @@ document.addEventListener("DOMContentLoaded", function () {
                         btnHora.addEventListener("click", () => {
                             sessionStorage.setItem("id_veterinario", vet.id_veterinario);
                             sessionStorage.setItem("horaSeleccionada", horaTexto);
+                            //pasamos a python la fecha seleccionada, la hora seleccionada y el veterinario seleccionado
+                            fetch('/api/guardar_vet_fecha_hora', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                            },
+                                body: JSON.stringify({
+                                    id_veterinario: vet.id_veterinario,
+                                    fechaSeleccionada: fechaSeleccionada,
+                                    horaSeleccionada: horaTexto
+                                })
+                            });
+                            
+                            
                             actualizarEstadoBotonAgendar();
                             actualizarTextoBotonAgendar();
                             if (fecha_almacenada === fechaSeleccionada && hora_almacenada === horaTexto) {
@@ -802,16 +816,23 @@ function actualizarTextoBotonAgendar() {
 // Función para verificar si una hora está bloqueada
 async function esHoraBloqueada(id_clinica, fecha, hora, id_veterinario) {
     try {
-        // ejecutamos la /api/reservas sólo la primera vez que se carga la página
-        //y luego guardamos el resultado en una variable de sesión
-        //si la variable de sesión reservas no existe, entonces la creamos
-        //si la variable de sesión reservas existe, entonces la usamos
-        if (sessionStorage.getItem("reservas") == null) {
+        // creamos una variable reservas como null
+        let reservas = null;
+        const reservasGuardadas = sessionStorage.getItem("reservas");
+
+        sessionStorage.setItem("reservas", reservas);
+
+        if (reservas == null) { // Dejo reservas en null para prueba, luego debo reemplazar esta línea por la siguiente
+        //if (sessionStorage.getItem("reservas") == null) {
             const response = await fetch('/api/reservas');
-            //const reservas = await response.json();
             reservas = await response.json();
+            if (!Array.isArray(reservas)) {
+                throw new Error("La respuesta no es una lista");
+            }else{
+                console.log("reservas obtenidas="); // Verifica el contenido de reservas
+            }
             sessionStorage.setItem("reservas", JSON.stringify(reservas));
-            console.log("reservas creada=", reservas); // Verifica el contenido de reservas
+            console.log("reservas contiene=", reservas); // Verifica el contenido de reservas
         }else{
             //const reservas = JSON.parse(sessionStorage.getItem("reservas"));
             reservas = JSON.parse(sessionStorage.getItem("reservas"));
@@ -829,16 +850,18 @@ async function esHoraBloqueada(id_clinica, fecha, hora, id_veterinario) {
         //alert(id_clinica);
 
         for (const reserva of reservas) {
-            const reservaFechaFormateada = new Date(reserva.fecha.split('-').reverse().join('-')).toISOString().split('T')[0];
-            const fechaFormateada = new Date(fecha).toISOString().split('T')[0];
+            // Convertimos la fecha de reserva a formato dd-mm-yyyy
+            const reservaFechaFormateada = convertirFecha(reserva.fecha); // la convierte a dd-mm-yyyy
+            // Convertimos la fecha del día seleccionado a formato dd-mm-yyyy
+            const fechaFormateada = convertirFecha2(fecha); // la convierte a dd-mm-yyyy
             const horaFormateada = hora.padStart(2, '0') + ':00'; // Asegura que la hora tenga el formato HH:MM
             const reservahoraFormateada = reserva.hora.padStart(5, '0');
             const id_veterinario_reserva = String(reserva.medico_que_atendio);
-            /*console.log("reserva.hora=", reserva.hora);
-            console.log("horaFormateada=", horaFormateada);
-            console.log("reservahoraFormateada=", reservahoraFormateada);   */
-            console.log("reserva.id_clinica=", reserva.id_clinica, 
+
+            console.log(
+                "reserva.id_clinica=", reserva.id_clinica, 
                 " id_clinica=", id_clinica, 
+                "Fecha=", fecha,
                 " reservaFechaFormateada=", reservaFechaFormateada, 
                 " fechaFormateada=", fechaFormateada, 
                 " reservahoraFormateada=", reservahoraFormateada, 
@@ -1226,3 +1249,36 @@ function guardarCamposNuevaMascotaEnSesion() {
         }
     });
 }
+
+
+function convertirFecha(fecha_ddmmaaaa) {
+    if (!fecha_ddmmaaaa) return null;
+
+    // Soporta fechas con '/' o '-' como separador
+    const delimitador = fecha_ddmmaaaa.includes('/') ? '/' : '-';
+
+    const [dia, mes, anio] = fecha_ddmmaaaa.split(delimitador);
+
+    if (!dia || !mes || !anio) {
+        console.error("Fecha malformada:", fecha_ddmmaaaa);
+        return null;
+    }
+
+    return `${dia.padStart(2, '0')}-${mes.padStart(2, '0')}-${anio}`;
+  }
+
+  function convertirFecha2(fecha_ddmmaaaa) {
+    if (!fecha_ddmmaaaa) return null;
+
+    // Soporta fechas con '/' o '-' como separador
+    const delimitador = fecha_ddmmaaaa.includes('/') ? '/' : '-';
+
+    const [anio, mes, dia] = fecha_ddmmaaaa.split(delimitador);
+
+    if (!dia || !mes || !anio) {
+        console.error("Fecha malformada:", fecha_ddmmaaaa);
+        return null;
+    }
+
+    return `${dia.padStart(2, '0')}-${mes.padStart(2, '0')}-${anio}`;
+  }

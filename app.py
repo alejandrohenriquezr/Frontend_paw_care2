@@ -36,6 +36,7 @@ import uuid #Para generar los id de sesión para transbank
 import fitz  # PyMuPDF
 import pypandoc
 import pytz
+import numpy as np  # importar numpy para usar np.nan
 
 
 
@@ -197,6 +198,9 @@ def login():
     # y redirigimos a la ruta de login
     #session.clear()
     #session['next'] = request.full_path
+    tipo = request.args.get("tipo", "usuario")
+    session['tipo_usuario'] = tipo
+    print(f"[INFO] Tipo de usuario en el login: {tipo}")
     print(f"[INFO LOGIN] next: {request.full_path}")
     #verificamos si request.full_path contiene agendar
     #si request.full_path contiene agendar, entonces guardamos la ruta completa en la sesión
@@ -266,8 +270,16 @@ def callback():
     print(f"Ruta de redirección en el callback es: {next_path}")
     # Si no existe next_path, redirige home
     if not next_path:
+        # Alternativamente, puedes pasar un parámetro a /login?tipo=profesional (más limpio)
+        tipo_usuario = session.pop("tipo_usuario", "usuario")
         #return redirect(url_for("/"))
-        return redirect(url_for("index"))
+        # Redirigir según selección
+        print(f"[INFO] Tipo de usuario: {tipo_usuario}")
+        if tipo_usuario == "profesional":
+            return redirect(url_for("pawcarepro"))
+        else:
+            return redirect(url_for("index"))
+        #return redirect(url_for("index"))
 
     # Si empieza con /agendar, redirige con url_for para asegurar parámetros
     parsed = urlparse(next_path)
@@ -309,6 +321,7 @@ def dashboard():
 # 📌 Ruta de agendar
 @app.route("/agendar")
 def agendar():
+
     #session.clear()
     status_code = None
     id_clinica = request.args.get('id_clinica')
@@ -316,6 +329,15 @@ def agendar():
         id_clinica = session.get('id_clinica')
     else:
         session['id_clinica'] = id_clinica
+
+    session['next'] = request.full_path
+    print(f"[INFO] next Agendar: {request.full_path}")
+    user = session.get("user", None)
+
+    print(session.get("user"))
+    if not user:
+        return redirect(url_for("login"))    
+    
     parametros = request.query_string.decode('utf-8')
     print(f"Parámetros de la URL: {parametros}")
     #si ac, c y r existenen la parametros, entonces ejecutamos confirmar_cita y retornamos a la web mis_citas
@@ -588,24 +610,40 @@ def mis_mascotas():
     df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format='mixed', dayfirst=True)
 
     #ahora filtramos df_reservas para que solo contenga las reservas con fecha mayor o igual a hoy
-    hoy = datetime.now().strftime("%d-%m-%Y")
+    #hoy = datetime.now().strftime("%d-%m-%Y")
+    # 2. Obtener fecha actual como datetime
+    hoy = pd.to_datetime(datetime.now().date())
     #ordenamos desde la fecha más actual a la mas vieja
     df_reservas = df_reservas.sort_values(by=["fecha"], ascending=False)
-    df_reservas_pasadas=df_reservas
-    df_reservas = df_reservas[(df_reservas["fecha"] >= hoy)]
-    df_reservas_pasadas = df_reservas_pasadas[(df_reservas_pasadas["fecha"] < hoy)]
-    #eliminamos los 00:00:00 del campo fecha
-    df_reservas["fecha"] = df_reservas["fecha"].dt.strftime("%d-%m-%Y")
+
+    # 4. Filtrar por fecha
+    df_reservas_futuras = df_reservas[df_reservas["fecha"] >= hoy].copy()
+    df_reservas_pasadas = df_reservas[df_reservas["fecha"] < hoy].copy()
+    # 5. Convertir fecha a string solo para mostrar/exportar
+    df_reservas_futuras["fecha"] = df_reservas_futuras["fecha"].dt.strftime("%d-%m-%Y")
     df_reservas_pasadas["fecha"] = df_reservas_pasadas["fecha"].dt.strftime("%d-%m-%Y")
+    #df_reservas["fecha"] = df_reservas["fecha"].dt.strftime("%d-%m-%Y")
+    #df_reservas_pasadas=df_reservas
+    #df_reservas = df_reservas[(df_reservas["fecha"] >= hoy)]
+    #df_reservas_pasadas = df_reservas_pasadas[(df_reservas_pasadas["fecha"] < hoy)]
+    #eliminamos los 00:00:00 del campo fecha
+    #df_reservas["fecha"] = df_reservas["fecha"].dt.strftime("%d-%m-%Y")
+    print("df_reservas próximas: ")
+    print(df_reservas_futuras)
+    print("df_reservas pasadas: ")
+    print(df_reservas_pasadas)
+    print("hoy=", hoy)
+    
+    #df_reservas_pasadas["fecha"] = df_reservas_pasadas["fecha"].dt.strftime("%d-%m-%Y")
     #eliminamos los segundos a los campos hora
-    df_reservas["hora"] = df_reservas["hora"].str[:5]
+    df_reservas_futuras["hora"] = df_reservas_futuras["hora"].str[:5]
     df_reservas_pasadas["hora"] = df_reservas_pasadas["hora"].str[:5]
 
     # Convertir dataframe a lista de diccionarios
 
-    mis_citas = df_reservas.to_dict(orient="records")
+    mis_citas = df_reservas_futuras.to_dict(orient="records")
     mis_citas_pasadas = df_reservas_pasadas.to_dict(orient="records")
-    print(df_reservas)
+    #print(df_reservas)
 
    # PAGINACIÓN
     page = request.args.get("page", default=1, type=int)
@@ -754,17 +792,31 @@ def cerrar_sesion():
 @app.route("/api/reservas", methods=["GET"])
 def obtener_reservas():
     try:
-        reservas = []
-        with open('data/reservas.csv', newline='', encoding='utf-8') as csvfile:
-            reader = csv.DictReader(csvfile, delimiter=';')
-            for row in reader:
-                reservas.append(row)
-        #print(f"Reservas: {reservas}")  # Depuración
+        #reservas = []
+        #with open('data/reservas.csv', newline='', encoding='utf-8') as csvfile:
+        #    reader = csv.DictReader(csvfile, delimiter=';')
+        #    for row in reader:
+        #        reservas.append(row)
+        print(f"Abrir el archivo de reservas")  # Depuración
+        df_reservas = pd.read_csv("data/reservas.csv", sep=";")
         
-        # Asegúrate de que reservas es un array
-        if not isinstance(reservas, list):
-            reservas = [reservas]
+        # Convertir NaN en None para que jsonify no falle
+        df_reservas = df_reservas.where(pd.notnull(df_reservas), None)
+        df_reservas = df_reservas.replace({np.nan: None})
+        reservas = df_reservas.to_dict(orient="records")
+        return jsonify(reservas)
+        #reservas = pd.read_csv('data/reservas.csv', parse_dates=['fecha'], dayfirst=True)
+        #with open('data/reservas.csv', newline='', encoding='utf-8') as f:
+        #    reader = csv.DictReader(f, delimiter=';')
+        #    reservas = list(reader)
+        #    for r in reservas:
+        #        r['fecha'] = datetime.strptime(r['fecha'], '%Y-%m-%d').strftime('%d/%m/%Y')  # aseguras formato
 
+        print(f"Reservas: {df_reservas}")  # Depuración
+        # Asegúrate de que reservas es un array
+        #if not isinstance(reservas, list):
+        #    reservas = [reservas]
+        reservas = df_reservas.to_dict(orient="records")
         return jsonify(reservas)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -817,6 +869,34 @@ def staff_clinica():
     # Devolver el resultado como JSON
     return jsonify(staff_clinica), 200
 
+#creamos una función fetch para obtener los datos de fetch('/api/seleccion_guardada' y los almacenamos en unas variables de sesión
+@app.route("/api/guardar_vet_fecha_hora", methods=["POST"])
+def guardar_vet_fecha_hora():
+    try:
+        data = request.get_json(force=True)
+        print("Datos recibidos:", data)  # TEMPORAL para debug
+        id_veterinario = data.get('id_veterinario')
+        fechaSeleccionada = data.get('fechaSeleccionada')
+        horaSeleccionada = data.get('horaSeleccionada')
+
+        if not all([id_veterinario, fechaSeleccionada, horaSeleccionada]):
+            return {"error": "Faltan datos"}, 400
+
+        # Guardar en sesión
+        session['id_veterinario'] = id_veterinario
+        session['fechaSeleccionada'] = fechaSeleccionada
+        session['horaSeleccionada'] = horaSeleccionada
+        session['fecha'] = fechaSeleccionada
+        session['hora'] = horaSeleccionada
+
+        return {"mensaje": "Datos guardados correctamente"}, 200
+
+    except Exception as e:
+        print("Error en /api/guardar_vet_fecha_hora:", e)
+        return {"error": str(e)}, 500
+
+    
+
 
 @app.route("/api/insertar_reservas", methods=["GET"])
 #insertar una reserva
@@ -840,6 +920,9 @@ def insert_reservation():
     #y después insertamos la reserva, ya que primero debemos actualizar el valor de mascotaSeleccionada
     print("en insertar reserva mascotaSeleccionada=", mascotaSeleccionada)
     print("los parametros de nueva_mascota son", session.get('nueva_mascota'))
+    #si session['crear_nueva_mascota'] no existe entonces la creamos con valor 0
+    if 'crear_nueva_mascota' not in session:
+        session['crear_nueva_mascota'] = 0
     print("[DEBUG] el valor de crear_nueva_mascota es: ", session['crear_nueva_mascota'])
     if session['crear_nueva_mascota'] == 1:
         with open('data/clientes_mascotas.csv', 'r', encoding='utf-8-sig') as f:
@@ -1155,20 +1238,22 @@ def cancelar_cita():
     id_clinica = int(data["id_clinica"])
     correo_cliente = data["correo"]
     fecha_original = data.get("fecha")
+    hora_seleccionada = data.get("hora")
 
     # 🛠 Convertir fecha del formato ISO a formato CSV (%d-%m-%Y)
     fecha = datetime.strptime(fecha_original[:10], "%Y-%m-%d").strftime("%d-%m-%Y")
     #pasamos fhea a formato %d-%m-%Y
     #fecha = pd.to_datetime(fecha, format="%Y-%m-%d")
 
-    print(f"[INFO] Datos recibidos en cancelar_cita: {id_clinica}, {correo_cliente}, {fecha}")
+    print(f"[INFO] Datos recibidos en cancelar_cita: {id_clinica}, {correo_cliente}, {fecha}, {hora_seleccionada}")
     try:
         df = pd.read_csv("data/reservas.csv", sep=";")
         print(f"[INFO] DataFrame cargado: {df.head()}")
         mask = (
             (df["id_clinica"] == id_clinica) &
             (df["correo_cliente"] == correo_cliente) &
-            (df["fecha"] == fecha)
+            (df["fecha"] == fecha) &
+            (df["hora"] == hora_seleccionada)
         )
         print(f"[INFO] Máscara de filtro: {mask}")
 

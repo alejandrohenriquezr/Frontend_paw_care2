@@ -155,7 +155,7 @@
           </div>
           {% for cita in mis_citas %}
             <div class="bg-[#D8E5E8] p-4 rounded-lg cita-item datos_reserva" data-fecha="{{ cita['fecha'].strftime('%Y-%m-%d') }}">
-              <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center justify-between mb-3" id="{{ cita.hora}}">
                 {% if cita['estado'] == 'Confirmar' %}
                 <button 
                 class="confirmar_cita bg-blue-500 hover:bg-red-600 text-white px-3 py-1 rounded"
@@ -191,6 +191,8 @@
                   data-id_clinica="{{ cita.id_clinica }}"
                   data-correo="{{ cita.correo_cliente }}"
                   data-fecha="{{ cita.fecha }}"
+                  data-hora="{{cita.hora}}"
+                  data-reserva="{{cita.id_reserva}}"
                   >Cancelar Cita</button>
                 
                   <button 

@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const botonSubmit = document.createElement("button");
             botonSubmit.type = "submit";
             botonSubmit.className="w-full py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-lg hover:bg-[#4F7F88] transition duration-200"
-            botonSubmit.textContent = "Agendar citas";
+            botonSubmit.textContent = "Agendar cita";
 
             formulario.append(inputIdClinica, inputAccion, botonSubmit);
             fila6.appendChild(formulario);

@@ -55,13 +55,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const id_clinica = this.dataset.id_clinica;
         const correo = this.dataset.correo;
         const fecha = this.dataset.fecha;
-        console.log("id_clinica=", id_clinica, " correo=", correo, "fecha= ", fecha);
+        const hora = this.dataset.hora;
+        console.log("id_clinica=", id_clinica, " correo=", correo, "fecha= ", fecha, " hora=", hora);
+        // Enviamos los datos al servidor para cancelar la cita
         const res = await fetch('/cancelar_cita', {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ id_clinica, correo, fecha })
+          body: JSON.stringify({ id_clinica, correo, fecha, hora })
         });
   
         const data = await res.json();
