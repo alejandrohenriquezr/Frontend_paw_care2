@@ -1,3 +1,14 @@
-﻿id_especie;especie
-1;Perro
-2;Gato
+﻿id_especie;especie;icono
+1;Perro;fa-solid fa-dog text-white
+2;Gato;fa-solid fa-cat text-white
+3;Vacuno;fa-solid fa-caw text-white
+4;Pez;fa-solid fa-fish text-white
+5;Ave;fa-solid fa-dove text-white
+6;Ave de corral;fa-solid fa-kiwi-bird text-white
+7;Serpiente;fa-solid fa-worm text-white
+8;Araña;fa-solid fa-spider text-white
+9;Insecto;fa-solid fa-mosquito text-white
+10;Caballo;fa-solid fa-horse text-white
+11;Rana;fa-solid fa-frog text-white
+12;Zapo;fa-solid fa-frog text-white
+13;Desconocido;fa-solid fa-dragon text-white

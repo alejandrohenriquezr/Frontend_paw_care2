@@ -1,0 +1,6 @@
+﻿mascota;id_reserva;frecuencia_cardiaca;frecuencia_respiratoria;temperatura;peso;razon_consulta;epicrisis;observaciones;fecha;hora;medico
+1;110;89;66;36;4;;;;;;
+2;111;92;64;38;5;;;;;;
+3;112;88;72;35;7;;;;;;
+3;155;110;101;36;4;aaa;bbb;ccc;12-06-2025;21:53;15
+2;154;92;64;38;5;;;;12-06-2025;23:38;15

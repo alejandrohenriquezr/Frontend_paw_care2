@@ -4,6 +4,7 @@
         "Ajusta",
         "azul",
         "clinicas",
+        "Datos",
         "intenso",
         "jsonify",
         "leve",
@@ -11,7 +12,8 @@
         "necesidades",
         "obtener",
         "redondo",
-        "seleccionado"
+        "seleccionado",
+        "veterinario"
     ],
     "python.analysis.extraPaths": [
         "./app"

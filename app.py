@@ -665,6 +665,11 @@ def mis_mascotas():
                         )
 
 
+
+
+
+
+
 def calcular_edad(fecha_nacimiento):
 
 #hay que pasar fecha_nacimiento al mismo foromato de datetime.now()
@@ -1446,12 +1451,136 @@ def pawcarepro():
     if not user:
         return redirect(url_for("login"))    
     email=user.get("email")
-    df_vaterinario = pd.read_csv("data/staff.csv", sep=";")
-    df_vaterinario = df_vaterinario[(df_vaterinario["correo"] == email)]
+    df_veterinario = pd.read_csv("data/staff.csv", sep=";")
+    df_veterinario = df_veterinario[(df_veterinario["correo"] == email)]
+    #si df_vaterinario está vacío, entonces redirigimos a la página de inicio de sesión
+    if df_veterinario.empty:
+        print("[ERROR] No se encontró el veterinario en el staff")
+        return redirect(url_for("login"))
+    #print(f"[INFO] Datos del veterinario:")
+    #print(f"{df_veterinario}")
+    id_veterinario = df_veterinario["id_veterinario"].values[0]
+
+    #Ahora generamos los datos para mostrar la agenda del veterinario
+    df_reservas = pd.read_csv("data/reservas.csv", sep=";")
+    df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], dayfirst=True, errors="coerce")
+    hoy = pd.to_datetime(datetime.today().date())
+
+    df_filtradas = df_reservas[
+        (df_reservas["medico_que_atendio"] == id_veterinario)
+    ]
+
+
+    df_clientes_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    #a df_filtradas le agregamos los datos de clientes_mascotas, donde id_clientes_mascotas == mascota
+    df_filtradas = df_filtradas.merge(
+        df_clientes_mascotas[["id_clientes_mascotas", "nombre_mascota", "sexo", "id_especie_raza"]],
+        left_on="mascota",
+        right_on="id_clientes_mascotas",
+        how="left"
+    )
+
+    #cerramos o eliminamos df_clientes_mascotas de la memoria de python
+    del df_clientes_mascotas
+
+    df_razas = pd.read_csv("data/razas.csv", sep=";")
+    #a df_filtradas le agregamos los datos de razas, donde id_especie_raza == id_especie_raza
+
+    df_filtradas = df_filtradas.merge(
+        df_razas[["id_raza", "nombre_raza"]],
+        left_on="id_especie_raza",
+        right_on="id_raza",
+        how="left"
+    )
+    del df_razas
+
+    df_especie_raza = pd.read_csv("data/especie_raza.csv", sep=";")
+    #a df_filtradas le agregamos los datos de especie_raza, donde id_especie_raza == id_especie_raza
+    df_filtradas = df_filtradas.merge(
+        df_especie_raza[["id_especie_raza", "id_especie"]],
+        left_on="id_especie_raza",
+        right_on="id_especie_raza",
+        how="left"
+    )  
+    del df_especie_raza
+
+    df_especies = pd.read_csv("data/especies.csv", sep=";")
+    #a df_filtradas le agregamos los datos de especies, donde id_especie == id_especie
+    df_filtradas = df_filtradas.merge(
+        df_especies[["id_especie", "especie", "icono"]],
+        left_on="id_especie",
+        right_on="id_especie",
+        how="left"
+    )
+    del df_especies
+
+    df_agenda = df_filtradas[
+        (df_filtradas["fecha"] >= hoy)
+    ]
+    #ordenamos df_agenda por fecha y hora desde lo más actual a lo más antiguo
+    df_agenda = df_agenda.sort_values(by=["fecha", "hora"], ascending=[False, False])
+    
+    
+    #calculamos las horas faltantes para la próxima cita, considerando el campo hora
+
+    # Convertir columnas
+    df_agenda["hora2"] = pd.to_datetime(df_agenda["hora"], errors="coerce").dt.time
+    df_agenda["fecha2"] = pd.to_datetime(df_agenda["fecha"], dayfirst=True, errors="coerce")
+    # Combinar fecha y hora en una nueva columna datetime completa
+    df_agenda["fecha_hora"] = df_agenda.apply(
+        lambda row: datetime.combine(row["fecha2"], row["hora2"]) if pd.notnull(row["fecha2"]) and pd.notnull(row["hora2"]) else None,
+        axis=1
+    )
+    # Calcular el tiempo faltante en horas
+    df_agenda["tiempo_faltante_horas"] = df_agenda["fecha_hora"].apply(
+        lambda dt: (dt - datetime.now()).total_seconds() / 3600 if dt else None
+    )
+
+    # Formatear el tiempo restante
+    df_agenda["tiempo_faltante_horas"] = df_agenda["tiempo_faltante_horas"].apply(
+        lambda x: f"{int(x // 24)} días, {int(x % 24)} horas, {int((x % 1) * 60)} minutos" if x and x > 0 else "Ya pasó"
+    )
+
+
+    df_agenda["fecha"] = df_agenda["fecha"].dt.strftime("%d/%m/%Y")
+    df_agenda["hora"] = pd.to_datetime(df_agenda["hora"], errors="coerce").dt.strftime("%H:%M")
+
+    
+    agenda = df_agenda.to_dict(orient="records")
+
+
+    df_agenda_historica = df_filtradas[
+        (df_filtradas["fecha"] < hoy)
+    ]
+
+    df_agenda_historica = df_agenda_historica.sort_values(by=["fecha", "hora"], ascending=[False, False])
+
+    df_agenda_historica["fecha"] = df_agenda_historica["fecha"].dt.strftime("%d/%m/%Y")
+    df_agenda_historica["hora"] = pd.to_datetime(df_agenda_historica["hora"], errors="coerce").dt.strftime("%H:%M")
+
+    # filtramos df_agenda_historica para cada "mascota" solo aparezca una vez con la fecha más reciente
+    #df_agenda_historica = df_agenda_historica.sort_values(by=["mascota", "fecha"], ascending=[True, False])
+    df_agenda_historica = df_agenda_historica.drop_duplicates(subset=["mascota"], keep="first")
+
+    agenda_historica = df_agenda_historica.to_dict(orient="records")
+
+    print(f"[DEBUG] df_filtradas final:")
+    print(f"{df_filtradas.head()}")
+
+    
+
+    del df_filtradas
+    del df_agenda
+    del df_agenda_historica
+
+    datos_veterinario = df_veterinario.to_dict(orient="records")
+    del df_veterinario
 
     return render_template("pawcarepro.html", 
-                            user=user, 
-                            datos_veterinario=df_vaterinario.to_dict(orient="records") 
+                            user=user , 
+                            datos_veterinario=datos_veterinario,
+                            agenda=agenda,
+                            agenda_historica=agenda_historica
     )
 
 
@@ -2086,6 +2215,197 @@ def crea_variable_sesion_mascota():
     #imprimir todo el contenido de session['nueva_mascota']
     print("[DEBUG] crear_nueva_mascota:", session['crear_nueva_mascota'])
     return jsonify({"estado": "ok"})
+
+
+@app.route("/api/agenda/<int:id_veterinario>")
+def obtener_agenda(id_veterinario):
+    df_reservas = pd.read_csv("data/reservas.csv", sep=";")
+    df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], dayfirst=True, errors="coerce")
+    hoy = pd.to_datetime(datetime.today().date())
+
+    df_filtradas = df_reservas[
+        (df_reservas["medico_que_atendio"] == id_veterinario) &
+        (df_reservas["fecha"] >= hoy)
+    ]
+
+    df_filtradas["fecha"] = df_filtradas["fecha"].dt.strftime("%d/%m/%Y")
+    df_filtradas["hora"] = pd.to_datetime(df_filtradas["hora"], errors="coerce").dt.strftime("%H:%M")
+
+    return jsonify(df_filtradas.to_dict(orient="records"))
+
+
+@app.route("/ficha_mascotas", methods=["GET", "POST"])
+def ficha_mascotas():
+    session['next'] = request.full_path
+    print(f"[INFO] next pawcarepro: {request.full_path}")
+    user = session.get("user", None)
+
+    print(session.get("user"))
+    if not user:
+        return redirect(url_for("login"))    
+    email=user.get("email")
+    df_veterinario = pd.read_csv("data/staff.csv", sep=";")
+    df_veterinario = df_veterinario[(df_veterinario["correo"] == email)]
+    #si df_vaterinario está vacío, entonces redirigimos a la página de inicio de sesión
+    if df_veterinario.empty:
+        print("[ERROR] No se encontró el veterinario en el staff")
+        return redirect(url_for("login"))
+    #print(f"[INFO] Datos del veterinario:")
+    #print(f"{df_veterinario}")
+    id_veterinario = df_veterinario["id_veterinario"].values[0]
+    del df_veterinario
+    session["id_veterinario"] = id_veterinario
+
+
+    mascota = request.args.get("mascota")
+    id_reserva = request.args.get("id_reserva")
+
+    if request.method == "POST":
+        print(f"[DEBUG] Datos recibidos en ficha_mascotas: {request.form}")
+        datos = {
+            "mascota": int(request.form["mascota"]),
+            "id_reserva": request.form["id_reserva"],
+            "frecuencia_cardiaca": request.form.get("frecuencia_cardiaca"),
+            "frecuencia_respiratoria": request.form.get("frecuencia_respiratoria"),
+            "temperatura": request.form.get("temperatura"),
+            "peso": request.form.get("peso"),
+            "razon_consulta": request.form.get("razon_consulta"),
+            "epicrisis": request.form.get("epicrisis"),
+            "observaciones": request.form.get("observaciones"),
+            "fecha": pd.to_datetime(datetime.today().date()).strftime("%d-%m-%Y"),  # Formato dd-mm-YYYY
+            #en la variable hora almacenamos la hora actual en formato HH:MM
+            "hora": pd.to_datetime(datetime.now()).strftime("%H:%M"),  # Formato HH:MM
+
+            "medico": id_veterinario
+        }
+        print(f"[DEBUG] Datos a guardar: {datos}")
+
+        #si id_reserva no existe en ficha_mascotas.csv, entonces insertamos una nueva fila con los valores de datos
+        df_ficha_mascotas = pd.read_csv("data/ficha_mascotas.csv", sep=";")
+        #df_ficha_mascotas["id_reserva"] = df_ficha_mascotas["id_reserva"].astype(str)  # Aseguramos que id_reserva sea str
+        if int(request.form["id_reserva"]) not in df_ficha_mascotas["id_reserva"].values:
+            # Si no existe, agregamos una nueva fila
+            df_ficha_mascotas = df_ficha_mascotas._append(datos, ignore_index=True)
+            print(f"[DEBUG] Se agregó una nueva fila a ficha_mascotas.csv con id_reserva: {datos['id_reserva']}")
+        else:
+            # Si existe, actualizamos la fila correspondiente
+            df_ficha_mascotas.loc[df_ficha_mascotas["id_reserva"] == int(datos["id_reserva"]), datos.keys()] = datos.values()   
+            print(f"[DEBUG] Se actualizó la fila en ficha_mascotas.csv con id_reserva: {datos['id_reserva']}")
+
+        # Guardar en el CSV
+        with open("data/ficha_mascotas.csv", "a", newline='', encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=datos.keys(), delimiter=";")
+            if f.tell() == 0:  # Si el archivo está vacío, escribe el encabezado
+                writer.writeheader()
+            writer.writerow(datos)
+
+        return redirect(url_for("pawcarepro"))
+
+        # Buscar el nombre de la mascota
+    df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    # Aseguramos que la columna también sea tipo entero
+    df_mis_mascotas["id_clientes_mascotas"] = df_mis_mascotas["id_clientes_mascotas"].astype(int)
+    mascota=int(mascota)
+    print(f"[DEBUG] df_mis_mascotas_1: {df_mis_mascotas.head()}")
+    df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["id_clientes_mascotas"] == mascota)]
+    print(f"[DEBUG] df_mis_mascotas_2: {df_mis_mascotas.head()}")
+    
+    print(f"[DEBUG] Buscando mascota: {mascota}")
+    
+    name_mascota = df_mis_mascotas.iloc[0]["nombre_mascota"] if not df_mis_mascotas.empty else "Mascota no encontrada"
+
+    df_fichas = pd.read_csv("data/ficha_mascotas.csv", sep=";")
+    #asignamos a peso, el valor de peso de la mascota donde id_reserva sea el mayor para mascota=mascota
+    df_fichas["mascota"] = df_fichas["mascota"].astype(int)
+    df_fichas_mascota = df_fichas[(df_fichas["mascota"] == int(mascota))]
+    #buscamos el peso de la mascota si df_fichas no está vacío
+    print(f"[DEBUG] Buscando fichas para la mascota: {mascota}")
+
+    if not df_fichas_mascota.empty:
+        #ordemanos df_fichas por id_reserva de forma descendente
+        df_fichas_mascota = df_fichas_mascota.sort_values(by="id_reserva", ascending=False)
+        #obtenemos el peso de la última reserva
+        peso = df_fichas_mascota.iloc[0]["peso"]   
+        
+    else:
+        #obtenemos el peso de la mascota desde df_mis_mascotas
+        print(f"[DEBUG] No se encontraron fichas para la mascota {mascota}, obteniendo peso desde df_mis_mascotas")
+        peso = df_mis_mascotas.iloc[0]["peso"]
+    
+    #Vemos si ya existe la reserva en las fichas, si es así, entonces el veterinario 
+    #está actualizando los datos de la ficha de esa reserva
+    df_fichas_reserva = df_fichas[(df_fichas["id_reserva"] == int(id_reserva))]
+    frecuencia_cardiaca = None
+    frecuencia_respiratoria = None
+    temperatura = None
+    razon_consulta = None
+    epicrisis = None
+    observaciones = None
+    peso_ficha = None
+    
+    # Si hay una reserva, obtenemos los datos de la ficha
+    if not df_fichas_reserva.empty: 
+        frecuencia_cardiaca = df_fichas_reserva.iloc[0]["frecuencia_cardiaca"]
+        frecuencia_respiratoria = df_fichas_reserva.iloc[0]["frecuencia_respiratoria"]
+        temperatura = df_fichas_reserva.iloc[0]["temperatura"]
+        razon_consulta = df_fichas_reserva.iloc[0]["razon_consulta"]
+        epicrisis = df_fichas_reserva.iloc[0]["epicrisis"]
+        observaciones = df_fichas_reserva.iloc[0]["observaciones"]
+        peso_ficha = df_fichas_reserva.iloc[0]["peso"]
+    del df_fichas_reserva
+    del df_fichas
+    del df_fichas_mascota
+
+
+    print(f"[DEBUG] Peso de la mascota: {peso}")
+    
+    df_reservas = pd.read_csv("data/reservas.csv", sep=";")
+    df_reservas = df_reservas[(df_reservas["id_reserva"] == int(id_reserva))]
+    id_veterinario = df_reservas.iloc[0]["medico_que_atendio"]
+    df_veterinario = pd.read_csv("data/staff.csv", sep=";")
+    df_veterinario = df_veterinario[(df_veterinario["id_veterinario"] == id_veterinario)]
+    datos_veterinario = df_veterinario.to_dict(orient="records")
+    del df_veterinario
+
+    id_especie_raza= df_mis_mascotas.iloc[0]["id_especie_raza"]
+    df_especie_raza = pd.read_csv("data/especie_raza.csv", sep=";")
+    df_especie_raza = df_especie_raza[(df_especie_raza["id_especie_raza"] == id_especie_raza)]
+    id_especie = df_especie_raza.iloc[0]["id_especie"]
+    df_especies = pd.read_csv("data/especies.csv", sep=";")
+    df_especies = df_especies[(df_especies["id_especie"] == id_especie)]
+    especie = df_especies.iloc[0]["especie"] if not df_especies.empty else "Especie no encontrada"
+    print(f"[DEBUG] Especie encontrada: {especie}")
+    id_raza = df_especie_raza.iloc[0]["id_raza"]
+    df_razas = pd.read_csv("data/razas.csv", sep=";")
+    df_razas = df_razas[(df_razas["id_raza"] == id_raza)]
+    raza = df_razas.iloc[0]["nombre_raza"] if not df_razas.empty else "Raza no encontrada"
+    print(f"[DEBUG] Raza encontrada: {raza}")
+
+    del df_especies
+    del df_especie_raza
+    del df_razas
+    del df_mis_mascotas
+    del df_reservas
+
+    print(f"[DEBUG] Nombre de la mascota: {name_mascota}")
+    return render_template("ficha_mascotas.html", 
+                           mascota=mascota, 
+                           id_reserva=id_reserva, 
+                           nombre_mascota=name_mascota, 
+                           datos_veterinario=datos_veterinario, 
+                           especie=especie, 
+                           raza=raza, 
+                           peso=peso, 
+                           peso_ficha=peso_ficha,
+                           frecuencia_cardiaca=frecuencia_cardiaca, 
+                           frecuencia_respiratoria=frecuencia_respiratoria, 
+                           temperatura=temperatura, 
+                           razon_consulta=razon_consulta, 
+                           epicrisis=epicrisis, 
+                           observaciones=observaciones, 
+                           user=user)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

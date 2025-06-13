@@ -122,86 +122,96 @@
   <section id="hero" class="pt-24 h-[150px] bg-[#F8FAFB]">
     <div class="container mx-auto px-4">
       <div class="text-center mb-12">
-        <h1 class="text-4xl md:text-5xl mb-4 text-[#2E2E2E]">Bienvenido a PawCare Pro</h1>
-        <p class="text-[#4A4A4A] text-lg mb-8">Gestiona tus consultas, pacientes y agenda de manera eficiente</p>
-        <!--
-        <div class="flex flex-col md:flex-row gap-4 justify-center">
-          <button id="ver_agenda" class="flex items-center justify-center gap-2 px-6 py-3 bg-[#5A8F99] text-white rounded-lg shadow-md hover:bg-[#4F7F88]">
-            <i class="fa-solid fa-calendar"></i>
-            Ver Agenda
-          </button>
-          <button class="flex items-center justify-center gap-2 px-6 py-3 bg-[#D1E5E8] text-[#2E2E2E] rounded-lg border border-[#5A8F99] shadow-md hover:bg-[#F8FAFB]">
-            <i class="fa-solid fa-users"></i>
-            Ver Pacientes
-          </button>
-        </div>
-        -->
+        <h1 class="text-4xl md:text-5xl mb-4 text-[#2E2E2E]">PawCare Pro - Ficha Clínica</h1>
+        <p class="text-[#4A4A4A] text-lg mb-8">Ingresa los datos de la consulta</p>
+        
       </div>
     </div>
   </section>
 
   <section id="dashboard" class="py-16 bg-[#F8FAFB]">
     <div class="container mx-auto px-4">
-      <div class="grid md:grid-cols-3 gap-8">
+      <div class="grid md:grid-cols-1 gap-8">
         <div class="bg-white p-6 rounded-xl border border-[#D1E5E8]">
           <h3 class="text-xl mb-4 text-[#2E2E2E] flex items-center gap-2">
             <i class="fa-solid fa-calendar-check"></i>
-            Mi agenda
+            Ficha Clínica
           </h3>
-          <div class="space-y-4">
-            {% for agendamiento in agenda %}
-            <div 
-              onclick="window.location.href='/ficha_mascotas?mascota={{ agendamiento['mascota'] }}&id_reserva={{ agendamiento['id_reserva'] }}'"
-              class="cursor-pointer flex items-center justify-between p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8] hover:bg-[#E6F0F2] transition"
-              >
-              <div id="{{ agendamiento['mascota'] }}">
-                <p class="text-[#2E2E2E]">{{ agendamiento['nombre_mascota'] }} ({{ agendamiento['nombre_raza'] }})</p>
-                <p class="text-sm text-[#6B7D85]">Control mensual</p>
+          <!-- ficha_mascotas.html -->
+          <div id="formulario_ficha" class="max-w-3xl mx-auto bg-white rounded-xl shadow-md p-6">
+            <h2 class="text-xl font-bold text-[#5A8F99] mb-4">Ficha clínica de <span id="nombre_mascota">{{nombre_mascota}}</span></h2>
+            <form id="formFicha" method="POST">
+              <input type="hidden" name="mascota" value="{{ mascota }}">
+              <input type="hidden" name="id_reserva" value="{{ id_reserva }}">
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center justify-between p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
+                  <label class="block text-sm font-medium text-gray-700">Raza</label>
+                  <p class="text-sm text-[#6B7D85]">{{especie}} {{raza}}</p>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
+                  <label class="block text-sm font-medium text-gray-700">Peso</label>
+                  <p class="text-sm text-[#6B7D85]">{{peso}}Kg.</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Frecuencia cardíaca</label>
+                  <input type="number" name="frecuencia_cardiaca" class="w-full border rounded-md px-3 py-2" 
+                  value="{{ '' if not frecuencia_cardiaca else frecuencia_cardiaca }}">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Frecuencia respiratoria</label>
+                  <input type="number" step="1" name="frecuencia_respiratoria" class="w-full border rounded-md px-3 py-2" 
+                  value="{{ '' if not frecuencia_respiratoria else frecuencia_respiratoria }}">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Temperatura (°C)</label>
+                  <input type="number" step="1" name="temperatura" class="w-full border rounded-md px-3 py-2"
+                  value="{{'' if not temperatura else temperatura}}">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Peso (kg)</label>
+                  <input type="number" step="0.1" name="peso" 
+                  value="{{'' if not peso_ficha else peso_ficha}}" class="w-full border rounded-md px-3 py-2">
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-sm font-medium text-gray-700">Razón de consulta</label>
+                  <textarea name="razon_consulta" rows="2" class="w-full border rounded-md px-3 py-2">{{'' if razon_consulta is none or razon_consulta != razon_consulta else razon_consulta}}</textarea>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-sm font-medium text-gray-700">Epicrisis</label>
+                  <textarea name="epicrisis" rows="2" class="w-full border rounded-md px-3 py-2">{{'' if epicrisis is none or epicrisis!=epicrisis else epicrisis}}</textarea>
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-sm font-medium text-gray-700">Observaciones</label>
+                  <textarea name="observaciones" rows="2" class="w-full border rounded-md px-3 py-2">{{'' if observaciones is none or observaciones!=observaciones else observaciones}}</textarea>
+                </div>
               </div>
-              <span  class="px-2 py-1 text-xs rounded bg-[#3F785D] text-white">{{ agendamiento['fecha'] }} - {{ agendamiento['hora'] }}</span>
-            </div>
-            {% endfor %}
-            
+
+              <div class="flex justify-end mt-6 space-x-4">
+                <button type="button" onclick="confirmarCancelar()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded">Cancelar</button>
+                <button type="submit" class="px-4 py-2 bg-[#5A8F99] text-white rounded hover:bg-[#497580]">Guardar</button>
+              </div>
+            </form>
           </div>
+
+          <script>
+          function confirmarCancelar() {
+            if (confirm("¿Seguro que deseas cancelar?")) {
+              window.location.href = "/pawcarepro";
+            }
+          }
+
+          document.getElementById("formFicha").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (confirm("¿Deseas guardar esta ficha clínica?")) {
+              this.submit();
+            }
+          });
+          </script>
+
         </div>
 
-        <div class="bg-white p-6 rounded-xl border border-[#D1E5E8]">
-          <h3 class="text-xl mb-4 text-[#2E2E2E] flex items-center gap-2">
-            <i class="fa-solid fa-paw"></i>
-            Pacientes Recientes
-          </h3>
-          <div class="space-y-4">
-            {% for agendamiento in agenda_historica %}
-            <div class="flex items-center gap-3 p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
-              <div class="bg-[#5A8F99] w-12 h-12 rounded-full flex items-center justify-center">
-                <i class="{{ agendamiento['icono'] }}"></i>
-              </div>
-              <div>
-                <p class="text-[#2E2E2E]">{{ agendamiento['nombre_mascota'] }}</p>
-                <p class="text-sm text-[#6B7D85]">Último control: {{ agendamiento['fecha'] }}</p>
-              </div>
-            </div>
-            {% endfor %}
-            
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-xl border border-[#D1E5E8]">
-          <h3 class="text-xl mb-4 text-[#2E2E2E] flex items-center gap-2">
-            <i class="fa-solid fa-bell"></i>
-            Notificaciones Importantes
-          </h3>
-          <div class="space-y-4">
-            <div class="p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
-              <p class="text-[#2E2E2E]">No tienes notificaciones</p>
-            </div>
-            <div class="p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
-              <p class="text-sm text-[#6B7D85]">Próxima cita: {{ agenda[0]['tiempo_faltante_horas'] }}/p> 
-
-            </div>            
-
-          </div>
-        </div>
+        
       </div>
     </div>
   </section>
