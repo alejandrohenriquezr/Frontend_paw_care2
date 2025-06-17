@@ -2,6 +2,8 @@
 <html lang="es">
 
 
+
+
 <script>
   // Obtener los parámetros de la URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -15,6 +17,10 @@
 </script>
 
 <head>
+  <script>
+    const mascotas = {{ mascotas | tojson | safe}};
+
+  </script>
   <title>PawCare</title>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
@@ -78,13 +84,34 @@
     console.log(staffData); // Verifica los datos en la consola
   </script>
 
-  <script src="static/script_clinicas.js">
 
-</script>
 </head>
 
   <body class="h-full text-base-content">
-    
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+
+        document.getElementById("user-nombre").innerText = nombreSeparado.join(" ");
+        document.getElementById("user-nombre").classList.remove("hidden");
+        document.getElementById("user-avatar").classList.remove("hidden");
+
+        
+      });
+
+      document.addEventListener("DOMContentLoaded", function() {
+          const nombre = "{{ user['name'] if user else '' }}";
+          if (nombre) {
+            const nombreSeparado = nombre.split(" ").map(p =>
+              p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
+            );
+            const target = document.getElementById("nombre-usuario");
+            if (target) {
+              target.innerText = nombreSeparado.join(" ");
+            }
+          }
+        });
+    </script>
+
     <div id="root" class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
       <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
         <div class="container mx-auto px-4">
@@ -120,18 +147,15 @@
             <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
           </div>
 
-            <div class="flex items-center space-x-4">
-              <button class="p-2 relative">
-                <i class="fa-regular fa-bell text-xl"></i>
-                <span class="absolute -top-1 -right-1 bg-neutral-500 text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
-              </button>
-              <a href="{{ url_for('cerrar_sesion') }}">
-                <button>Cerrar Sesión</button>
-              </a>              
-              <button  onclick="window.location.href='login'"   class="px-4 py-2 bg-white text-[#5A8F99] rounded-lg hover:bg-neutral-100 transition-colors">
-                Iniciar Sesión
-              </button>
-            </div>
+          <div class="flex items-center space-x-4">
+            <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+            <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+            <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+            <span id="nombre-usuario"></span>
+            <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+  
+            </span>
+          </div>
           </div>
         </div>
       </header>
@@ -334,10 +358,33 @@
             $('#confirmModal').modal('show');          
         }
     });
+
+        //si mascotas es un objeto vacío, entonces no hay mascotas y ejecutamos la función para insertar los campos de la nueva mascota
+    /*if (Object.keys(mascotas).length === 0) {
+      alert("No tienes mascotas registradas. Por favor, registra una mascota antes de agendar una cita.");
+      crear_campos_nueva_mascota();
+    }*/
   </script>
 
-
+<script src="{{ url_for('static', filename='script_clinicas.js') }}"></script>
   </body>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const user = {
+      picture: "{{ user['picture'] if user else '' }}",
+    };
+    if (user.picture) {
+      btnLogin = document.getElementById("btn-login");
+      btnLogin.classList.add("hidden");
+      const avatar = document.getElementById("user-avatar");
+      avatar.src = user.picture;
+      avatar.classList.remove("hidden");
+      const userNombre = document.getElementById("user-nombre");
+      userNombre.classList.remove("hidden");
+
+    }
+  });
+</script>
 
   <script>
     // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa

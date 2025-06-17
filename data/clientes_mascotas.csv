@@ -1,8 +1,9 @@
 ﻿id_clientes_mascotas;correo_cliente;nombre_mascota;fecha_nacimiento;sexo;peso;id_especie_raza
-1;alhen1970@gmail.com;Milo;01-01-2023;Macho;10.0;1
-2;alhen1970@gmail.com;Fito;01-06-2023;Macho;5.2;1
-3;alhen1970@gmail.com;Peca;15-07-2021;Hembra;3.4;2
-4;alhen1970@gmail.com;uno;02-12-2024;Macho;5.2;1
-5;alhen1970@gmail.com;Nerón;02-12-2024;Macho;12.0;3
-6;alhen1970@gmail.com;rata;2025-05-26;Macho;2.0;3
-7;alhen1970@gmail.com;rata;2025-05-28;Macho;44.0;3
+1;alhen1970_2@gmail.com;Milo;01-01-2023;Macho;10.0;1
+2;alhen1970_2@gmail.com;Fito;01-06-2023;Macho;5.2;1
+3;alhen1970_2@gmail.com;Peca;15-07-2021;Hembra;3.4;2
+4;alhen1970_2@gmail.com;uno;02-12-2024;Macho;5.2;1
+5;alhen1970_2@gmail.com;Nerón;02-12-2024;Macho;12.0;3
+6;alhen1970_2@gmail.com;rata;26-05-2025;Macho;2.0;3
+7;alhen1970_2@gmail.com;rata;28-05-2025;Macho;44.0;3
+8;alhen1970@gmail.com;nina;2025-06-02;Hembra;2.0;293

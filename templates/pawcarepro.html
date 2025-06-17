@@ -110,9 +110,7 @@
           <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
           <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
           <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
-            <script>
-            //  document.write(nombreSeparado.join(" "));
-            </script>
+
           </span>
         </div>
       </div>
@@ -196,7 +194,7 @@
               <p class="text-[#2E2E2E]">No tienes notificaciones</p>
             </div>
             <div class="p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
-              <p class="text-sm text-[#6B7D85]">Próxima cita: {{ agenda[0]['tiempo_faltante_horas'] }}/p> 
+              <p class="text-sm text-[#6B7D85]">Próxima cita: {{ agenda[0]['tiempo_faltante_horas'] }}</p> 
 
             </div>            
 

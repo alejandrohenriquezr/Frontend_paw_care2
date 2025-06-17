@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+              
+<head>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+  <meta charset="UTF-8">
+
+  <title>Paw Care</title>  
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+      window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+      };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    
+<style>
+  * {
+    font-family: "Inter", sans-serif;
+  }
+
+</style>
+
+    
+
+    
+  <script>
+        tailwind.config = {
+            theme: {
+              extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+              },
+            },
+            variants: {
+              extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+              },
+            },
+            plugins: [],
+          };
+
+          const nombre = "{{ user['name'] }}";
+  const nombreSeparado = nombre.split(" ");
+  // ahora para cada elemento del array, ponemos la primera letra en mayúscula y el resto de las letras en minuscula
+  for (let i = 0; i < nombreSeparado.length; i++) {
+    nombreSeparado[i] = nombreSeparado[i].charAt(0).toUpperCase() + nombreSeparado[i].slice(1).toLowerCase();
+  }
+
+  </script>
+
+</head>
+
+<body class="h-full text-base-content">
+  <div id="root" class="min-h-screen bg-[#E8EFF1]">
+  <!-- Header -->
+  <header id="header" class="fixed w-full bg-[#5A8F99] text-white border-b border-[#B0C4C9] z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <i class="fa-solid fa-paw text-2xl"></i>
+          <span class="ml-2 text-xl">PawCare</span>
+        </div>
+        <!-- Botón hamburguesa móvil -->
+
+
+        <div class="md:hidden  md:flex items-center space-x-4" >
+          <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+        <!-- Navegación principal -->
+        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href=''">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </nav>
+  
+        <!-- Menú móvil desplegable -->
+        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href=''">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </div>
+
+        <!-- Right Side -->
+        <div class="flex items-center space-x-4">
+          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
+          </span>
+        </div>
+      </div>
+    </div>
+  </header>
+                
+  <main id="appointments" class="pt-24 pb-16">
+    <div class="container mx-auto px-4">
+      <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+
+        <div class="border-b border-neutral-200">
+          <div class="flex gap-6 mb-[-1px]">
+            <button id="btn-ayuda" name="ayuda" class="px-4 py-2 border-b-2 border-neutral-700 text-neutral-700">Centro de ayuda</button>
+            <button id="btn-faq" name="faq" class="px-4 py-2 text-neutral-500">Preguntas frecuentes</button>
+            <button id="btn-contacto" name="faq" class="px-4 py-2 text-neutral-500">Contacto</button>
+            <button id="btn-privacidad" name="privacidad" class="px-4 py-2 text-neutral-500">Política de privacidad</button>
+          </div>
+        </div>
+        <div class="mt-6 space-y-4" id="contenedor">
+          <div id="div-ayuda" class="hidden text-center text-gray-500 italic">
+            <p align="justify">
+              <b>¿Tienes preguntas?</b><br>
+              ¡Estamos aquí para ayudarte!<br><br>
+              En PawCare, nuestro compromiso es brindarte una experiencia 
+              confiable, segura y sin complicaciones. Aquí encontrarás respuestas a las dudas más 
+              comunes sobre cómo buscar veterinarios, reservar citas, administrar a tus mascotas y 
+              mucho más.<br><br>
+              Explora nuestras guías y artículos o contacta directamente con nuestro equipo de 
+              soporte si necesitas ayuda personalizada. Estamos disponibles para acompañarte en 
+              cada paso del cuidado de tu mascota.<br><br>
+              📩 <b>¿Necesitas ayuda urgente?</b> <br>
+              Escríbenos a soporte@pawcare.cl
+            </p>
+          </div>
+          <div id="div-faq" class="hidden text-center text-gray-500 italic">
+            <p align="justify">
+              <b>¿Qué es PawCare?</b><br>
+              PawCare es una plataforma digital que conecta a dueños de mascotas con veterinarios y clínicas cercanas para agendar citas de manera rápida y sencilla.<br><br>
+              
+              <b>¿Cómo puedo buscar un veterinario en PawCare?</b><br>
+              Solo debes ingresar la especie de tu mascota, la especialidad que necesitas o la ubicación deseada en la barra de búsqueda.<br><br>
+              
+              <b>¿Puedo reservar una cita desde la plataforma?</b><br>
+              Sí, puedes agendar directamente desde la web. Selecciona fecha, hora y clínica, y confirma tu cita en pocos pasos.<br><br>
+              
+              <b>¿Necesito crear una cuenta para usar PawCare?</b><br>
+              Sí, es necesario crear una cuenta para gestionar tus citas, mascotas y recibir notificaciones.<br><br>
+              
+              <b>¿Tiene algún costo usar PawCare?</b><br>
+              No, PawCare es completamente gratuito para los usuarios. Solo pagas por los servicios veterinarios contratados.<br><br>
+              
+              <b>¿Puedo elegir un veterinario específico en una clínica?</b><br>
+              Sí, si la clínica lo permite, podrás ver los veterinarios disponibles y seleccionar el que prefieras.<br><br>
+              
+              <b>¿Cómo sé si una clínica tiene disponibilidad?</b><br>
+              La disponibilidad aparece automáticamente después de seleccionar la especialidad y ubicación deseada.<br><br>
+              
+              <b>¿Puedo cancelar o reagendar una cita?</b><br>
+              Sí, desde tu perfil puedes cancelar o reprogramar citas con al menos 24 horas de anticipación.<br><br>
+              
+              <b>¿Qué pasa si no me presento a la cita?</b><br>
+              La clínica puede aplicar políticas de no presentación, incluyendo cobros o restricciones para futuras citas.<br><br>
+              
+              <b>¿Qué tipo de servicios veterinarios están disponibles?</b><br>
+              Desde consultas generales hasta especialidades como dermatología, cardiología, radiología, urgencias y más.<br><br>
+              
+              <b>¿Puedo agregar más de una mascota a mi cuenta?</b><br>
+              ¡Por supuesto! Puedes registrar todas tus mascotas y gestionar sus citas desde un solo perfil.<br><br>
+              
+              <b>¿Cómo sé si un veterinario está certificado?</b><br>
+              Verificamos los perfiles profesionales de cada veterinario antes de que puedan ofrecer servicios en PawCare.<br><br>
+              
+              <b>¿Puedo dejar una reseña después de la cita?</b><br>
+              Sí, después de cada atención podrás calificar la experiencia y ayudar a otros usuarios con tu opinión.<br><br>
+              
+              <b>¿Qué métodos de pago se aceptan?</b><br>
+              Los pagos se realizan directamente en la clínica. La mayoría acepta efectivo, tarjetas y transferencias.<br><br>
+              
+              <b>¿Puedo ver precios antes de reservar?</b><br>
+              Sí, en el perfil de cada clínica se muestra el precio estimado de consulta o servicio.<br><br>
+              
+              <b>¿Qué hago si necesito atención veterinaria urgente?</b><br>
+              Usa el filtro “urgencia” al buscar, y verás clínicas disponibles para atención inmediata.<br><br>
+              
+              <b>¿PawCare ofrece atención a domicilio?</b><br>
+              Algunas clínicas asociadas ofrecen servicios a domicilio. Puedes verificar esta opción en sus perfiles.<br><br>
+              
+              <b>¿Cómo contacto al soporte de PawCare?</b><br>
+              Puedes escribirnos a soporte@pawcare.cl o utilizar el formulario en el Centro de Ayuda.<br><br>
+              
+              <b>¿Mis datos están seguros en PawCare?</b><br>
+              Sí, protegemos tu información mediante protocolos seguros y nunca compartimos datos sin tu consentimiento.<br><br>
+              
+              <b>¿Puedo usar PawCare desde el celular?</b><br>
+              Sí, PawCare está optimizado para navegadores móviles y pronto lanzaremos nuestra app oficial.<br><br>
+            </p>
+            
+          </div>
+          <div id="div-contacto" class="hidden text-center text-gray-500 italic">
+            Formulario de contacto:
+            <form id="contact-form" class="max-w-md mx-auto mt-6">
+              <div class="mb-4">
+                <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
+                <input type="text" id="name" name="name" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary">
+              </div>
+              <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                <input type="email" id="email" name="email" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary">
+              </div>
+              <div class="mb-4">
+                <label for="message" class="block text-sm font-medium text-gray-700">Mensaje</label>
+                <textarea id="message" name="message" rows="4" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary"></textarea>
+              </div>
+              <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-focus transition duration-200">Enviar</button>
+            </form>
+          </div>   
+          <div id="div-privacidad" class="hidden text-center text-gray-500 italic">
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">1. Introducción</h2>
+              <p>En PawCare, valoramos tu privacidad y nos comprometemos a proteger la información personal que compartes con nosotros. Esta Política de Privacidad explica qué datos recopilamos, cómo los usamos y con quién los compartimos.</p>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">2. Información que recopilamos</h2>
+              <ul class="list-disc list-inside space-y-1">
+                <li><b>Datos de registro:</b> nombre, correo electrónico, contraseña, número telefónico.</li>
+                <li><b>Datos de tu mascota:</b> nombre, especie, raza, edad, historial médico.</li>
+                <li><b>Datos de citas:</b> fecha, hora, clínica, veterinario, estado de la cita.</li>
+                <li><b>Datos de ubicación:</b> ciudad o región para mostrar clínicas cercanas.</li>
+                <li><b>Interacciones en la plataforma:</b> búsquedas realizadas, reseñas y calificaciones dejadas.</li>
+                <li><b>Datos técnicos:</b> dirección IP, tipo de navegador y dispositivo, página de navegación.</li>
+              </ul>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">3. Uso de tus datos</h2>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Facilitar búsqueda y reserva de citas veterinarias.</li>
+                <li>Enviar recordatorios y notificaciones sobre citas.</li>
+                <li>Mostrar clínicas y veterinarios próximos a tu ubicación.</li>
+                <li>Mejorar la calidad del servicio y la experiencia del usuario.</li>
+                <li>Recopilar retroalimentación mediante reseñas y calificaciones.</li>
+                <li>Cumplir obligaciones legales o fiscales.</li>
+              </ul>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">4. Compartir y revelar datos</h2>
+              <p>Solo compartimos datos con terceros en los siguientes casos:</p>
+              <ul class="list-disc list-inside space-y-1">
+                <li><b>Clínicas y veterinarios:</b> para coordinar citas.</li>
+                <li><b>Proveedores de servicios:</b> técnicos y de análisis (por ejemplo: hosting, email, analytics).</li>
+                <li><b>Requerimientos legales:</b> ante citaciones, investigaciones o cumplimiento de leyes.</li>
+                <li><b>Transferencias corporativas:</b> en casos de venta de PawCare (con notificaciones y opciones).</li>
+              </ul>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">5. Almacenamiento y seguridad</h2>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Datos almacenados en servidores seguros con encriptación TLS y cifrado de base de datos.</li>
+                <li>Acceso restringido solo al personal autorizado.</li>
+                <li>Medidas avanzadas de firewall y auditorías de seguridad periódicas.</li>
+              </ul>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">6. Retención de datos</h2>
+              <p>Conservamos tu información mientras tu cuenta esté activa o según lo exijan las leyes aplicables. Si solicitas la eliminación de tu cuenta, se procederá conforme a la legislación vigente.</p>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">7. Derechos del usuario</h2>
+              <p>Tienes derecho a:</p>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Acceder, modificar o corregir tus datos personales.</li>
+                <li>Eliminar tu cuenta y datos (salvo obligaciones legales).</li>
+                <li>Oponerte al tratamiento o solicitar portabilidad de los datos.</li>
+                <li>Retirar tu consentimiento para notificaciones.</li>
+              </ul>
+              <p class="mt-2">Para ejercer estos derechos, contáctanos en <a href="mailto:soporte@pawcare.cl" class="text-blue-600 underline">soporte@pawcare.cl</a>.</p>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">8. Cookies y tecnologías similares</h2>
+              <ul class="list-disc list-inside space-y-1">
+                <li>Mantener tu sesión iniciada.</li>
+                <li>Registrar tus preferencias (idioma, filtros).</li>
+                <li>Obtener estadísticas de uso (ej. Google Analytics).</li>
+              </ul>
+              <p class="mt-2">Puedes desactivar las cookies desde tu navegador, aunque podría afectar la experiencia en PawCare.</p>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">9. Menores de edad</h2>
+              <p>PawCare está dirigido exclusivamente a personas mayores de 18 años. No recopilamos información consciente de menores sin consentimiento parental.</p>
+            </section>
+          
+            <section class="mb-6" align="justify">
+              <h2 class="font-semibold text-lg mb-2">10. Cambios en esta política</h2>
+              <p>Podemos actualizar esta Política de Privacidad. Te notificaremos sobre cambios relevantes mediante un aviso en el sitio o por correo electrónico.</p>
+            </section>
+          
+            <section align="justify">
+              <h2 class="font-semibold text-lg mb-2">11. Contacto</h2>
+              <p>Si tienes preguntas sobre esta política o deseas ejercer tus derechos:</p>
+              <p>📧 <a href="mailto:soporte@pawcare.cl" class="text-blue-600 underline">soporte@pawcare.cl</a></p>
+            </section>
+                            
+          </div>       
+        </div>
+        
+        
+      </div>
+    </div>
+  </main>
+
+  <footer id="footer" class="bg-[#87AEB5] text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-3 gap-8">
+        <div>
+          <h4 class="text-lg mb-4">Enlaces rápidos</h4>
+          <ul class="space-y-2">
+            <li><span class="hover:text-neutral-200 cursor-pointer">Inicio</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Buscar Veterinarios</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Mascotas</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer">Mis Citas</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg mb-4">Soporte</h4>
+          <ul class="space-y-2">
+            <li><span class="hover:text-neutral-200 cursor-pointer" onclick="window.location.href='ayuda?a=1'">Centro de ayuda</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer" onclick="window.location.href='ayuda?a=2'">FAQ</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer" onclick="window.location.href='ayuda?a=3'">Contacto</span></li>
+            <li><span class="hover:text-neutral-200 cursor-pointer" onclick="window.location.href='ayuda?a=4'">Política de privacidad</span></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-lg mb-4">Síguenos</h4>
+          <div class="flex space-x-4">
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-facebook text-2xl"></i></span>
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-instagram text-2xl"></i></span>
+            <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-twitter text-2xl"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+
+    <script>
+          document.addEventListener("DOMContentLoaded", function() {
+              const user = {
+                  picture: "{{ user['picture'] if user else '' }}",
+              };
+              if (user.picture) {
+                      
+                  btnLogin = document.getElementById("btn-login");
+                  btnLogin.classList.add("hidden");
+  
+                  const avatar = document.getElementById("user-avatar");
+                  avatar.src = user.picture;
+                  avatar.classList.remove("hidden");
+                  const userNombre = document.getElementById("user-nombre");
+                  userNombre.classList.remove("hidden");
+          
+              }
+          });
+      </script>
+
+<script>
+  // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+    const mobileNav = document.getElementById("mobile-nav");
+    mobileNav.classList.toggle("hidden");
+  });
+
+</script>
+<script src="static/ayuda.js"></script>
+
+  </body>
+</html>
+          

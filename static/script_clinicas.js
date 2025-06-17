@@ -504,9 +504,11 @@ document.addEventListener("DOMContentLoaded", function () {
                             </select>
                             <select id="raza_mascota" class="input" disabled><option value="">Selecciona una especie primero</option></select>
                         `;
-        
+                        //alert("Por favor, completa los campos para crear una nueva mascota.");
                         document.getElementById('especie_mascota').addEventListener('change', function () {
                             const id_especie = this.value;
+                            //alert('Por favor, selecciona una especie para ver las razas disponibles. ', id_especie);
+                            //alert(id_especie)
                             fetch(`/api/razas?id_especie=${id_especie}`)
                                 .then(res => res.json())
                                 .then(razas => {
@@ -896,6 +898,7 @@ async function obtenerMascotas() {
       const response = await fetch('/data/clientes_mascotas.csv');
       const data = await response.text();
       //console.log(data);
+      console.log("Datos de mascotas obtenidos correctamente");
       const mascotas = data.split('\n').slice(1).map(line => {
         const [id_clientes_mascotas, correo_cliente, nombre_mascota, fecha_nacimiento, id_especie_raza] = line.split(';');
         if (id_clientes_mascotas && correo_cliente && nombre_mascota && fecha_nacimiento && id_especie_raza) { // Verifica que no haya líneas en blanco
@@ -911,24 +914,38 @@ async function obtenerMascotas() {
   }
 
   async function crearCampoMascotas() {
-    const mascotas = await obtenerMascotas();
     const divMascotas = document.createElement('div');
     divMascotas.id = 'mis_mascotas_container';
-    //divMascotas.className = 'mt-4 p-4 border rounded bg-gray-100';
-    //divMascotas.className = 'flex flex-col md:flex-row gap-6';
     divMascotas.className = 'w-full';
     
-  
+    //creamos el select de mascotas
     const selectMascotas = document.createElement('select');
     selectMascotas.id = 'mis_mascotas';
     selectMascotas.className = 'px-4 py-2 border border-neutral-300 rounded-lg text-[#2E2E2E]';
+    
+
+    // Agregamos una opción para crear una nueva mascota
+    const option_0 = document.createElement('option');
+    option_0.value = '0';
+    option_0.textContent = 'Selecciona una mascota';
+    selectMascotas.appendChild(option_0);
+
+    
+    //agregamos los option para cada mascota
     mascotas.forEach(mascota => {
       const option = document.createElement('option');
       option.value = mascota.id_clientes_mascotas;
       option.textContent = mascota.nombre_mascota;
       selectMascotas.appendChild(option);
     });
-  
+
+    // Agregamos una opción para crear una nueva mascota
+    const option = document.createElement('option');
+    option.value = '999';
+    option.textContent = 'Nueva mascota';
+    selectMascotas.appendChild(option);
+
+
     if (mascotas.length > 0) {
         mascotaSeleccionada = mascotas[0].id_clientes_mascotas; // Selecciona la primera mascota por defecto
         }
@@ -947,11 +964,6 @@ async function obtenerMascotas() {
         })
     });
 
-
-    const option = document.createElement('option');
-    option.value = '999';
-    option.textContent = 'Nueva mascota';
-    selectMascotas.appendChild(option);
   
     divMascotas.appendChild(selectMascotas);
     
@@ -1282,3 +1294,4 @@ function convertirFecha(fecha_ddmmaaaa) {
 
     return `${dia.padStart(2, '0')}-${mes.padStart(2, '0')}-${anio}`;
   }
+

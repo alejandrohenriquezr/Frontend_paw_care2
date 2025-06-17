@@ -494,10 +494,20 @@ def agendar():
     #df_staff = df_staff.to_dict(orient="records")
     #primero debo ver si status_code existe y esta definida
     #si no existe, entonces la reserva no fue creada
+
+    #filtramos las mascotas del usuario donde el correo_cliente sea igual al correo del usuario
+    df_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    email = user.get("email")
+    df_mascotas = df_mascotas[df_mascotas["correo_cliente"] == email]
+    #pasamos df_mascotas a formato JSON
+    df_mascotas_json = df_mascotas.to_dict(orient="records")
+    print(f"df_mascotas: {df_mascotas}")
     return render_template("agendar.html",
         df_staff=df_staff,
         df_staff_json=df_staff.to_dict(orient="records"),  # 🔹 aquí va el JSON
         df_reservas=df_reservas,
+        mascotas=df_mascotas_json,
+        user=user,
         status_code=status_code
                            )
 
@@ -2183,11 +2193,16 @@ def api_razas():
     df_razas = pd.read_csv('data/razas.csv', sep=";")
 
     especie_raza = especie_raza.merge(
-        df_razas,
+        df_razas[['id_raza', 'nombre_raza']],
         left_on="id_raza",
         right_on="id_raza",
         how="left"
     )
+    #ordenamos especie_raza por el campo nombre_raza de la a a la z
+    especie_raza = especie_raza.sort_values(by='nombre_raza', ascending=True)
+    #ponemos en mayúscula la primera letra de cada palabra del campo nombre_raza
+    especie_raza['nombre_raza'] = especie_raza['nombre_raza'].str.title()
+
     print("[DEBUG] especie_raza:", especie_raza)
     #ids = df_join[df_join['id_especie'] == int(id_especie)]['id_raza']
     #razas = df_razas[df_razas['id_raza'].isin(ids)]
@@ -2405,6 +2420,13 @@ def ficha_mascotas():
                            observaciones=observaciones, 
                            user=user)
 
+# 📌 Ruta de Ayuda
+@app.route("/ayuda")
+#@login_required
+def ayuda():
+    user = session.get("user", None)
+
+    return render_template("ayuda.html", user=user)
 
 
 if __name__ == "__main__":
