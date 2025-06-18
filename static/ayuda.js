@@ -1,4 +1,3 @@
-let modoPasadas = false;
 document.addEventListener("DOMContentLoaded", function () {
     const btnayuda = document.querySelector("#btn-ayuda");
     const btnfaq = document.querySelector("#btn-faq");
@@ -31,9 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
       });
   
       btnfaq.addEventListener("click", () => {
-        modoPasadas = false;
         btnfaq.classList.add("border-b-2", "border-neutral-700", "text-neutral-700");
-        
+
         divAyuda.classList.add("hidden");
         divFaq.classList.remove("hidden");
         divContacto.classList.add("hidden");
@@ -51,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
   
   
       btncontacto.addEventListener("click", () => {
-        modoPasadas = false;
         btncontacto.classList.add("border-b-2", "border-neutral-700", "text-neutral-700");
         divAyuda.classList.add("hidden");
         divFaq.classList.add("hidden");
@@ -70,7 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   
       btnprivacidad.addEventListener("click", () => {
-        modoPasadas = false;
         btnprivacidad.classList.add("border-b-2", "border-neutral-700", "text-neutral-700");
         divAyuda.classList.add("hidden");
         divFaq.classList.add("hidden");
@@ -87,9 +83,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
       });
 
-    // Por omisión: mostrar próximas citas
-    btnayuda.click();
-  });
+  // Comprobar si hay está el parámeteo a en la URL y dependiendo de su valor, 
+  // mostramos la sección correspondiente
+  const urlParams = new URLSearchParams(window.location.search);
+  aParam = urlParams.get("a");
+  
+  aParam = parseInt(aParam, 10);
+
+  if (aParam && !isNaN(aParam) && aParam >= 1 && aParam <= 4){
+    // Si el parámetro a está presente, mostrar la sección correspondiente
+    if (aParam === 2) {
+      btnfaq.click();
+    } else if (aParam === 3) {
+      btncontacto.click();
+    } else if (aParam === 4) {
+      btnprivacidad.click();
+    } else {
+      btnayuda.click(); // Por defecto, mostrar ayuda
+    }
+  } else {
+    btnayuda.click(); // Por defecto, mostrar ayuda
+  }
+  
+});
   
 
   

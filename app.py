@@ -1176,7 +1176,7 @@ def mis_citas():
     # Leer reservas.csv
     email = user.get("email")
     df_reservas = pd.read_csv("data/reservas.csv", sep=";")
-    df_reservas = df_reservas[(df_reservas["correo_cliente"] == email) & (df_reservas["estado"] >= 0)]
+    df_reservas = df_reservas[(df_reservas["correo_cliente"] == email)]
 
     #si el campo estado==1 lo cambiamos por Confirmada, si es -1 lo cambiamos por Cancelada, si es 0 lo cambiamos por Confirmar
     df_reservas["estado"] = df_reservas["estado"].replace({1: "Confirmada", -1: "Cancelada", 0: "Confirmar"})
@@ -1226,6 +1226,7 @@ def mis_citas():
     df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format='mixed', dayfirst=True)
 
     df_reservas = df_reservas.sort_values(by=["fecha"], ascending=False)
+    print("[INFO] DataFrame de reservas después de la unión:")
     print(df_reservas)
     # Convertir dataframe a lista de diccionarios
     mis_citas = df_reservas.to_dict(orient="records")
@@ -1234,10 +1235,12 @@ def mis_citas():
     return render_template("mis_citas.html", user=user, mis_citas=mis_citas)
 
 
+
+
 @app.route('/cancelar_cita', methods=["POST"])
-#@login_required
 def cancelar_cita():
-    data = request.get_json(silent=True)
+    #data = request.get_json(silent=True)
+    data = request.get_json()
     if data is None:
         print("[ERROR] No se recibió un cuerpo JSON válido en /cancelar_cita")
         return jsonify({"success": False, "error": "JSON inválido o vacío"}), 400    
@@ -1249,39 +1252,24 @@ def cancelar_cita():
     if not user:
         return redirect(url_for("login"))    
     #data = request.json
+
+    id_reserva = data.get("id_reserva")
     
-    id_clinica = int(data["id_clinica"])
-    correo_cliente = data["correo"]
-    fecha_original = data.get("fecha")
-    hora_seleccionada = data.get("hora")
-
-    # 🛠 Convertir fecha del formato ISO a formato CSV (%d-%m-%Y)
-    fecha = datetime.strptime(fecha_original[:10], "%Y-%m-%d").strftime("%d-%m-%Y")
-    #pasamos fhea a formato %d-%m-%Y
-    #fecha = pd.to_datetime(fecha, format="%Y-%m-%d")
-
-    print(f"[INFO] Datos recibidos en cancelar_cita: {id_clinica}, {correo_cliente}, {fecha}, {hora_seleccionada}")
+    print(f"[INFO] Datos recibidos en cancelar_cita: {id_reserva}")
     try:
         df = pd.read_csv("data/reservas.csv", sep=";")
-        print(f"[INFO] DataFrame cargado: {df.head()}")
-        mask = (
-            (df["id_clinica"] == id_clinica) &
-            (df["correo_cliente"] == correo_cliente) &
-            (df["fecha"] == fecha) &
-            (df["hora"] == hora_seleccionada)
-        )
-        print(f"[INFO] Máscara de filtro: {mask}")
-
-        if mask.any():
-            df.loc[mask, "estado"] = -1
-            df.to_csv("data/reservas.csv", sep=";", index=False)
-            return jsonify({"success": True})
-        else:
+        #filtramos df por id_reserva
+        id_reserva = int(id_reserva)
+        df = df[df["id_reserva"] == id_reserva]
+        if df.empty:
             return jsonify({"success": False, "error": "Reserva no encontrada."}), 404
-
+        # cambiamos el estado de la reserva a -1 (cancelada)
+        df.loc[df["id_reserva"] == id_reserva, "estado"] = -1
+        df.to_csv("data/reservas.csv", sep=";", index=False)
+        return jsonify({"success": True}), 200
+    
     except Exception as e:
         return jsonify({"success": False, "error": str(e)}), 500
-
 
 
 @app.route('/confirmar_cita', methods=["POST"])
