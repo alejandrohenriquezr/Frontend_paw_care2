@@ -111,14 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
           this.classList.remove("bg-red-500", "hover:bg-red-600");
           this.classList.add("bg-green-200", "text-red-800");
           this.disabled = true;
-          /*  
-          const statusSpan = this.closest(".datos_reserva").querySelector(".estado_cita");
-          if (statusSpan) {
-            statusSpan.textContent = "Eliminada";
-            statusSpan.classList.remove("bg-green-200", "text-green-800");
-            statusSpan.classList.add("bg-red-200", "text-red-800");
-          }
-            */
+
         } else {
           alert("Error al cancelar la cita.");
         }

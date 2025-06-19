@@ -14,6 +14,7 @@ from reportlab.lib.units import inch, cm
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from flask_session import Session
+from werkzeug.utils import secure_filename
 
 # Para Transbank
 #from flask import Flask, render_template, redirect, url_for, request
@@ -93,6 +94,14 @@ google = oauth.register(
     client_kwargs={"scope": "openid email profile"},
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration'
 )
+
+# Configuración de la ruta de archivos estáticos
+UPLOAD_FOLDER = "data/certificados"
+CSV_FILE = "data/certificados.csv"
+ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # 📌 Ruta principal
 @app.route("/")
@@ -2416,6 +2425,47 @@ def ayuda():
 
     return render_template("ayuda.html", user=user)
 
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/subir_certificado', methods=['POST'])
+def subir_certificado():
+    if 'user' not in session:
+        return jsonify(success=False, error="No autenticado"), 403
+
+    email = session['user']['email']
+    nombre_certificado = request.form.get('nombre_certificado')
+    archivo = request.files.get('archivo')
+
+    if not nombre_certificado or not archivo:
+        return jsonify(success=False, error="Datos incompletos"), 400
+
+    if archivo and allowed_file(archivo.filename):
+        nombre_archivo = secure_filename(archivo.filename)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        nombre_guardado = f"{email}_{timestamp}_{nombre_archivo}"
+        ruta = os.path.join(app.config['UPLOAD_FOLDER'], nombre_guardado)
+        archivo.save(ruta)
+
+        # Guardar en CSV
+        nueva_fila = pd.DataFrame([{
+            "email_usuario": email,
+            "nombre_certificado": nombre_certificado,
+            "nombre_archivo": nombre_guardado,
+            "fecha_subida": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }])
+
+        if os.path.exists(CSV_FILE):
+            df = pd.read_csv(CSV_FILE, sep=';')
+            df = pd.concat([df, nueva_fila], ignore_index=True)
+        else:
+            df = nueva_fila
+
+        df.to_csv(CSV_FILE, index=False, sep=';', encoding='utf-8')
+        return jsonify(success=True)
+    else:
+        return jsonify(success=False, error="Formato de archivo no permitido"), 400
 
 if __name__ == "__main__":
     app.run(debug=True)
