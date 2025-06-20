@@ -1552,7 +1552,8 @@ def pawcarepro():
     df_agenda["fecha"] = df_agenda["fecha"].dt.strftime("%d/%m/%Y")
     df_agenda["hora"] = pd.to_datetime(df_agenda["hora"], errors="coerce").dt.strftime("%H:%M")
 
-    
+    print(f"[DEBUG] df_agenda:")
+    print(df_agenda)
     agenda = df_agenda.to_dict(orient="records")
 
 

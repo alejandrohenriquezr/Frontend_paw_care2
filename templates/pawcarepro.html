@@ -56,7 +56,7 @@
       const id_veterinario = datosVeterinario[0].id_veterinario;
       const nombres = datosVeterinario[0].nombres;
       const apellidos = datosVeterinario[0].apellidos;
-      const nombre = nombres + " " + apellidos;
+      const nombre = "Dr. " + nombres + " " + apellidos;
       const nombreSeparado = nombre.split(" ").map(
         parte => parte.charAt(0).toUpperCase() + parte.slice(1).toLowerCase()
       );
@@ -88,20 +88,21 @@
 
         <!-- Navegación principal -->
         <nav id="main-nav" class="hidden md:flex items-center space-x-8">
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/pawcarepro'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_pacientes'">Mis Pacientes</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_consultas'">Mis Consultas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='calendario'">Calendario</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='soporte'">Soporte</span>
         </nav>
 
 
   
         <!-- Menú móvil desplegable -->
         <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/pawcarepro'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_pacientes'">Mis Pacientes</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_consultas'">Mis Consultas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='soporte'">Soporte</span>
         </div>
 
         <!-- Right Side -->
@@ -147,18 +148,24 @@
             Mi agenda
           </h3>
           <div class="space-y-4">
-            {% for agendamiento in agenda %}
-            <div 
-              onclick="window.location.href='/ficha_mascotas?mascota={{ agendamiento['mascota'] }}&id_reserva={{ agendamiento['id_reserva'] }}'"
-              class="cursor-pointer flex items-center justify-between p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8] hover:bg-[#E6F0F2] transition"
-              >
-              <div id="{{ agendamiento['mascota'] }}">
-                <p class="text-[#2E2E2E]">{{ agendamiento['nombre_mascota'] }} ({{ agendamiento['nombre_raza'] }})</p>
-                <p class="text-sm text-[#6B7D85]">Control mensual</p>
+            {% if agenda %}
+              {% for agendamiento in agenda %}
+              <div 
+                onclick="window.location.href='/ficha_mascotas?mascota={{ agendamiento['mascota'] }}&id_reserva={{ agendamiento['id_reserva'] }}'"
+                class="cursor-pointer flex items-center justify-between p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8] hover:bg-[#E6F0F2] transition"
+                >
+                <div id="{{ agendamiento['mascota'] }}">
+                  <p class="text-[#2E2E2E]">{{ agendamiento['nombre_mascota'] }} ({{ agendamiento['nombre_raza'] }})</p>
+                  <p class="text-sm text-[#6B7D85]">Control mensual</p>
+                </div>
+                <span  class="px-2 py-1 text-xs rounded bg-[#3F785D] text-white">{{ agendamiento['fecha'] }} - {{ agendamiento['hora'] }}</span>
               </div>
-              <span  class="px-2 py-1 text-xs rounded bg-[#3F785D] text-white">{{ agendamiento['fecha'] }} - {{ agendamiento['hora'] }}</span>
+              {% endfor %}
+            {% else %}
+            <div class="p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
+              <p class="text-[#2E2E2E]">No tienes citas programadas</p>
             </div>
-            {% endfor %}
+            {% endif %}
             
           </div>
         </div>
@@ -194,8 +201,11 @@
               <p class="text-[#2E2E2E]">No tienes notificaciones</p>
             </div>
             <div class="p-3 bg-[#F8FAFB] rounded-lg border border-[#D1E5E8]">
+              {% if agenda %}
               <p class="text-sm text-[#6B7D85]">Próxima cita: {{ agenda[0]['tiempo_faltante_horas'] }}</p> 
-
+              {% else %}
+              <p class="text-[#2E2E2E]">No tienes citas programadas</p>
+              {% endif %}
             </div>            
 
           </div>
@@ -204,7 +214,7 @@
     </div>
   </section>
 
-  {% include 'footer.html' %}
+  {% include 'footerpro.html' %}
 </div>
 
   </body>
