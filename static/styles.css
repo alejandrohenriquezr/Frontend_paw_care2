@@ -65,7 +65,7 @@ footer {
     height: 20px;
 }
 
-.suggestions {
+.suggestions1 {
     position: absolute;
     top: 40px;
     left: 0;
@@ -80,11 +80,43 @@ footer {
 .suggestion-item {
     padding: 10px;
     cursor: pointer;
+    left:0
 }
 
-.suggestion-item:hover {
+.suggestion-item:hover1 {
     background-color: #f0f0f0;
 }
+
+
+#suggestions {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #d1d5db; /* neutral-300 */
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 50;
+    display: none;
+    width: 100%;
+    overflow-y: auto;
+    /*alinear a la izquierda*/
+    left: 0;
+    max-height: 240px; /* Aprox. 5 elementos de 48px cada uno */
+    overflow-y: auto;  /* 🔥 Habilita el scroll vertical */
+    overflow-x: hidden; /* 🔒 Previene scroll lateral */
+    
+  }
+
+  .suggestion-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    left: 0;
+  }
+
+  .suggestion-item:hover {
+    background-color: #f3f4f6; /* neutral-100 */
+    left: 0;
+  }
+
 
 .contenedor {
     display: flex;
@@ -99,11 +131,11 @@ footer {
 
 .columna-1 {
     display: flex;
-    flex-direction: column;  /* 🔥 Asegura que los elementos se apilen verticalmente */
-    align-items: left;     /* 🔥 Centra horizontalmente el contenido */
-    justify-content: center; /* 🔥 Centra verticalmente (si la altura está definida) */
-    text-align: left;      /* 🔥 Centra el texto si lo hubiera */
-    width: 100%;             /* 🔥 Ajuste del ancho */
+    flex-direction: column;     /* Elementos en columna */
+    align-items: flex-start;    /* Alinea HORIZONTALMENTE hacia la izquierda */
+    justify-content: flex-start; /* Alinea VERTICALMENTE hacia arriba */
+    text-align: left;
+    width: 100%;
 }
 
 /* 🔥 Redondear bordes de la imagen */
@@ -585,3 +617,19 @@ body { font-family: Arial, sans-serif; text-align: center; }
   .btn-subir-certificado:hover {
     background-color: #45a049;
   }
+
+  #resultados {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .contenedor {
+    min-width: 300px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  

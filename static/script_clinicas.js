@@ -259,11 +259,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const imgVet = document.createElement("img");
             imgVet.src = `/static/images/vet_${vet.id_veterinario}.jpg`;
             imgVet.alt = `Veterinario ${vet.id_veterinario}`;
+            //alinear la imagen al centro
+            imgVet.style.margin = "0 auto";
+
             imgVet.className = "w-16 h-16 rounded-full object-cover bg-gray-200";
 
             const textoVet = document.createElement("span");
-            textoVet.innerHTML = `${vet.nombres} ${vet.apellidos}<br>${vet.area_interes}`;
             textoVet.className = "font-bold text-blue-800";
+            textoVet.innerHTML = `${vet.nombres} ${vet.apellidos}<br>${vet.area_interes}`;
+            textoVet.style.textAlign = "center";
+            textoVet.style.fontSize = "0.9rem";
+            textoVet.style.marginTop = "0.5rem";
+            textoVet.style.marginBottom = "0.5rem";
+            textoVet.style.lineHeight = "1.2";
+            textoVet.style.fontWeight = "normal";
+
+
+            
 
             divId.appendChild(imgVet);
             divId.appendChild(textoVet);
@@ -502,21 +514,33 @@ document.addEventListener("DOMContentLoaded", function () {
                                 <option value="">Selecciona especie</option>
                                 ${especies.map(e => `<option value="${e.id_especie}">${e.especie}</option>`).join('')}
                             </select>
-                            <select id="raza_mascota" class="input" disabled><option value="">Selecciona una especie primero</option></select>
+                            <input list="razas_sugeridas" id="raza_mascota" name="raza_mascota" class="input" placeholder="Ingrese raza" required>
+                            <datalist id="razas_sugeridas"></datalist>
                         `;
                         //alert("Por favor, completa los campos para crear una nueva mascota.");
-                        document.getElementById('especie_mascota').addEventListener('change', function () {
-                            const id_especie = this.value;
-                            //alert('Por favor, selecciona una especie para ver las razas disponibles. ', id_especie);
-                            //alert(id_especie)
-                            fetch(`/api/razas?id_especie=${id_especie}`)
-                                .then(res => res.json())
-                                .then(razas => {
-                                    const razaSelect = document.getElementById('raza_mascota');
-                                    razaSelect.innerHTML = razas.map(r => `<option value="${r.id_especie_raza}">${r.nombre_raza}</option>`).join('');
-                                    razaSelect.disabled = false;
+                        document.getElementById('especie_mascota').addEventListener('change', async function () {
+                            const especie = this.value;
+                          
+                            if (especie) {
+                              try {
+                                const res = await fetch(`/api/razas_por_especie/${especie}`);
+                                const data = await res.json();
+                          
+                                const datalist = document.getElementById("razas_sugeridas");
+                                datalist.innerHTML = ""; // Limpiar anteriores
+                          
+                                data.forEach(raza => {
+                                  const option = document.createElement("option");
+                                  option.value = raza;
+                                  datalist.appendChild(option);
                                 });
-                        });
+                          
+                              } catch (err) {
+                                console.error("Error cargando razas:", err);
+                              }
+                            }
+                          });
+                          
         
                         ['nombre_mascota', 'fecha_nacimiento', 'sexo_mascota', 'peso_mascota'].forEach(id => {
                             document.getElementById(id).addEventListener('change', () => {

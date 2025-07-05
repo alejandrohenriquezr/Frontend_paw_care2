@@ -747,8 +747,11 @@ def obtener_clinicas():
         if "comuna" in request.args and request.args.get("comuna") != "":
             session["comuna"] = request.args.get("comuna").strip()
             comuna= session["comuna"]
+            print(f"[INFO] Comuna desde URL: '{comuna}'")
+            
         else:
             comuna=session.get("comuna", None)  # Obtener el valor de la comuna de la sesión, si no existe, será None
+            print(f"[INFO] Comuna desde sesión: '{comuna}'")
 
         
 
@@ -765,11 +768,6 @@ def obtener_clinicas():
             if df_nombre.empty:
                 clinicas_especialidades = pd.read_csv("data/clinicas_especialidades.csv", sep=";")
                 especialidades = pd.read_csv("data/especialidades.csv", sep=";")
-                staff = pd.read_csv("data/staff.csv", sep=";")
-                staff["nombre_completo"] = staff["nombres"].str.strip() + " " + staff["apellidos"].str.strip()
-                staff_clinica = pd.read_csv("data/staff_clinica.csv", sep=";")
-
-
                 # Unir las tablas para obtener especialidades
                 clinicas_especialidades = clinicas_especialidades.merge(
                     especialidades[["id_especialidad", "especialidad"]],
@@ -777,7 +775,6 @@ def obtener_clinicas():
                     right_on="id_especialidad",
                     how="left"
                 )
-
                 # a clinicas_especialidades le agregamos todos los campos de df donde id_clinica =O id_clinica
                 clinicas_especialidades = clinicas_especialidades.merge(
                     df[["id_clinica", "nombre", "direccion", "dpa","calificacion", "estado", "n_calificaciones" ]],
@@ -785,42 +782,22 @@ def obtener_clinicas():
                     right_on="id_clinica",
                     how="left"
                 )
-
-                           
                 print("clinicas_especialidades")
                 print(clinicas_especialidades)
                 print(f"buscando dentro del if por {busqueda} en especialidades")
                 #filtramos clinicas_especialidades por el campo especialidad = busqueda
-                clinicas_especialidades_original = clinicas_especialidades
+
                 clinicas_especialidades = clinicas_especialidades[clinicas_especialidades["especialidad"].str.contains(busqueda, case=False, na=False)]
-                clinicas_especialidades["tipo"]= "especialidades"
-                if clinicas_especialidades.empty:
-                    clinicas_especialidades = clinicas_especialidades_original
-                    print("clinicas_especialidades:")
-                    print(clinicas_especialidades)                     
-                    staff_clinica= staff_clinica.merge(
-                    staff[["id_veterinario", "nombre_completo"]],
-                    left_on="id_veterinario",
-                    right_on="id_veterinario",
-                    how="left"
-                    )
-                    staff_clinica = staff_clinica[staff_clinica["nombre_completo"] == busqueda]
-                   
-                    print(type(staff_clinica))
-                    print(staff_clinica)
-                    # 1. Asegurar que ambos campos sean del mismo tipo (int)
-                    clinicas_especialidades["id_clinica"] = clinicas_especialidades["id_clinica"].astype(int)
-                    staff_clinica["id_clinica"] = staff_clinica["id_clinica"].astype(int)
+                #  clinicas_especialidades = clinicas_especialidades[clinicas_especialidades["especialidad"] == busqueda]
 
-                    # 2. Filtrar clinicas_especialidades según los ID presentes en clinicas
-                    clinicas_especialidades = clinicas_especialidades[
-                        clinicas_especialidades["id_clinica"].isin(staff_clinica["id_clinica"])
-                    ]
-                    clinicas_especialidades = clinicas_especialidades.drop_duplicates(subset="id_clinica", keep="first")
-                    clinicas_especialidades["tipo"]= "veterinario"
-                    print("filtrado")
-                    print(clinicas_especialidades)
-
+                #clinicas_especialidades=clinicas_especialidades["nombre"]
+                #clinicas_especialidades = clinicas_especialidades[clinicas_especialidades["especialidad"].str.contains(busqueda, case=False, na=False)]
+                #clinicas_especialidades = clinicas_especialidades["nombre"].dropna().unique()  # Obtener nombres únicos
+                #df=clinicas_especialidades
+                print("clinicas_especialidades2")
+                print(clinicas_especialidades)
+                #clinicas_json = clinicas_especialidades.to_dict(orient="records")
+                #clinicas_json = clinicas_especialidades.to_frame(name="nombre").to_dict(orient="records")
                 clinicas_json = clinicas_especialidades.to_dict(orient="records")
                 print("clinicas_json")
                 print(clinicas_json)
@@ -873,22 +850,27 @@ def obtener_sugerencias():
     query = remover_tildes(query)  # 🔥 Eliminar tildes de la búsqueda
     comuna = request.args.get("comuna", "")  # Obtener el valor del select comunas
     resultados = []
-    print("Entrando a sugerencias")
-    if query:
-        print(f"🔍 Buscando sugerencias para: '{query}' en la comuna '{comuna}'")  # Depuración
-    else:
-        print("🔍 Buscando todas las especialidades disponibles")
-
+    print(f"🔍 Buscando sugerencias para: '{query}' en la comuna '{comuna}'")  # Depuración
     if query:
         try:
             print("📂 Intentando leer el archivo: data/clinicas.csv")  # Depuración
             df = pd.read_csv("data/clinicas.csv", sep=";")  # Leer el archivo CSV
 
+           # print("✅ Archivo CSV leído correctamente")
+
+            # Mostrar las primeras filas del archivo en la consola
+            #print("🔍 Primeras filas del CSV:\n", df.head())
+            #muestro el tipo de dato de la columna dpa
+           # print("Tipo de dato de la columna dpa:", df['dpa'].dtype)
+            # Verificar si la columna existe en el CSV
+            if "nombre" not in df.columns or "dpa" not in df.columns:
+                print("❌ ERROR: La columna 'nombre' o 'DPA' no existe en el CSV")
+                return jsonify({"error": "Las columnas 'nombre' o 'dpa' no existen en el CSV"}), 500
+             
             # Filtrar por la comuna seleccionada
             df["dpa"] = df["dpa"].astype(str)
             df_filtrado = df[df["dpa"].str.contains(comuna, case=False, na=False)]
-            #clinicas = df_filtrado["nombre"].dropna().unique()  # Obtener nombres únicos
-            clinicas = df["nombre"].dropna().unique()  # Obtener nombres únicos
+            clinicas = df_filtrado["nombre"].dropna().unique()  # Obtener nombres únicos
 
             clinicas_especialidades = pd.read_csv("data/clinicas_especialidades.csv", sep=";")  # Leer el archivo CSV
             # le agregamos la dpa a clinicas_especialidades desde el df_filtrado
@@ -910,50 +892,12 @@ def obtener_sugerencias():
             clinicas_especialidades = clinicas_especialidades["especialidad"].dropna().unique()  # Obtener nombres únicos
             print(f"clinicas_especialidades:")
             print(f"{clinicas_especialidades}")
-            
-            staff = pd.read_csv("data/staff.csv", sep=";")  # Leer el archivo CSV
-            staff_clinicas = pd.read_csv("data/staff_clinica.csv", sep=";")  # Leer el archivo CSV
-            print("staff:")
-            print(staff)   
-            print("staff_clinicas:")
-            print(staff_clinicas)         
-            staff_clinicas= staff_clinicas.merge(
-                staff[["id_veterinario","nombres", "apellidos"]],
-                left_on="id_veterinario",
-                right_on="id_veterinario",
-                how="left"
-            )
-
-            staff_clinicas["nombre_completo"] = staff_clinicas["nombres"].str.strip() + " " + staff_clinicas["apellidos"].str.strip()
-            staff_clinicas = staff_clinicas[["id_clinica", "nombre_completo"]]
-
-            
-            print("Staff_clinicas merge")
-            print(staff_clinicas)
-
+            #especialidades = df_filtrado["especialidades"].dropna().unique()
             # Filtrar sugerencias que contengan el texto ingresado
-            
             resultados_nombre = [c for c in clinicas if query in remover_tildes(c.lower())]
-            if resultados_nombre:
-                print("Se encontraron resultados en resultados_nombre")
-                resultados_nombre.insert(0, "clinica")
-            print(type(resultados_nombre))
-            print("resultados_nombre")
-            print(resultados_nombre)
             resultados_especialidades = [e for e in clinicas_especialidades if query in remover_tildes(e.lower())]
-            if resultados_especialidades:
-                print("Se encontraron resultados en resultados_especialidades")
-                resultados_especialidades.insert(0, "especialidades")
-            print("resultados_especialidades")
-            print(resultados_especialidades)
-            resultados_staff = [f for f in staff_clinicas["nombre_completo"] if query in remover_tildes(f.lower())]
-            if resultados_staff:
-                print("Se encontraron resultados en staff_clinicas")
-                resultados_staff.insert(0, "veterinario")
-            print("resultados_staff")
-            print(resultados_staff)
             # Combinar resultados de nombres y especialidades
-            resultados = list(set(resultados_nombre + resultados_especialidades + resultados_staff))
+            resultados = list(set(resultados_nombre + resultados_especialidades))
 
             # Filtrar sugerencias que contengan el texto ingresado
                           
@@ -962,12 +906,10 @@ def obtener_sugerencias():
             return jsonify({"error": f"Error al leer el CSV: {str(e)}"}), 500
     else:
         especialidades = pd.read_csv("data/especialidades.csv", sep=";")
-        especialidades = especialidades["especialidad"].dropna().unique()  # Obtener nombres únicos
-        especialidades = np.sort(especialidades)  # Ordenar alfabéticamente
         #with especialidades as f:
         #    reader = csv.DictReader(f)
         #    especialidades = sorted(set(row["especialidad"] for row in reader if row["especialidad"].strip()))
-        resultados = list(especialidades)  # Solo muestra 10 por omisión
+        resultados = especialidades  # Solo muestra 10 por omisión
         print("resultados")
         print(resultados)
 
@@ -1906,6 +1848,54 @@ def api_precios():
     return precios_raw
 
 
+@app.route('/api/sugerencias_busqueda')
+def sugerencias_busqueda():
+    q = request.args.get("q", "").strip().lower()
+    comuna = request.args.get("comuna", "").strip()
+    sugerencias = []
+
+    # Cargar especialidades
+    sugerencias = pd.read_csv("data/especialidades.csv", sep=";")
+    #renombramos el campo especialidad por label
+    sugerencias = sugerencias.rename(columns={"especialidad": "label"})
+    sugerencias = sugerencias.rename(columns={"id_especialidad": "value"})
+    sugerencias["tipo"] = "especialidad"
+    print("sugerencias=", sugerencias)
+    # Cargar clínicas si hay búsqueda
+    if q:
+        with open("data/clinicas.csv", newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if comuna and row["dpa"] != comuna:
+                    continue
+                nombre = row["nombre"]
+                if q in nombre.lower():
+                    sugerencias.append({
+                        "label": nombre,
+                        "value": nombre,
+                        "tipo": "clínica"
+                    })
+
+        with open("data/staff.csv", newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if comuna and row["dpa"] != comuna:
+                    continue
+                nombre = row["nombre"]
+                if q in nombre.lower():
+                    sugerencias.append({
+                        "label": nombre,
+                        "value": nombre,
+                        "tipo": "staff"
+                    })
+
+    # Ordenar por cantidad de coincidencias con q
+    if q:
+        sugerencias.sort(key=lambda x: x["label"].lower().count(q), reverse=True)
+
+    return jsonify(sugerencias)
+
+
 
 @app.route("/api/especialidades_clinica")
 def especialidades_clinica():
@@ -2771,48 +2761,6 @@ def subir_certificado():
         return jsonify(success=True)
     else:
         return jsonify(success=False, error="Formato de archivo no permitido"), 400
-
-@app.route("/api/obtener_dpa", methods=["GET"])
-def obtener_dpa():
-    nombre_comuna = request.args.get("nombre_comuna", "").strip().lower()
-
-    if not nombre_comuna:
-        return jsonify({"error": "Nombre de comuna no especificado"}), 400
-
-    try:
-        df_dpa = pd.read_csv("data/dpa.csv", dtype=str)
-        df_dpa["Nombre_Comuna"] = df_dpa["Nombre_Comuna"].str.strip().str.lower()
-
-        fila = df_dpa[df_dpa["Nombre_Comuna"] == nombre_comuna]
-
-        if fila.empty:
-            return jsonify({"error": "Comuna no encontrada"}), 404
-
-        id_dpa = fila.iloc[0]["Codigo_Comuna_2017"]
-        return jsonify({"id_dpa": id_dpa})
-
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/obtener_comuna/<int:id_dpa>")
-def obtener_nombre_comuna(id_dpa):
-    try:
-        print(f"[DEBUG] Obteniendo comuna para id_dpa: {id_dpa}")
-        df_dpa = pd.read_csv("data/dpa.csv", sep=";")
-        
-        df_dpa = df_dpa.dropna(subset=["id_dpa", "Nombre_Comuna"])
-        print("df_dpa:", df_dpa)
-        resultado = df_dpa[df_dpa["id_dpa"] == id_dpa]
-
-        if not resultado.empty:
-            nombre_comuna = resultado.iloc[0]["Nombre_Comuna"]
-            return jsonify({"nombre_comuna": nombre_comuna})
-        else:
-            return jsonify({"error": "Comuna no encontrada"}), 404
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 
 if __name__ == "__main__":
     app.run(debug=True)
