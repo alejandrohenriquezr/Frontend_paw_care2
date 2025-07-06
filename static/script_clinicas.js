@@ -89,7 +89,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             card.innerHTML = `
                 <div class="bg-neutral-200 h-48 rounded-lg mb-4 flex items-center justify-center">
-                    <img src="/static/images/id_${clinica.id_clinica}.jpg" alt="${clinica.nombre}" class="h-full w-full object-cover rounded-lg">
+                    <img src="/static/images/id_${clinica.id_clinica}.jpg" 
+                    alt="${clinica.nombre}" 
+                    class="h-full w-full object-cover rounded-lg"
+                    onerror="this.onerror=null; this.src='/static/images/foto_generica_clinica.jpg';">
                 </div>
                 <h3 class="text-xl mb-2 text-[#333333]">${clinica.nombre}</h3>
                 <p class="text-[#4A4A4A] mb-2"><i class="fa-solid fa-location-dot"></i> A ${clinica.distancia}</p>

@@ -2,6 +2,10 @@
 <html lang="es">
               
 <head>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
   <meta charset="UTF-8">
@@ -49,7 +53,17 @@
           };
   </script>
 
-
+<script>
+navigator.geolocation.getCurrentPosition(
+    function(position) {
+        sessionStorage.setItem("lat_usuario", position.coords.latitude);
+        sessionStorage.setItem("lon_usuario", position.coords.longitude);
+    },
+    function(error) {
+        console.warn("No se pudo obtener la ubicación del usuario");
+    }
+);
+</script>
 <script>
 
       window.onload = function() {
@@ -65,6 +79,9 @@
       function showPosition(position) {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
+        
+          console.log(`Ubicación del usuario en el index es: Latitud ${lat}, Longitud ${lon}`);
+
           const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
 
           fetch(url)
@@ -363,20 +380,28 @@
 
 
   <!-- Featured Clinics -->
-  <!--<section id="clinics" class="py-16 bg-gradient-to-b from-[#D8E5E8] to-[#E8EFF1]">
+  <section id="clinics" class="py-16 bg-gradient-to-b from-[#D8E5E8] to-[#E8EFF1]">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl mb-8 text-[#2E2E2E]">Clínicas veterinarias cerca de ti</h2>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div id="clinicas-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      -->
-        <!-- Paginación -->
-        <!--<div id="paginacion" class="flex justify-center mt-6"></div>
-        
-        <script src="/static/script2.js"></script>
-        
+      <div id="ordenadores" class="flex flex-wrap gap-3 mb-6">
+        <button class="ordenador-btn activo" data-sort="distancia_asc">Distancia ↑</button>
+        <button class="ordenador-btn" data-sort="distancia_desc">Distancia ↓</button>
+        <button class="ordenador-btn" data-sort="calificacion_asc">Calificación ↑</button>
+        <button class="ordenador-btn" data-sort="calificacion_desc">Calificación ↓</button>
+        <button class="ordenador-btn" data-sort="resenas_asc">Reseñas ↑</button>
+        <button class="ordenador-btn" data-sort="resenas_desc">Reseñas ↓</button>
       </div>
-    </div>-->
+
+      
+      <div id="clinicas_recomendadas" class="grid md:grid-cols-2 lg:grid-cols-1 gap-6">
+        <!-- Aquí se cargarán las clínicas recomendadas -->
+      </div>
+      <div id="paginador_recomendadas" class="flex justify-center mt-4"></div>
+    </div>
+  </section>
+
+
+  
 
 
   <!-- Footer -->

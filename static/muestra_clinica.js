@@ -37,6 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
             imagen.alt = clinica.nombre;
             imagen.width = 275;
             imagen.height = 184;
+            imagen.onerror = function() {
+                this.onerror = null;
+                this.src = '/static/images/foto_generica_clinica.jpg';
+            };
 
             columna1.appendChild(imagen);
 

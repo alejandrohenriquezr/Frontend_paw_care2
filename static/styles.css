@@ -10,10 +10,12 @@ h1 {
     color: #333;
 }
 header {
+    position: fixed;
     background-color: white;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 1000; /* suficientemente alto para estar por encima de los mapas */
 
 }
 
@@ -121,6 +123,7 @@ footer {
 .contenedor {
     display: flex;
     margin-bottom: 10px; /* 🔥 Espaciado entre clínicas */
+    background-color: whitesmoke;
 }
 
 .columna-1 img {
@@ -633,3 +636,26 @@ body { font-family: Arial, sans-serif; text-align: center; }
     scroll-snap-align: start;
   }
   
+  .leaflet-container {
+  z-index: 0 !important;
+}
+
+.ordenador-btn {
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.ordenador-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.ordenador-btn.activo {
+  background-color: #2563eb;   /* azul */
+  color: white;
+  font-weight: bold;
+  border: 1px solid #2563eb;
+}

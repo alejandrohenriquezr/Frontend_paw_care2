@@ -15,6 +15,7 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from flask_session import Session
 from werkzeug.utils import secure_filename
+from math import radians, cos, sin, sqrt, atan2
 
 # Para Transbank
 #from flask import Flask, render_template, redirect, url_for, request
@@ -38,6 +39,8 @@ import fitz  # PyMuPDF
 import pypandoc
 import pytz
 import numpy as np  # importar numpy para usar np.nan
+
+
 
 
 
@@ -140,7 +143,57 @@ def index():
         # Redirigir a la página de inicio de sesión
         return render_template(("index.html"))
     #return render_template("index.html", user=user)
-    
+
+# Cargar una vez el CSV
+clinicas_df = pd.read_csv("data/clinicas.csv", sep=";")
+dpa_df = pd.read_csv("data/dpa.csv", sep=";")
+clinicas_df = clinicas_df.merge(
+    dpa_df[["id_dpa", "Nombre_Comuna"]],
+    left_on="dpa",
+    right_on="id_dpa",
+    how="left"
+)
+
+def calcular_distancia(lat1, lon1, lat2, lon2):
+    R = 6371  # Radio de la Tierra en km
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    return R * c
+
+@app.route("/api/clinicas_cercanas")
+def clinicas_cercanas():
+    try:
+        lat = float(request.args.get("lat"))
+        lon = float(request.args.get("lon"))
+
+        df = clinicas_df.copy()
+
+        # Asegurarse de que las columnas latitud y longitud son numéricas
+        # Reemplazar ',' por '.' antes de convertir a float
+        df["latitud"] = pd.to_numeric(df["latitud"].str.replace(",", "."), errors="coerce")
+        df["longitud"] = pd.to_numeric(df["longitud"].str.replace(",", "."), errors="coerce")
+        print("df clinicas lat y long:")
+        print(df[["nombre", "latitud", "longitud", "Nombre_Comuna"]])
+        # Eliminar filas con coordenadas inválidas
+        df = df.dropna(subset=["latitud", "longitud"])   
+
+        df["distancia"] = df.apply(lambda row: calcular_distancia(lat, lon, row["latitud"], row["longitud"]), axis=1)
+        print("Distancias calculadas:")
+        print(df[["nombre", "latitud", "longitud", "distancia"]].sort_values("distancia").head(5))
+
+        df_ordenado = df.sort_values(by="distancia")
+
+        resultado = df_ordenado[[
+            "id_clinica", "nombre", "direccion", "dpa", "latitud", "longitud", "Nombre_Comuna", "calificacion", "n_calificaciones", "distancia"
+        ]].to_dict(orient="records")
+
+        return jsonify(resultado)
+    except Exception as e:
+        print("Error en /api/clinicas_cercanas:", e)
+        return jsonify({"error": "Parámetros inválidos o error interno"}), 400
+
 
 # Guardar datos que provienen de JS en la sesión de python
 @app.route('/guardar_datos', methods=['POST'])
@@ -2775,21 +2828,25 @@ def subir_certificado():
 @app.route("/api/obtener_dpa", methods=["GET"])
 def obtener_dpa():
     nombre_comuna = request.args.get("nombre_comuna", "").strip().lower()
+    print("[DEBUG] Nombre de comuna recibido obtener_dpa:", nombre_comuna)
 
     if not nombre_comuna:
         return jsonify({"error": "Nombre de comuna no especificado"}), 400
 
     try:
-        df_dpa = pd.read_csv("data/dpa.csv", dtype=str)
-        df_dpa["Nombre_Comuna"] = df_dpa["Nombre_Comuna"].str.strip().str.lower()
+        df_dpa = pd.read_csv("data/dpa.csv", sep=";")
 
+        df_dpa["Nombre_Comuna"] = df_dpa["Nombre_Comuna"].str.lower()
+        print("[DEBUG] DataFrame df_dpa:", df_dpa)
         fila = df_dpa[df_dpa["Nombre_Comuna"] == nombre_comuna]
 
         if fila.empty:
             return jsonify({"error": "Comuna no encontrada"}), 404
 
-        id_dpa = fila.iloc[0]["Codigo_Comuna_2017"]
+        id_dpa = int(fila.iloc[0]["Comuna"])
+        print("[DEBUG] ID DPA encontrado:", id_dpa)
         return jsonify({"id_dpa": id_dpa})
+        #return id_dpa
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

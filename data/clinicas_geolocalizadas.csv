@@ -1,0 +1,24 @@
+id_clinica;nombre;direccion;dpa;estado;n_calificaciones;calificacion;especialidades;id_dpa;Nombre_Comuna;latitud;longitud
+1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;13130;1;25;4,2;aaaa;13130;San Miguel;-33.4823152;-70.6512387
+2;Clínica 2;Los Conquistadores 2328;13123;1;45;5;bbbb;13123;Providencia;-33.4151561;-70.6110142
+3;Clínica 3;Avenida El Rosal 4250;13119;1;12;3,9;cccc;13119;Maipú;-33.4851875;-70.7675101
+4;Clínica 4;Huérfanos 2653;13101;1;10;4,8;aaaa;13101;Santiago;-33.4418933;-70.6727172
+5;Clínica 5;Huérfanos 2653;13101;1;69;2,9;bbbb;13101;Santiago;-33.4418933;-70.6727172
+6;Clínica 6;Huérfanos 2653;13101;1;54;3;cccc;13101;Santiago;-33.4418933;-70.6727172
+7;Clínica 7;Huérfanos 2653;13101;1;44;2,4;aaaa;13101;Santiago;-33.4418933;-70.6727172
+8;Clínica 8;Huérfanos 2653;13101;1;26;4,8;bbbb;13101;Santiago;-33.4418933;-70.6727172
+9;Clínica 9;Huérfanos 2653;13101;1;16;3,3;cccc;13101;Santiago;-33.4418933;-70.6727172
+10;Clínica 10;Huérfanos 2653;13101;1;74;3,4;aaaa;13101;Santiago;-33.4418933;-70.6727172
+11;Clínica 11;Huérfanos 2653;13101;1;60;3,6;bbbb;13101;Santiago;-33.4418933;-70.6727172
+12;Clínica 12;Huérfanos 2653;13101;1;26;3,9;cccc;13101;Santiago;-33.4418933;-70.6727172
+13;Clínica 13;Huérfanos 2653;13101;1;50;2,4;aaaa;13101;Santiago;-33.4418933;-70.6727172
+14;Clínica 14;Huérfanos 2653;13101;1;96;4,9;bbbb;13101;Santiago;-33.4418933;-70.6727172
+15;Clínica 15;Huérfanos 2653;13101;1;12;3,5;cccc;13101;Santiago;-33.4418933;-70.6727172
+16;Clínica 16;Huérfanos 2653;13101;1;53;4;aaaa;13101;Santiago;-33.4418933;-70.6727172
+17;Clínica 17;Huérfanos 2653;13101;1;70;2,6;bbbb;13101;Santiago;-33.4418933;-70.6727172
+18;Clínica 18;Huérfanos 2653;13101;1;28;4;cccc;13101;Santiago;-33.4418933;-70.6727172
+19;Clínica 19;Huérfanos 2653;13101;1;42;2,9;aaaa;13101;Santiago;-33.4418933;-70.6727172
+20;Clínica 20;Huérfanos 2653;13101;1;68;3,6;bbbb;13101;Santiago;-33.4418933;-70.6727172
+21;Clínica 21;Compañía de Jesús 1553;13101;1;25;4,2;aaaa;13101;Santiago;-33.4392101;-70.6589691
+22;Clínica 22;Los Conquistadores 2328;9101;1;45;5;bbbb;9101;Temuco;-38.7720794;-72.7661483
+23;Clínica 23;Jaime Castillo Velasco 2316;13101;1;12;3,9;cccc;13101;Santiago;-33.4446326;-70.6682111
