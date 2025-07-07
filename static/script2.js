@@ -66,6 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const inicio = (pagina - 1) * elementosPorPagina;
         const fin = inicio + elementosPorPagina;
         const clinicasPagina = clinicasData.slice(inicio, fin);
+        //const latUsuario = (position.coords.latitude);
+        //const lonUsuario = (position.coords.longitude);
+        //console.log(`Mostrando latUsuario en mostrarPagina ${latUsuario} lonUsuario ${lonUsuario} en la página ${pagina}`);
 
         clinicasPagina.forEach(clinica => {
             const contenedor = document.createElement("div");
@@ -90,16 +93,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const fila2 = document.createElement("div");
             fila2.classList.add("fila2");
-            fila2.textContent = clinica.nombre;
+            console.log("staffData", staffData);
+            fila2.innerHTML = clinica.nombre;
+
+            for (let i = 1; i < staffData.length; i++) {
+                if (staffData[i]?.id_clinica == clinica.id_clinica) {
+                    fila2.innerHTML += "<br>Vet. " + staffData[i]?.nombre_completo;
+                }
+            }
+
+            
 
             const fila3 = document.createElement("div");
             fila3.classList.add("fila2");
-            fila3.textContent = clinica.direccion;
+            fila3.textContent = "Dir. " + clinica.direccion;
 
             const fila4 = document.createElement("div");
             fila4.classList.add("fila2");
             obtenerNombreComuna(clinica.dpa).then(nombreComuna => {
-                fila4.textContent = `Comuna: ${nombreComuna}`;
+                fila4.textContent = `${nombreComuna}`;
             });
 
             const fila5 = document.createElement("div");
@@ -107,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const calificacion = parseFloat(clinica.calificacion.replace(",", "."));
             const parteEntera = Math.floor(calificacion);
             const parteDecimal = calificacion - parteEntera;
-            fila5.innerHTML = `${clinica.calificacion} `;
+            //fila5.innerHTML = `${clinica.calificacion} `;
             for (let i = 0; i < parteEntera; i++) fila5.innerHTML += `<img src="/static/icons/star.png" width="15"> `;
             if (parteDecimal > 0.1) fila5.innerHTML += `<img src="/static/icons/star_2.png" width="15"> `;
 
@@ -117,6 +129,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const fila7 = document.createElement("div");
             fila7.classList.add("fila2");
+            //alinear el contenido al centro
+            fila7.style.textAlign = "center";
+            fila7.style.marginTop = "10px";
             const formulario = document.createElement("form");
             formulario.classList.add("search-form");
             formulario.action = "/agendar";
@@ -125,8 +140,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 <input type="hidden" name="id_clinica" value="${clinica.id_clinica}">
                 <input type="hidden" name="accion_agendar" value="1">
                 <button type="submit" class="w-full py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-lg hover:bg-[#4F7F88] transition duration-200">Agendar cita</button>
+
             `;
+            //"mt-2 px-4 py-2 bg-[#2563eb] text-white rounded-lg border-2 border-indigo-600 shadow-lg hover:bg-indigo-700 transition duration-200"
+            fila7.innerHTML = `
+                <!-- Botón Waze -->
+                <button onclick="window.open('https://waze.com/ul?ll=${clinica.latitud},${clinica.longitud}&navigate=yes&z=10', '_blank')"
+                    class="w-full h-10 mt-4 flex items-center justify-center gap-3 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition px-4">
+                    <!--<img src="/static/images/logo_waze.png" alt="Waze" width="32" height="32" class="inline-block align-middle"> -->
+                    ¿Cómo llegar con Waze?</span>
+                </button>
+
+                <!-- Botón Google Maps -->
+                <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${clinica.latitud},${clinica.longitud}', '_blank')"
+                    class="w-full h-10 mt-4 flex items-center justify-center gap-3 bg-green-600 text-white text-sm font-semibold rounded-lg hover:bg-green-700 transition px-4">
+                    <!--<img src="/static/images/google_maps_icon.png" alt="Google Maps" width="32" height="32" class="inline-block align-middle"> -->
+                    ¿Cómo llegar con Google Maps?</span>
+                </button><br>
+            `;
+
             fila7.appendChild(formulario);
+
 
             columna1.append(fila1, fila2, fila3, fila4, fila5, fila6, fila7);
             contenedor.appendChild(columna1);
@@ -170,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const response = await fetch(`/api/clinicas?comuna=${encodeURIComponent(comunaParam)}&search=${encodeURIComponent(search)}`);
         const data = await response.json();
         clinicasData = data.clinicas || [];
+        staffData = data.staff_json || [];
         if (clinicasData.length === 0) {
             sessionStorage.removeItem("busqueda");
             sessionStorage.removeItem("comuna");
@@ -290,11 +325,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     <button onclick="window.open('https://waze.com/ul?ll=${c.latitud},${c.longitud}&navigate=yes&z=10', '_blank')" 
                             class="mt-2 px-4 py-2 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700 transition">
-                        Cómo llegar con Waze
+                       ¿Cómo llegar con Waze?
                     </button>
                     <button onclick="window.open('https://www.google.com/maps/dir/?api=1&destination=${c.latitud},${c.longitud}&origin=${latUsuario},${lonUsuario}', '_blank')" 
                             class="mt-2 px-4 py-2 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition">
-                        Cómo llegar con Google Maps
+                        ¿Cómo llegar con Google Maps?
                     </button>
 
                     <form class="search-form mt-2" action="/agendar" method="GET">

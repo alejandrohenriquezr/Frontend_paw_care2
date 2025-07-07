@@ -784,12 +784,14 @@ def obtener_clinicas():
         print("leyendo df clinicas")
         # 🔥 Cargar el CSV
         df = pd.read_csv("data/clinicas.csv", sep=";")
+        df_dpa = pd.read_csv("data/dpa.csv", sep=";")
+        df = df.merge(
+            df_dpa[["id_dpa", "Nombre_Comuna"]],
+            left_on="dpa",
+            right_on="id_dpa",
+            how="left"
+        )
         
-        # 🔥 Renombrar columnas para evitar espacios en blanco
-        #df.columns = df.columns.str.strip()
-        #busqueda es el valor del parámetro search de la url
-        
-        #busqueda = None
         # Verificar si hay un valor de búsqueda en la sesión
         busqueda = request.args.get("search", "").strip()
         session["busqueda"] = busqueda
@@ -812,7 +814,7 @@ def obtener_clinicas():
         
         # Filtrar por search si se proporciona
         if busqueda:
-            print(f"buscando dentro del if por {busqueda}")
+            print(f"BUSCANDO DENTRO DEL IF POR {busqueda}")
             df_nombre = df[df["nombre"].str.contains(busqueda, case=False, na=False)]
             #si df es vacio, entonces buscamos por el campo especialidades
             if df_nombre.empty:
@@ -833,30 +835,38 @@ def obtener_clinicas():
 
                 # a clinicas_especialidades le agregamos todos los campos de df donde id_clinica =O id_clinica
                 clinicas_especialidades = clinicas_especialidades.merge(
-                    df[["id_clinica", "nombre", "direccion", "dpa","calificacion", "estado", "n_calificaciones" ]],
+                    df[["id_clinica", "nombre", "direccion", "dpa","calificacion", "estado", "n_calificaciones", "latitud", "longitud" ]],
                     left_on="id_clinica",
                     right_on="id_clinica",
                     how="left"
                 )
-
+                staff_clinica= staff_clinica.merge(
+                staff[["id_veterinario", "nombre_completo"]],
+                left_on="id_veterinario",
+                right_on="id_veterinario",
+                how="left"
+                )
                            
-                print("clinicas_especialidades")
-                print(clinicas_especialidades)
+
                 print(f"buscando dentro del if por {busqueda} en especialidades")
                 #filtramos clinicas_especialidades por el campo especialidad = busqueda
                 clinicas_especialidades_original = clinicas_especialidades
                 clinicas_especialidades = clinicas_especialidades[clinicas_especialidades["especialidad"].str.contains(busqueda, case=False, na=False)]
                 clinicas_especialidades["tipo"]= "especialidades"
+                print("staff_clinica en buscar por especialildad")
+                print(staff_clinica)
+                print("clinicas_especialidades")
+                print(clinicas_especialidades)
+                # Filtrar: subset de staff_clinica con solo las clínicas presentes en clinicas_especialidades
+                staff_filtrado = staff_clinica[staff_clinica["id_clinica"].isin(clinicas_especialidades["id_clinica"])]
+                print("staff_filtrado")
+                print(staff_filtrado)
+                staff_json = staff_filtrado.to_dict(orient="records")
                 if clinicas_especialidades.empty:
                     clinicas_especialidades = clinicas_especialidades_original
                     print("clinicas_especialidades:")
                     print(clinicas_especialidades)                     
-                    staff_clinica= staff_clinica.merge(
-                    staff[["id_veterinario", "nombre_completo"]],
-                    left_on="id_veterinario",
-                    right_on="id_veterinario",
-                    how="left"
-                    )
+
                     staff_clinica = staff_clinica[staff_clinica["nombre_completo"] == busqueda]
                    
                     print(type(staff_clinica))
@@ -864,7 +874,7 @@ def obtener_clinicas():
                     # 1. Asegurar que ambos campos sean del mismo tipo (int)
                     clinicas_especialidades["id_clinica"] = clinicas_especialidades["id_clinica"].astype(int)
                     staff_clinica["id_clinica"] = staff_clinica["id_clinica"].astype(int)
-
+                    staff_json = staff_clinica.to_dict(orient="records")
                     # 2. Filtrar clinicas_especialidades según los ID presentes en clinicas
                     clinicas_especialidades = clinicas_especialidades[
                         clinicas_especialidades["id_clinica"].isin(staff_clinica["id_clinica"])
@@ -877,7 +887,11 @@ def obtener_clinicas():
                 clinicas_json = clinicas_especialidades.to_dict(orient="records")
                 print("clinicas_json")
                 print(clinicas_json)
-                return jsonify({"clinicas": clinicas_json})                
+                #if staff_clinica:
+                #    staff_json = staff_clinica.to_dict(orient="records")
+
+
+                return jsonify({"clinicas": clinicas_json, "staff_json": staff_json})                
             else:
                 df = df_nombre
             # si no har search, entonces buscamos por comuna

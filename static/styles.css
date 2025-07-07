@@ -121,15 +121,22 @@ footer {
 
 
 .contenedor {
-    display: flex;
-    margin-bottom: 10px; /* 🔥 Espaciado entre clínicas */
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 10px;
     background-color: whitesmoke;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 12px;
+    border-radius: 8px;
 }
 
 .columna-1 img {
     font-family: Arial, sans-serif;
     font-size: 14px;
     margin-left: 10px;
+    
 }
 
 .columna-1 {
@@ -137,6 +144,7 @@ footer {
     flex-direction: column;     /* Elementos en columna */
     align-items: flex-start;    /* Alinea HORIZONTALMENTE hacia la izquierda */
     justify-content: flex-start; /* Alinea VERTICALMENTE hacia arriba */
+    align-self: stretch;
     text-align: left;
     width: 100%;
 }
@@ -162,14 +170,15 @@ footer {
 .columna-1 .fila:first-child {
 
     margin-left: 20px;
+    justify-content: flex-start; /* Alinea VERTICALMENTE hacia arriba */
 
 }
 
 .columna-1 .fila1 {
     text-align: center;  /* 🔥 Centra la imagen horizontalmente */
     display: flex;       /* 🔥 Habilita flexbox */
-    justify-content: center; /* 🔥 Centra la imagen en el eje X */
-    align-items: center; /* 🔥 Centra la imagen en el eje Y */
+    justify-content: flex-start; /* 🔥 Centra la imagen en el eje X */
+    /*align-items: center;  🔥 Centra la imagen en el eje Y */
     width: 100%;         /* 🔥 Asegura que ocupe todo el ancho disponible */
     height: 100%;  
     filter: drop-shadow();      /* 🔥 Ajustar según el diseño */
@@ -179,7 +188,9 @@ footer {
     text-align: left;      /* 🔥 Centra el texto si lo hubiera */
     margin-left: 20px;
     text-align: left;      /* 🔥 Centra el texto si lo hubiera */
-    
+    font-size: 0.875rem;   /* text-sm */
+    color: #374151;        /* text-gray-700 */
+
 }
 .columna-2 .fila:first-child {
     font-weight: bold;
@@ -486,13 +497,7 @@ footer {
     gap: 15px;
 }
 
-.contenedor {
-    width: 30%; /* Ajuste para que se muestren hasta 3 por fila */
-    min-width: 275px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-}
+
 
 .paginador-container {
     display: flex;
@@ -630,11 +635,7 @@ body { font-family: Arial, sans-serif; text-align: center; }
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
   }
-  .contenedor {
-    min-width: 300px;
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-  }
+
   
   .leaflet-container {
   z-index: 0 !important;

@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 
-
-
-
 <script>
   // Obtener los parámetros de la URL
   const urlParams = new URLSearchParams(window.location.search);
@@ -13,12 +10,24 @@
   function cerrarModal(id) {
     document.getElementById(id).classList.remove("visible");
 }
-
 </script>
 
 <head>
+ 
   <script>
     const mascotas = {{ mascotas | tojson | safe}};
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const latUsuario = position.coords.latitude;
+        const lonUsuario = position.coords.longitude;
+        sessionStorage.setItem("lat_usuario", latUsuario);
+        sessionStorage.setItem("lon_usuario", lonUsuario);
+        console.log("Ubicación del usuario almacenada:", latUsuario, lonUsuario);
+      },
+      (error) => {
+        console.warn("No se pudo obtener la ubicación del usuario:", error.message);
+      }
+    );  
 
   </script>
   <title>PawCare</title>
@@ -41,10 +50,6 @@
   * {
     font-family: "Inter", sans-serif;
   }
-
-/*  ::-webkit-scrollbar {
-    display: none;
-  }*/
 </style>
 
   <script>
@@ -84,18 +89,14 @@
     console.log(staffData); // Verifica los datos en la consola
   </script>
 
-
 </head>
 
   <body class="h-full text-base-content">
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-
         document.getElementById("user-nombre").innerText = nombreSeparado.join(" ");
         document.getElementById("user-nombre").classList.remove("hidden");
-        document.getElementById("user-avatar").classList.remove("hidden");
-
-        
+        document.getElementById("user-avatar").classList.remove("hidden");       
       });
 
       document.addEventListener("DOMContentLoaded", function() {
@@ -122,7 +123,6 @@
             </div>
           <!-- Botón hamburguesa móvil -->
 
-
           <div class="md:hidden  md:flex items-center space-x-4" >
             <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
               <i class="fas fa-bars"></i>
@@ -136,8 +136,6 @@
             <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
             <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
           </nav>
-
-
     
           <!-- Menú móvil desplegable -->
           <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
@@ -164,8 +162,6 @@
         <div class="container mx-auto px-">
           <section id="booking-header" class="py-18">
             <div id="agendar_resultados" class="container">
-
- <!-- Este script debe mostrar los resultados de la búsqueda de clínicas -->
               <!-- 🔥 Aquí se insertan los datos de la clínica -->
             </div>  
             <!-- Formulario de selección de fecha y hora -->
@@ -173,15 +169,12 @@
               
               <div id="horas-container" class="flex flex-wrap gap-6 mt-6"></div>
 
-
             </div>
           </section>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-6">
-          <div  id="datos_de_la_clinica"  class="bg-white p-6 rounded-xl shadow-lg">
-          </div>
-          <script src="static/muestra_clinica.js"></script> <!-- Este script debe mostrar los datos de la clínica seleccinada -->
+        <div class="container px-4 mx-auto">
+          <div id="datos_de_la_clinica" class="bg-white p-6 rounded-xl shadow-lg w-full"></div>
         </div>
                 <!-- 🔥 Modal de éxito -->
           <div id="modal_exito" class="modal">
@@ -198,8 +191,6 @@
                 <button onclick="cerrarModal('modal_error')">Cerrar</button>
             </div>
           </div>
-
-
 
           <section id="available-clinics" class="py-8">
             <div class="grid md:grid-cols-2 gap-6">
@@ -278,8 +269,6 @@
       {% include 'footer.html' %}
     </div>
 
-
-
     <!-- Ventana modal -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -304,7 +293,6 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   
   <script>
-  
 
     window.addEventListener("load", function() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -326,15 +314,21 @@
         }
     });
 
-        //si mascotas es un objeto vacío, entonces no hay mascotas y ejecutamos la función para insertar los campos de la nueva mascota
-    /*if (Object.keys(mascotas).length === 0) {
-      alert("No tienes mascotas registradas. Por favor, registra una mascota antes de agendar una cita.");
-      crear_campos_nueva_mascota();
-    }*/
   </script>
 
-<script src="{{ url_for('static', filename='script_clinicas.js') }}"></script>
-  </body>
+<!-- Bootstrap y dependencias -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- ✅ Carga de Leaflet (SOLO UNA VEZ) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- ✅ Tus scripts después de Leaflet -->
+  <script src="{{ url_for('static', filename='muestra_clinica.js') }}"></script>
+  <script src="{{ url_for('static', filename='script_clinicas.js') }}"></script>
+</body>
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     const user = {
@@ -359,10 +353,8 @@
       const mobileNav = document.getElementById("mobile-nav");
       mobileNav.classList.toggle("hidden");
     });
-
     
   </script>
-  
   
 </html>
           

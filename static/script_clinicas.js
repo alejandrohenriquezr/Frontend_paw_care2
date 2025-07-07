@@ -144,11 +144,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 📌 Formulario f1
     const formHTML = `
-        <div id="f1" class="mt-4 p-4 border rounded bg-gray-100">
-            <div id="fechas-container" class="w-full"></div>
-            <div id="horas-container" class="hidden flex space-x-2 mt-2"></div>
+        <div id="f1" class="mt-4 p-4 border items-center rounded bg-gray-100">
+            <div id="fechas-container" class="w-full items-center"></div>
+            <br>
+            <div id="horas-container" class="hidden flex items-center space-x-2 mt-2"></div>
             <button id="btn-agendar" class="mt-4 px-6 py-3 rounded-full bg-green-500 text-white"></button>
         </div>
+
     `;
     
     // 🔹 Insertar el formulario en el div agendar_resultados
@@ -156,8 +158,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const fechasContainer = document.getElementById("fechas-container");
     const horasContainer = document.getElementById("horas-container");
-    const horaSeleccionada = sessionStorage.getItem("horaSeleccionada");
+    // Crear dos saltos de línea
+    const salto1 = document.createElement("br");
+    const salto2 = document.createElement("br");
 
+    // Insertarlos justo después de #horas-container
+    horasContainer.parentNode.insertBefore(salto1, horasContainer.nextSibling);
+    //horasContainer.parentNode.insertBefore(salto2, salto1.nextSibling);
+    const horaSeleccionada = sessionStorage.getItem("horaSeleccionada");
+    
     const btnAgendar = document.getElementById("btn-agendar");
     btnAgendar.disabled = true;
     usuarioAutenticado().then(autenticado => {
@@ -256,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         veterinariosPagina.forEach(vet => {
             const contenedorVet = document.createElement("div");
-            contenedorVet.className = "flex flex-col bg-gray-100 p-4 rounded shadow-md space-y-4 basis-1/4";
+            contenedorVet.className = "flex flex-col bg-gray-100 p-4 rounded shadow-md space-y-4 basis-1/3";
 
             const divId = document.createElement("div");
             const imgVet = document.createElement("img");
@@ -944,6 +953,7 @@ async function obtenerMascotas() {
     const divMascotas = document.createElement('div');
     divMascotas.id = 'mis_mascotas_container';
     divMascotas.className = 'w-full';
+    
     
     //creamos el select de mascotas
     const selectMascotas = document.createElement('select');
