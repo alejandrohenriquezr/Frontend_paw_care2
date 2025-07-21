@@ -2617,7 +2617,7 @@ def api_pagar():
         for key, value in session.items():  
             print(f"{key}: {value}")  
 
-        amount = float(session.get('cargoTotal'))
+        amount = int(session.get('cargoTotal'))
         print(f"cargoTotal={session.get('cargoTotal')}")
         #amount = int(session.get('precio', 1000))
         return_url = url_for('respuesta_pago', _external=True)

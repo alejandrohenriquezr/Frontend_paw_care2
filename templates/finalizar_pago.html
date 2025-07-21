@@ -353,29 +353,29 @@ navigator.geolocation.getCurrentPosition(
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const user = {
-      picture: "{{ user['picture'] if user else '' }}",
+        picture: "{{ user['picture'] if user else '' }}",
       };
       if (user.picture) {
-      btnLogin = document.getElementById("btn-login");
-      btnLogin.classList.add("hidden");
+        btnLogin = document.getElementById("btn-login");
+        btnLogin.classList.add("hidden");
 
-      const avatar = document.getElementById("user-avatar");
-      avatar.src = user.picture;
-      avatar.classList.remove("hidden");
-      const userNombre = document.getElementById("user-nombre");
-      userNombre.classList.remove("hidden");
-        
-      }
+        const avatar = document.getElementById("user-avatar");
+        avatar.src = user.picture;
+        avatar.classList.remove("hidden");
+        const userNombre = document.getElementById("user-nombre");
+        userNombre.classList.remove("hidden");
+       
+      };
 
       //Completar el cargo por servicio y el valor total
-      const valorBase = parseFloat({{ valor }});
+      const valorBase = parseFloat({{ valor }}); //Este es el valor de la consulta
 
       if (!isNaN(valorBase)) {
         // Cálculo
         const cargoServicio = Math.round(valorBase * 0.03);
         const cargoTotal = valorBase + cargoServicio;
 
-        fetch("/guardar_variable_sesion", {
+        fetch("/guardar_variable_sesion", { //Guardamos la variable de sesión cargoTotal
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -388,8 +388,7 @@ navigator.geolocation.getCurrentPosition(
             console.log("Sesión actualizada:", data);
         });
 
-
-        fetch("/guardar_variable_sesion", {
+        fetch("/guardar_variable_sesion", {//Guardamos la variable de sesión cargoServicio
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -541,7 +540,7 @@ navigator.geolocation.getCurrentPosition(
 
     console.log("clientes_mascotas" + clientes_mascotas);
     if(clientes_mascotas){
-      console("Llenando el select de mascotas");
+      console.log("Llenando el select de mascotas");
       const selectMascotas = document.getElementById("mascotaSeleccionada");
 
       clientes_mascotas.forEach(mascota => {
