@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+              
+<head>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+  <meta charset="UTF-8">
+  <title>Paw Care</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+      window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+      };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+<style>
+  * {
+    font-family: "Inter", sans-serif;
+  }
+
+
+</style>
+
+    
+    
+  <script>
+        tailwind.config = {
+            theme: {
+              extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+              },
+            },
+            variants: {
+              extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+              },
+            },
+            plugins: [],
+          };
+  </script>
+
+<script>
+navigator.geolocation.getCurrentPosition(
+    function(position) {
+        sessionStorage.setItem("lat_usuario", position.coords.latitude);
+        sessionStorage.setItem("lon_usuario", position.coords.longitude);
+    },
+    function(error) {
+        console.warn("No se pudo obtener la ubicación del usuario");
+    }
+);
+</script>
+<script>
+
+      window.onload = function() {
+        sessionStorage.clear();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("La geolocalización no es soportada por este navegador.");
+        }
+      };
+
+
+      function showPosition(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+        
+          console.log(`Ubicación del usuario en el index es: Latitud ${lat}, Longitud ${lon}`);
+
+          const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+          fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                  
+                //comuna = data. identifier || data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
+                  const comuna = data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
+                  sessionStorage.setItem("comuna", comuna);  
+                  //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
+                  cargarComunas(comuna);
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  alert("No se pudo obtener la comuna.");
+              });
+      }
+
+      function showError(error) {
+          switch(error.code) {
+              case error.PERMISSION_DENIED:
+                  //alert("El usuario denegó la solicitud de geolocalización.");
+                  break;
+              case error.POSITION_UNAVAILABLE:
+                  alert("La información de ubicación no está disponible.");
+                  break;
+              case error.TIMEOUT:
+                  alert("La solicitud de ubicación ha expirado.");
+                  break;
+              case error.UNKNOWN_ERROR:
+                  alert("Ha ocurrido un error desconocido.");
+                  break;
+          }
+      }
+      
+      async function cargarComunas(comuna) {
+
+            const response = await fetch('/api/insertar_comunas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ comuna: comuna })
+            });
+            const options = await response.text();
+            document.getElementById('comunas').innerHTML = options;
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+          const nombre = "{{ user['name'] if user else '' }}";
+          if (nombre) {
+            const nombreSeparado = nombre.split(" ").map(p =>
+              p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
+            );
+            const target = document.getElementById("nombre-usuario");
+            if (target) {
+              target.innerText = nombreSeparado.join(" ");
+            }
+          }
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+          
+            const searchInput = document.getElementById("search-input");
+            const suggestionsContainer = document.getElementById("suggestions");
+            searchInput.addEventListener("input", async function() {
+                const query = searchInput.value.trim();
+                const comuna = document.getElementById("comunas").value;
+                if (query.length < 2) { // Mostrar sugerencias solo si hay al menos 2 caracteres
+                    suggestionsContainer.innerHTML = "";
+                    suggestionsContainer.style.display = "none";
+                    return;
+                }
+                try {
+                    const response = await fetch(`/sugerencias?q=${query}&comuna=${comuna}`);
+                    data = await response.json();
+                    console.log("Sugerencias obtenidas:", data); // Ver en la consola del navegador
+                    // Limpiar sugerencias anteriores
+                    suggestionsContainer.innerHTML = "";
+                    if (data.length > 0) {
+                        const primerElemento = data[data.length-1];
+                        //alert(primerElemento);
+                        if (data.includes("veterinario")){
+                          icono="fa fa-user-circle fa-2x";
+                        } else if(data.includes("clinica")) {
+                          icono="fa fa-hospital";
+                        } else {
+                          icono="fa fa-graduation-cap text-green-600 mr-2";
+                        }
+
+                        suggestionsContainer.style.display = "block";
+                        data.forEach(sugerencia => {
+                          if (sugerencia!="veterinario" && sugerencia!="clinica" && sugerencia!="especialidades") {
+                            const div = document.createElement("div");
+                            div.classList.add("suggestion-item");
+                            div.style.textAlign = "left";
+                            div.innerHTML = `<i class="${icono} text-green-600 mr-2"></i> ${sugerencia}`;
+                            div.onclick = function() {
+                                searchInput.value = sugerencia;
+                                suggestionsContainer.innerHTML = "";
+                                suggestionsContainer.style.display = "none";
+                            };
+                            suggestionsContainer.appendChild(div);
+                          }
+                        });
+                    } else {
+                        suggestionsContainer.style.display = "none";
+                    }
+                } catch (error) {
+                    console.error("Error obteniendo sugerencias:", error);
+                }
+            });
+            // Ocultar sugerencias cuando se hace clic fuera
+            document.addEventListener("click", function(event) {
+                if (!searchInput.contains(event.target) && !suggestionsContainer.contains(event.target)) {
+                    suggestionsContainer.style.display = "none";
+                }
+            });
+        });
+
+        
+
+
+      async function cargarUsuarios() {
+          let respuesta = await fetch("/tipo_usuarios");
+          let usuarios = await respuesta.json();
+          let lista = document.getElementById("lista-usuarios");
+          lista.innerHTML = "";
+          usuarios.forEach(usuario => {
+              let item = document.createElement("li");
+              item.textContent = usuario.tipo_usuario + " - " + usuario.activo;
+              lista.appendChild(item);
+          });
+      }
+
+     // window.onload = cargarUsuarios;
+
+      async function cargarUsuarios() {
+      let respuesta = await fetch("/tipo_usuarios");
+      let usuarios = await respuesta.json();
+      console.log("Datos recibidos:", usuarios);  // Ver en la consola del navegador
+
+      let lista = document.getElementById("lista-usuarios");
+      lista.innerHTML = "";
+
+      usuarios.forEach(usuario => {
+          let item = document.createElement("li");
+          item.textContent = usuario.tipo_usuario + " - " + usuario.activo;
+          lista.appendChild(item);
+      });
+  }        
+
+</script>
+<script>
+      tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+              ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+              ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+              },
+            },
+          },
+          variants: {
+            extend: {
+              backgroundColor: ['active', 'group-hover'],
+              textColor: ['active', 'group-hover'],
+            },
+          },
+          plugins: [],
+        };
+</script>
+
+
+ <!-- Agregar scripts de Bootstrap -->
+ 
+</head>
+
+<body class="h-full text-base-content">
+  <div id="root" class="min-h-screen bg-white">
+  <!-- Header -->
+  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <i class="fa-solid fa-paw text-2xl"></i>
+          <span class="ml-2 text-xl">PawCare</span>
+        </div>
+  
+        <!-- Botón hamburguesa móvil -->
+        <div class="md:hidden">
+          <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+  
+        <!-- Navegación principal -->
+        <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </nav>
+  
+        <!-- Menú móvil desplegable -->
+        <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+        </div>
+  
+        <!-- Right Side -->
+        <div class="flex items-center space-x-4">
+          <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+          <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+          <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+          <span id="nombre-usuario"></span>
+          <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+            
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- Hero Section -->
+  <section id="hero" class="pt-24 h-auto bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
+    <div class="flex justify-center">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl mb-4 text-[#2E2E2E]">Atención veterinaria a tu alcance</h1>
+        <p class="text-[#4A4A4A] text-lg mb-8">AGENDAR. 
+          </p>
+        
+
+  
+       <div class="flex justify-center">
+        <div class="w-full max-w-7xl px-4">
+            <!-- Resultados -->
+        <section id="resultados" class="py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Specialists View -->
+                <div id="specialists-view" class="px-4 sm:px-6 lg:px-8">
+                    <div class="w-full md:w-[80%] bg-white mx-auto rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow" data-id-clinica="{{ id_clinica }}">
+
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="static/images/vet_{{ id_veterinario }}.jpg" 
+                                alt="{{ veterinario[0]['nombres'] }} {{ veterinario[0]['apellidos'] }}" 
+                                class="w-16 h-16 rounded-full object-cover"
+                                 onerror="this.onerror=null; this.src='static/images/foto_generica.png';">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-900">
+                                      {% if veterinario[0]['sexo']=="MASCULINO" %}
+                                      Dr.
+                                      {% else %}
+                                      Dra.
+                                      {% endif %}
+                                      {{ veterinario[0]['nombres'] }} {{ veterinario[0]['apellidos'] }}</h3>
+                                    
+                                    <p class="text-pawcare-teal font-medium">{{ clinica }}</p>
+                                    <button onclick="window.open('https://waze.com/ul?ll={{veterinario[0]['latitud']}},{{veterinario[0]['longitud']}}&navigate=yes&z=10', '_blank')"
+                                      class="text-gray-500 text-sm flex items-center"
+                                      title="Abrir mapa en Waze">
+                                      <i class="fas fa-map-marker-alt mr-1"></i>
+                                      {{comuna}}                                      
+                                    </button>
+
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500">
+                                <i class="far fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex text-yellow-400 items-center">
+                              {% set calificacion = calificacion | float %}
+                              {% set valor = valor |int %}
+                              {% set enteras = calificacion |int %}
+                              {% set decimal = calificacion - enteras %}
+
+                              {# Estrellas completas #}
+                              {% for i in range(enteras) %}
+                                <i class="fas fa-star text-yellow-400 items-center"></i>
+                              {% endfor %}
+
+                              {# Estrella parcial si decimal > 0.1 (para evitar casos como 3.0) #}
+                              {% if decimal >= 0.5 %}
+                                <i class="fas fa-star text-yellow-400"></i>
+                              {% endif %}
+
+                              {# Opcional: Estrellas vacías para completar 5 #}
+                              {% for i in range(5 - enteras - (1 if decimal >= 0.5 else 0) ) %}
+                                <i class="far fa-star text-gray-300"></i>
+                              {% endfor %}
+                            </div>
+                            <span class="text-gray-600 text-sm">{{ calificacion }} ({{ ncalificaciones }} opiniones)</span>
+                        </div>
+                        <p>
+                          
+
+                              <span class="text-gray-600 text-sm text-left">
+                                <li>{{ especialidad }}</li>
+                              </span>
+
+                        </p>
+
+
+
+                        <div class="mb-4">
+                            <p class="text-lg font-semibold text-gray-900">Desde ${{ "{:,.0f}".format(valor).replace(",", ".") }}</p>
+                        </div>
+                        <div class="bg-pawcare-light rounded-lg p-4">
+
+                        </div>
+                    </div>
+
+
+                    
+
+                    
+                </div>
+
+
+            </div>
+        </section>
+
+
+      </div>
+      
+      </div>
+    </div>
+  </section>
+
+
+  
+
+  
+
+
+  <!-- Footer -->
+  {% include 'footer.html' %}
+</div>
+
+<script>
+  /*
+  document.querySelector('button[name="btn_teleconsulta"]').addEventListener('click', async function() {
+    const selectComunas = document.getElementById('comunas');
+    selectComunas.name = 'especialidades_teleconsulta';
+    selectComunas.innerHTML = '<option value="">Seleccionar especialidad</option>';
+    try {
+      const response = await fetch('/api/especialidades_teleconsulta');
+      const options = await response.text();
+      selectComunas.innerHTML += options;
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+  */
+  document.addEventListener("DOMContentLoaded", function () {
+    const btnPresencial = document.querySelector('button[name="btn_presencial"]');
+    const btnTeleconsulta = document.querySelector('button[name="btn_teleconsulta"]');
+    const selectComunas = document.getElementById("comunas");
+    const selectTeleconsulta = document.getElementById("teleconsulta");
+
+    // Al cargar la página: activar presencial y cargar comunas
+    btnPresencial.classList.add("btn-seleccionado");
+    btnPresencial.classList.remove("btn-no-seleccionado");
+    btnTeleconsulta.classList.add("btn-no-seleccionado");
+    btnTeleconsulta.classList.remove("btn-seleccionado");
+
+    selectComunas.classList.remove("hidden");
+    selectTeleconsulta.classList.add("hidden");
+    const comunaInicial = sessionStorage.getItem("comuna");
+    //alert("comunaInicial=", comunaInicial);
+    cargarComunas(comunaInicial);
+
+    // Evento botón presencial
+    btnPresencial.addEventListener("click", function () {
+      btnPresencial.classList.add("btn-seleccionado");
+      btnPresencial.classList.remove("btn-no-seleccionado");
+      btnTeleconsulta.classList.add("btn-no-seleccionado");
+      btnTeleconsulta.classList.remove("btn-seleccionado");
+
+      selectComunas.name = "comuna";
+      selectComunas.classList.remove("hidden");
+      selectTeleconsulta.classList.add("hidden");
+      selectTeleconsulta.name = "";
+
+      const comuna = sessionStorage.getItem("comuna");
+      cargarComunas(comuna);
+    });
+
+    // Evento botón teleconsulta
+    btnTeleconsulta.addEventListener("click", async function () {
+      btnTeleconsulta.classList.add("btn-seleccionado");
+      btnTeleconsulta.classList.remove("btn-no-seleccionado");
+      btnPresencial.classList.add("btn-no-seleccionado");
+      btnPresencial.classList.remove("btn-seleccionado");
+
+      selectComunas.classList.add("hidden");
+      selectComunas.name = "";
+      selectTeleconsulta.classList.remove("hidden");
+      selectTeleconsulta.name = "especialidades_teleconsulta";
+
+      selectTeleconsulta.innerHTML = "<option value=''>Seleccionar especialidad</option>";
+      try {
+        const response = await fetch("/api/especialidades_teleconsulta");
+        const options = await response.text();
+        selectTeleconsulta.innerHTML += options;
+      } catch (error) {
+        console.error("Error al cargar especialidades de teleconsulta:", error);
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+              const user = {
+                  picture: "{{ user['picture'] if user else '' }}",
+              };
+              if (user.picture) {
+                      
+                  btnLogin = document.getElementById("btn-login");
+                  btnLogin.classList.add("hidden");
+  
+                  const avatar = document.getElementById("user-avatar");
+                  avatar.src = user.picture;
+                  avatar.classList.remove("hidden");
+                  const userNombre = document.getElementById("user-nombre");
+                  userNombre.classList.remove("hidden");
+          
+              }
+          });
+</script>
+
+<script>
+  // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
+  document.getElementById("menu-toggle").addEventListener("click", function () {
+    const mobileNav = document.getElementById("mobile-nav");
+    mobileNav.classList.toggle("hidden");
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {  
+    const searchInput = document.getElementById("search-input");
+    const params = new URLSearchParams(window.location.search);
+    const suggestionsContainer = document.getElementById("suggestions");
+    const comunaParam = params.get("comuna");
+    const searchParam = params.get("search");
+    if (searchInput) {
+          searchInput.placeholder = searchParam && searchParam.trim() !== ""
+              ? searchParam
+              : "Especialidad, clínica o veterinario";
+      }
+
+      searchInput.addEventListener("focus", async () => {
+          const data = await fetchSugerencias("");
+          suggestionsContainer.innerHTML = "";
+          if (data.length > 0) {
+              suggestionsContainer.style.display = "block";
+              data.forEach(sugerencia => {
+                  const div = document.createElement("div");
+                  div.classList.add("suggestion-item");
+                  div.innerHTML = `<i class="fa fa-graduation-cap text-green-600 mr-2"></i> ${sugerencia}`;
+                  div.onclick = () => {
+                      searchInput.value = sugerencia;
+                      suggestionsContainer.innerHTML = "";
+                      suggestionsContainer.style.display = "none";
+                  };
+                  suggestionsContainer.appendChild(div);
+              });
+          } else {
+              suggestionsContainer.style.display = "none";
+          }
+      });
+
+      async function fetchSugerencias(query) {
+          const comuna = document.getElementById("comunas")?.value || "";
+          const res = await fetch(`/sugerencias?q=${encodeURIComponent(query)}&comuna=${comuna}`);
+          return await res.json();
+      }
+    })
+</script>
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const hoy = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+
+    // Recorremos todos los bloques de horarios
+    document.querySelectorAll("[id^='horas-disponibles-']").forEach(div => {
+        const idVeterinario = div.id.split("-")[2];
+        const card = div.closest(".veterinario-card");
+        const idClinica = card ? card.dataset.idClinica : null;
+
+        if (idClinica && idVeterinario) {
+            fetch(`/api/reservas_veterinario?fecha=${hoy}&id_clinica=${idClinica}&id_veterinario=${idVeterinario}`)
+                .then(res => res.text())
+                .then(html => {
+                    div.innerHTML = html;
+                })
+                .catch(err => {
+                    div.innerHTML = "<p class='text-red-500'>Error al cargar horas.</p>";
+                    console.error(err);
+                });
+        }
+    });
+});
+</script>
+
+<script>
+  let fechaActual = new Date();
+
+  document.addEventListener("DOMContentLoaded", () => {
+      actualizarFechaLabel();
+      cargarHorasDisponibles();
+  });
+
+
+function seleccionar_hora(boton) {
+  const estaSeleccionado = boton.classList.contains("selected");
+
+  if (estaSeleccionado) {
+    // Si ya está seleccionado, lo deseleccionamos
+    boton.classList.remove(
+      "bg-gray-200",
+      "border-gray-700",
+      "text-gray-500",
+      "selected"
+    );
+    boton.classList.add(
+      "bg-white",
+      "border-gray-300",
+      "text-gray-700",
+      "hover:bg-gray-50"
+    );
+  } else {
+    // Si no está seleccionado, lo seleccionamos
+    boton.classList.remove(
+      "bg-white",
+      "border-gray-300",
+      "text-gray-700",
+      "hover:bg-gray-50"
+    );
+    boton.classList.add(
+      "bg-gray-200",
+      "border-gray-700",
+      "text-gray-500",
+      "selected"
+    );
+  }
+}
+
+
+
+
+  function cambiarFecha(boton, dias) {
+      fechaActual.setDate(fechaActual.getDate() + dias);
+      //alert("cambiando fecha");
+      //const boton = document.querySelector('.btn-manana'); //se usa para acceder por nombre y . para buscar por clase
+      //alert("dias=" + dias);
+      const id_clinica = boton.dataset.mananaClinica || boton.dataset.ayerClinica;
+      const id_veterinario = boton.dataset.mananaVeterinario || boton.dataset.ayerVeterinario;
+
+     //alert("cambiarFecha id_clinica=" + id_clinica + "id_veterinario=" + id_veterinario);
+
+      //alert("id_veterinario=" + id_veterinario);
+
+      actualizarFechaLabel(id_clinica, id_veterinario);
+
+      cargarHorasDisponibles(id_clinica, id_veterinario);
+  }
+
+  function actualizarFechaLabel(id_clinica, id_veterinario) {
+      fechaStr = fechaActual.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      
+
+      if(!id_clinica){
+        let fechaActual = new Date();
+
+        const dia = String(fechaActual.getDate()).padStart(2, '0');
+        const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+        const año = fechaActual.getFullYear();
+
+        const fechaStr = `${dia}-${mes}-${año}`; // → formato "dd/mm/yyyy"
+        console.log("fechaStr=", fechaStr)
+        //fechaStr = fechaActual.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+        // Selecciona todos los elementos span con clases que comienzan con "mi-span-"
+        const elementos = document.querySelectorAll('span[id^="fecha-mostrada"]');
+
+        // Itera sobre los elementos seleccionados
+        elementos.forEach(elemento => {
+          // Asigna un nuevo contenido
+          elemento.textContent = fechaStr;
+
+
+        });
+      }else{
+        //alert("actualizar FechaLabel id_clinica=" + id_clinica + "id_veterinario=" + id_veterinario);
+
+        const fecha_mostrada = "fecha-mostrada_" +id_clinica + "_" + id_veterinario; 
+        console.log("ID buscado:", fecha_mostrada); // 🔍 Verifica el ID correcto
+        const span = document.getElementById(fecha_mostrada);
+
+        if (span) {
+          span.textContent = fechaStr;
+          console.log("Fecha actualizada:", fechaStr);
+        } else {
+          console.warn("No se encontró el span con ID:", fecha_mostrada);
+        }
+      }
+
+
+  }
+
+  async function cargarHorasDisponibles(id_clinica, id_veterinario, fecha_inicial ) {
+      //acá debo recoger la fecha del span correspondiente a id_clinica, id_veterinario
+      const fecha_mostrada = "fecha-mostrada_" +id_clinica + "_" + id_veterinario; 
+
+      console.log("ID buscado:", fecha_mostrada); // 🔍 Verifica el ID correcto
+      const span = document.getElementById(fecha_mostrada); 
+
+      fechaActual2 = span.textContent;
+      //alert("fechaActual2=" + fechaActual2);
+
+        console.warn("fechaActual en el span es" +fechaActual2);
+
+      //const fechaFormateada = fechaActual2.toISOString().split('T')[0];
+      const fechaFormateada = fechaActual2
+      try {
+          const response = await fetch('/api/reservas_por_fecha', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fecha: fechaFormateada })
+          });
+          const data = await response.json();
+
+
+          console.log("Reservas para la fecha:", data.reservas);
+          if (data.reservas && Array.isArray(data.reservas)) {
+            console.log("data=");
+            console.warn(data);
+            actualizarBotones(id_clinica, id_veterinario, data.reservas);  // 👈 Aquí se llama correctamente
+          } else {
+            console.warn("No se encontraron reservas para la fecha:", fecha);
+          }
+
+          // 🔥 Comparar con la fecha de hoy para habilitar o deshabilitar el botón ayer
+          const hoy = new Date();
+          const hoyStr = hoy.toISOString().split("T")[0]; // formato yyyy-mm-dd
+          console.log("hoyStr", hoyStr)
+          console.log("fecha buscada", fechaFormateada)
+
+          const btnAyer = document.getElementById("btn-ayer");
+          if (fechaFormateada === hoyStr) {
+            btnAyer.disabled = true;
+            btnAyer.classList.add("opacity-50", "cursor-not-allowed");
+          } else {
+            btnAyer.disabled = false;
+            btnAyer.classList.remove("opacity-50", "cursor-not-allowed");
+          }
+          
+          // Aquí podrías llamar a una función que recorra `veterinario_especialidades`
+          // y actualice los botones de horas por cada veterinario.
+      } catch (error) {
+          console.error("Error al obtener reservas:", error);
+      }
+  }
+
+  function actualizarBotones(id_clinica, id_veterinario, reservas) {
+  // Primero, restablece todos los botones al estado disponible
+
+    //alert("actualizarBotones");
+    if(!id_clinica){
+      const selector1 = `.hora-btn`; //si no existe id_clinica, significa que estamos cargando la página y se deben limpiar todos los botones
+      document.querySelectorAll(selector1).forEach(btn => {
+        clinica = btn.dataset.clinica;
+        veterinario = btn.dataset.veterinario;
+        btn.className = "hora-btn bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50";
+        btn.disabled = false;
+      });      
+    }else{
+      //alert("actualizarBotones");
+      console.log("actualizarBotones id_clinica=" + id_clinica);
+      console.log("actualizarBotones id_veterinario=" + id_veterinario);
+      console.log("actualizarBotones reservas" + reservas);      
+      const selector1 = `.hora-btn[data-clinica="${id_clinica}"][data-veterinario="${id_veterinario}"]`;
+      document.querySelectorAll(selector1).forEach(btn => {
+        clinica = btn.dataset.clinica;
+        veterinario = btn.dataset.veterinario;
+        btn.className = "hora-btn bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50";
+        btn.disabled = false;
+
+      });      
+    };
+
+    // Luego, desactiva y cambia clase a las horas ocupadas
+    reservas.forEach(reserva => {
+      if(reserva.id_clinica==id_clinica && reserva.medico_que_atendio==id_veterinario){
+
+        const selector = `.hora-btn[data-clinica="${reserva.id_clinica}"][data-veterinario="${reserva.medico_que_atendio}"][data-hora="${reserva.hora}"]`;
+        //alert(selector);
+        const boton = document.querySelector(selector);
+        //alert("BOTON=" + boton);
+        if (boton) {
+          //alert("Boton Existe");
+          boton.classList.remove(
+            "bg-white",
+            "border-gray-300",
+            "text-gray-700",
+            "hover:bg-gray-50"
+          );
+
+          boton.classList.add(
+            "bg-gray-200",
+            "border-gray-700",
+            "text-gray-500",
+            "line-through",
+            "cursor-not-allowed"
+          );
+
+          boton.disabled = true;
+        }
+      }
+    });
+}
+
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const botonesHora = document.querySelectorAll(".hora-btn");
+
+  // Extraer combinaciones únicas de id_clinica e id_veterinario desde los botones
+  const combinaciones = new Set();
+  botonesHora.forEach(btn => {
+    const idClinica = btn.dataset.clinica;
+    const idVeterinario = btn.dataset.veterinario;
+    const clave = `${idClinica}-${idVeterinario}`;
+    combinaciones.add(clave);
+  });
+
+  const fechaHoy = new Date();
+  const fechaStr = fechaHoy.toISOString().split("T")[0];
+
+  for (const clave of combinaciones) {
+    const [idClinica, idVeterinario] = clave.split("-");
+    await cargarHorasDisponibles(idClinica, idVeterinario, fechaStr);
+  }
+});
+</script>
+
+  </body>
+</html>
+          

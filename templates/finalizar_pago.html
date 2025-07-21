@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="es">
+              
+<head>
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+  <meta charset="UTF-8">
+  <title>Paw Care</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+      window.FontAwesomeConfig = {
+          autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
+      };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+<style>
+  * {
+    font-family: "Inter", sans-serif;
+  }
+
+
+</style>
+
+    
+    
+  <script>
+        tailwind.config = {
+            theme: {
+              extend: {
+                colors: {
+                ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+                ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+                },
+              },
+            },
+            variants: {
+              extend: {
+                backgroundColor: ['active', 'group-hover'],
+                textColor: ['active', 'group-hover'],
+              },
+            },
+            plugins: [],
+          };
+  </script>
+
+<script>
+navigator.geolocation.getCurrentPosition(
+    function(position) {
+        sessionStorage.setItem("lat_usuario", position.coords.latitude);
+        sessionStorage.setItem("lon_usuario", position.coords.longitude);
+    },
+    function(error) {
+        console.warn("No se pudo obtener la ubicación del usuario");
+    }
+);
+</script>
+<script>
+/*
+      window.onload = function() {
+        sessionStorage.clear();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("La geolocalización no es soportada por este navegador.");
+        }
+      };
+*/
+
+
+
+
+      
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function() {
+          const nombre = "{{ user['name'] if user else '' }}";
+          if (nombre) {
+            const nombreSeparado = nombre.split(" ").map(p =>
+              p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
+            );
+            const target = document.getElementById("nombre-usuario");
+            if (target) {
+              target.innerText = nombreSeparado.join(" ");
+            }
+          }
+        });
+
+ 
+
+</script>
+<script>
+      tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+              ...{"transparent":"transparent","current":"currentColor","black":"#000000","white":"#ffffff","gray":{"50":"#f9fafb","100":"#f3f4f6","200":"#e5e7eb","300":"#d1d5db","400":"#9ca3af","500":"#6b7280","600":"#4b5563","700":"#374151","800":"#1f2937","900":"#111827"},"red":{"50":"#fef2f2","100":"#fee2e2","200":"#fecaca","300":"#fca5a5","400":"#f87171","500":"#ef4444","600":"#dc2626","700":"#b91c1c","800":"#991b1b","900":"#7f1d1d"},"yellow":{"50":"#fffbeb","100":"#fef3c7","200":"#fde68a","300":"#fcd34d","400":"#fbbf24","500":"#f59e0b","600":"#d97706","700":"#b45309","800":"#92400e","900":"#78350f"},"green":{"50":"#ecfdf5","100":"#d1fae5","200":"#a7f3d0","300":"#6ee7b7","400":"#34d399","500":"#10b981","600":"#059669","700":"#047857","800":"#065f46","900":"#064e3b"},"blue":{"50":"#eff6ff","100":"#dbeafe","200":"#bfdbfe","300":"#93c5fd","400":"#60a5fa","500":"#3b82f6","600":"#2563eb","700":"#1d4ed8","800":"#1e40af","900":"#1e3a8a"},"indigo":{"50":"#eef2ff","100":"#e0e7ff","200":"#c7d2fe","300":"#a5b4fc","400":"#818cf8","500":"#6366f1","600":"#4f46e5","700":"#4338ca","800":"#3730a3","900":"#312e81"},"purple":{"50":"#f5f3ff","100":"#ede9fe","200":"#ddd6fe","300":"#c4b5fd","400":"#a78bfa","500":"#8b5cf6","600":"#7c3aed","700":"#6d28d9","800":"#5b21b6","900":"#4c1d95"},"pink":{"50":"#fdf2f8","100":"#fce7f3","200":"#fbcfe8","300":"#f9a8d4","400":"#f472b6","500":"#ec4899","600":"#db2777","700":"#be185d","800":"#9d174d","900":"#831843"}},
+              ...{"primary":{"50":"var(--color-primary-50)","100":"var(--color-primary-100)","200":"var(--color-primary-200)","300":"var(--color-primary-300)","400":"var(--color-primary-400)","500":"var(--color-primary-500)","600":"var(--color-primary-600)","700":"var(--color-primary-700)","800":"var(--color-primary-800)","900":"var(--color-primary-900)","DEFAULT":"var(--color-primary)","focus":"var(--color-primary-focus)","content":"var(--color-primary-content)"},"secondary":{"50":"var(--color-secondary-50)","100":"var(--color-secondary-100)","200":"var(--color-secondary-200)","300":"var(--color-secondary-300)","400":"var(--color-secondary-400)","500":"var(--color-secondary-500)","600":"var(--color-secondary-600)","700":"var(--color-secondary-700)","800":"var(--color-secondary-800)","900":"var(--color-secondary-900)","DEFAULT":"var(--color-secondary)","focus":"var(--color-secondary-focus)","content":"var(--color-secondary-content)"},"accent":{"50":"var(--color-accent-50)","100":"var(--color-accent-100)","200":"var(--color-accent-200)","300":"var(--color-accent-300)","400":"var(--color-accent-400)","500":"var(--color-accent-500)","600":"var(--color-accent-600)","700":"var(--color-accent-700)","800":"var(--color-accent-800)","900":"var(--color-accent-900)","DEFAULT":"var(--color-accent)","focus":"var(--color-accent-focus)","content":"var(--color-accent-content)"},"neutral":{"50":"var(--color-neutral-50)","100":"var(--color-neutral-100)","200":"var(--color-neutral-200)","300":"var(--color-neutral-300)","400":"var(--color-neutral-400)","500":"var(--color-neutral-500)","600":"var(--color-neutral-600)","700":"var(--color-neutral-700)","800":"var(--color-neutral-800)","900":"var(--color-neutral-900)","DEFAULT":"var(--color-neutral)","focus":"var(--color-neutral-focus)","content":"var(--color-neutral-content)"},"info":{"50":"var(--color-info-50)","100":"var(--color-info-100)","200":"var(--color-info-200)","300":"var(--color-info-300)","400":"var(--color-info-400)","500":"var(--color-info-500)","600":"var(--color-info-600)","700":"var(--color-info-700)","800":"var(--color-info-800)","900":"var(--color-info-900)","DEFAULT":"var(--color-info)","focus":"var(--color-info-focus)","content":"var(--color-info-content)"},"success":{"50":"var(--color-success-50)","100":"var(--color-success-100)","200":"var(--color-success-200)","300":"var(--color-success-300)","400":"var(--color-success-400)","500":"var(--color-success-500)","600":"var(--color-success-600)","700":"var(--color-success-700)","800":"var(--color-success-800)","900":"var(--color-success-900)","DEFAULT":"var(--color-success)","focus":"var(--color-success-focus)","content":"var(--color-success-content)"},"warning":{"50":"var(--color-warning-50)","100":"var(--color-warning-100)","200":"var(--color-warning-200)","300":"var(--color-warning-300)","400":"var(--color-warning-400)","500":"var(--color-warning-500)","600":"var(--color-warning-600)","700":"var(--color-warning-700)","800":"var(--color-warning-800)","900":"var(--color-warning-900)","DEFAULT":"var(--color-warning)","focus":"var(--color-warning-focus)","content":"var(--color-warning-content)"},"error":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"danger":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"},"failure":{"50":"var(--color-error-50)","100":"var(--color-error-100)","200":"var(--color-error-200)","300":"var(--color-error-300)","400":"var(--color-error-400)","500":"var(--color-error-500)","600":"var(--color-error-600)","700":"var(--color-error-700)","800":"var(--color-error-800)","900":"var(--color-error-900)","DEFAULT":"var(--color-error)","focus":"var(--color-error-focus)","content":"var(--color-error-content)"}},
+              },
+            },
+          },
+          variants: {
+            extend: {
+              backgroundColor: ['active', 'group-hover'],
+              textColor: ['active', 'group-hover'],
+            },
+          },
+          plugins: [],
+        };
+</script>
+
+
+ <!-- Agregar scripts de Bootstrap -->
+ 
+</head>
+
+
+  <body class="h-full text-base-content">
+    <div id="root" class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
+      <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#87AEB5] z-50">
+        <div class="container mx-auto px-4">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex items-center">
+              <i class="fa-solid fa-paw text-2xl"></i>
+              <span class="ml-2 text-xl">PawCare</span>
+            </div>
+
+      
+            <!-- Botón hamburguesa móvil -->
+            <div class="md:hidden">
+              <button id="menu-toggle" class="focus:outline-none text-white text-2xl">
+                <i class="fas fa-bars"></i>
+              </button>
+            </div>
+      
+            <!-- Navegación principal -->
+            <nav id="main-nav" class="hidden md:flex items-center space-x-8">
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+            </nav>
+      
+            <!-- Menú móvil desplegable -->
+            <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_mascotas'">Mis Mascotas</span>
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_citas'">Mis Citas</span>
+              <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='favoritos'">Favoritos</span>
+            </div>
+
+            <!-- Right Side -->
+            <div class="flex items-center space-x-4">
+              <button class="p-2"><i class="fa-regular fa-bell text-xl"></i></button>
+              <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
+              <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
+              <span id="nombre-usuario"></span>
+              <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
+                
+              </span>
+              
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main id="main" class="pt-24 px-4 md:px-0">
+        <div class="container mx-auto max-w-4xl">
+          <h1 class="text-3xl mb-8 text-[#2E2E2E]">Confirmar Reserva</h1>
+
+          <div class="grid gap-6">
+            <div id="clinic-info" class="bg-white p-6 rounded-xl shadow-lg">
+              <div class="bg-neutral-300 h-48 rounded-lg mb-4 flex items-center justify-center">
+                <img src="static/images/id_{{ id_clinica }}.jpg" 
+                  alt="{{ clinica }}" 
+                  class="w-16 h-16 rounded-full object-cover"
+                  onerror="this.onerror=null; this.src='static/images/foto_generica_clinica.jpg';">
+              </div>
+              <h2 class="text-xl mb-2">{{ clinica }}</h2>
+              <p class="flex items-center gap-2 text-neutral-600 mb-2">
+                <i class="fa-solid fa-location-dot"></i>
+                {{ direccion }}, {{ comuna }}
+              </p>
+              <p class="text-neutral-600">
+                <i class="fa-regular fa-calendar"></i>
+                <span class="ml-2">{{ fecha }} - {{ hora }} hrs</span>
+              </p>
+            </div>
+
+            <div id="vet-info" class="bg-white p-6 rounded-xl shadow-lg">
+              <div class="flex items-center gap-4">
+                <img src="static/images/vet_{{ id_veterinario }}.jpg" 
+                  alt="{{nombresvet}} {{apellidosvet}}" 
+                  class="w-16 h-16 rounded-full object-cover"
+                  onerror="this.onerror=null; this.src='static/images/foto_generica.png';">
+                <div>
+                  <h3 class="text-lg">Vet. {{nombresvet}} {{apellidosvet}}</h3>
+                  <p class="text-neutral-600">{{especialidad}}</p>
+                </div>
+              </div>
+            </div>
+          {% if not user %}
+            <div id="metodo-autenticacion" class="bg-white p-6 rounded-xl shadow-lg">
+              <!-- Contenedor flex -->
+              <div id="metodos_autenticacion" class="flex gap-4">
+                <!-- Botón Google -->
+                <button id="btn-google" onclick="window.location.href='/login?redirect=finalizar_pago'" class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors">
+                  <i class="fa-brands fa-google"></i>
+                  <span>Continuar con Google</span>
+                </button>
+
+                <!-- Botón Invitado -->
+                <button id="btn-invitado" class="flex-1 px-4 py-2 border border-neutral-300 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors">
+                  <i></i>
+                  <span>Continuar como invitado</span>
+                </button>
+              </div>
+            </div>
+          {% endif %}
+
+            <div id="pet-selection" class="bg-white p-6 rounded-xl shadow-lg hidden" >
+              <select id="mascotaSeleccionada" class="w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300">
+                <option>Seleccionar mascota</option>
+              </select>
+
+            </div>
+
+            <div id="correos" class="bg-white p-6 rounded-xl shadow-lg hidden">
+              <div class="flex flex-col md:flex-row gap-4 w-full">
+                <div id="div-correo-usuario" class="flex-1 bg-white p-6 rounded-xl shadow-lg">
+                  <input type="email" 
+                        id="correo-usuario" 
+                        class="w-full p-3 border border-neutral-300 rounded-lg text-blue-600 bg-white transition-colors duration-300"
+                        placeholder="Ingresa aquí tu correo para registrar la reserva"
+                        required/>
+                </div>
+                <div id="correo-comparacion" class="text-sm mt-2"></div>
+                <div id="div-correo-usuario2" class="flex-1 bg-white p-6 rounded-xl shadow-lg">
+                  <input type="email" 
+                        id="correo-usuario2" 
+                        class="w-full p-3 border border-neutral-300 rounded-lg text-blue-600 bg-white transition-colors duration-300"
+                        placeholder="Verifica aquí tu correo para registrar la reserva"
+                        required/>
+                </div>
+              </div>
+            </div>
+
+
+            <div id="payment-method" class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg mb-4">Método de Pago</h3>
+              <div class="space-y-3">
+                <div class="flex items-center gap-3 p-3 border border-neutral-300 rounded-lg">
+                  <input type="radio" name="payment" id="card" checked>
+                    <img src="/static/images/logo_webpay2.png" 
+                    alt="Transbank">                  
+                  
+                </div>
+                <div class="flex items-center gap-3 p-3 border border-neutral-300 rounded-lg">
+                  <input type="radio" name="payment" id="cash">
+                  <i class="fa-solid fa-money-bill"></i>
+                  <label for="cash">Pagar en consulta</label>
+                </div>
+              </div>
+            </div>
+
+            <div id="payment-summary" class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg mb-4">Resumen de Pago</h3>
+              <div class="space-y-2 mb-4">
+                <div class="flex justify-between">
+                  <span id="txt_msg_valor_a_pagar">Valor consulta veterinaria<sup>(*)</sup></span>
+                  <span id="valor-num">${{ valor|formato_miles }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Cargo por servicio<sup>(**)</sup></span>
+                  <span id="cargo_servicio"></span>
+                </div>
+                <div class="flex justify-between text-lg pt-2 border-t">
+                  <span id="txt_total">Total a pagar</span>
+                  <span id="cargo_total"></span>
+                </div>
+              </div>
+            </div>
+
+            <div id="notas_al_pie" class="bg-white p-6 rounded-xl shadow-lg">
+              <h3 class="text-lg mb-4"><strong><u>IMPORTANTE</u></strong></h3>
+              <div class="space-y-2 mb-4">
+                <ul class="list-disc list-inside text-left text-sm text-gray-700 space-y-1">
+                  <div class="flex justify-between">
+                    <span id="nota_1"><li>
+                      * El valor de la consulta no considera insumos o exámenes u otros costos que podrían estar asociados al procedimiento.</li></span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span id="nota_2"><li>
+                      ** Al confirmar y pagos, Ud. está aceptando los Términos de referencia y la Polìtica de privacidad de PawCare.</li></span>
+                  </div>
+                </ul>
+              </div>
+            </div>
+            <button id="btn-confirmar-pago" class="w-full py-4 bg-[#5A8F99] text-white rounded-lg shadow-lg hover:bg-[#4F7F88] transition duration-200 text-lg">
+              Confirmar y Pagar
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <footer id="footer" class="bg-[#87AEB5] text-white py-12 mt-16">
+        <div class="container mx-auto px-4">
+          <div class="grid md:grid-cols-3 gap-8">
+            <div>
+              <h4 class="text-lg mb-4">Enlaces rápidos</h4>
+              <ul class="space-y-2">
+                <li><span class="hover:text-neutral-200 cursor-pointer">Inicio</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Buscar Veterinarios</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Mis Mascotas</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Mis Citas</span></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-lg mb-4">Soporte</h4>
+              <ul class="space-y-2">
+                <li><span class="hover:text-neutral-200 cursor-pointer">Centro de ayuda</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">FAQ</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Contacto</span></li>
+                <li><span class="hover:text-neutral-200 cursor-pointer">Política de privacidad</span></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 class="text-lg mb-4">Síguenos</h4>
+              <div class="flex space-x-4">
+                <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-facebook text-2xl"></i></span>
+                <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-instagram text-2xl"></i></span>
+                <span class="hover:text-neutral-200 cursor-pointer"><i class="fa-brands fa-twitter text-2xl"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const user = {
+      picture: "{{ user['picture'] if user else '' }}",
+      };
+      if (user.picture) {
+      btnLogin = document.getElementById("btn-login");
+      btnLogin.classList.add("hidden");
+
+      const avatar = document.getElementById("user-avatar");
+      avatar.src = user.picture;
+      avatar.classList.remove("hidden");
+      const userNombre = document.getElementById("user-nombre");
+      userNombre.classList.remove("hidden");
+        
+      }
+
+      //Completar el cargo por servicio y el valor total
+      const valorBase = parseFloat({{ valor }});
+
+      if (!isNaN(valorBase)) {
+        // Cálculo
+        const cargoServicio = Math.round(valorBase * 0.03);
+        const cargoTotal = valorBase + cargoServicio;
+
+        fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "cargoTotal", valor: cargoTotal }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+        });
+
+
+        fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "cargoServicio", valor: cargoServicio }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+        });        
+
+        // Formato tipo "1.234.567" (chileno/europeo)
+        const formatCL = n => n.toLocaleString("de-DE");
+
+        // Insertar en los elementos correspondientes
+        document.getElementById("cargo_servicio").textContent = `$${formatCL(cargoServicio)}`;
+        document.getElementById("cargo_total").textContent = `$${formatCL(cargoTotal)}`;
+      }      
+      
+      const user2 = {{ 'true' if user else 'false' }};
+      console.log("USER={{use2}}")
+      const petselection = document.getElementById("pet-selection");
+      const divcorreos = document.getElementById("correos");
+      const btnGoogle = document.getElementById("btn-google");
+      const btnInvitado = document.getElementById("btn-invitado");
+
+      if (!user2) {
+        // Usuario no autenticado
+        petselection.classList.add("hidden");
+        divcorreos.classList.add("hidden");
+
+        // Botones normales
+        btnGoogle?.classList.remove("bg-gray-200");
+        btnInvitado?.classList.remove("bg-gray-200");
+
+      } else {
+        // Usuario autenticado
+        petselection.classList.remove("hidden");
+        divcorreos.classList.add("hidden");
+
+        // Fondo gris al botón Google
+        btnGoogle?.classList.add("bg-gray-200");
+        btnInvitado?.classList.remove("bg-gray-200");
+      }
+
+
+      //********************************
+      //Evitar copiar y pegar correos
+      const inputs = [
+        document.getElementById("correo-usuario"),
+        document.getElementById("correo-usuario2")
+      ];
+
+      inputs.forEach(input => {
+        // Bloquear copiar, cortar y pegar
+        input.addEventListener("copy", e => e.preventDefault());
+        input.addEventListener("cut", e => e.preventDefault());
+        input.addEventListener("paste", e => e.preventDefault());
+        // Opcional: mostrar un mensaje
+        input.addEventListener("paste", () => {
+          Swal.fire({
+            icon: 'info',
+            title: 'No copiar y pegar',
+            text: 'Por seguridad, no se permite pegar el correo. Por favor escríbelo manualmente.',
+            confirmButtonText: 'Entendido',
+            allowOutsideClick: false, // <- evita perder foco si se hace clic fuera
+            didClose: () => {
+              input.focus();
+
+              // parpadeo visual del input
+              let i = 0;
+              const max = 3;
+              const originalBg = getComputedStyle(input).backgroundColor;
+
+              const parpadeo = setInterval(() => {
+                input.style.backgroundColor = "#fdecea"; // rojo claro
+
+                setTimeout(() => {
+                  input.style.backgroundColor = originalBg;
+                }, 300);
+
+                i++;
+                if (i >= max) clearInterval(parpadeo);
+              }, 500);
+            }
+          });
+        });
+      });      
+
+      //********************************
+      //Escuchar cuando el usuario ingresa el segundo correo y ver si las letras coinciden
+      const correo1 = document.getElementById("correo-usuario");
+      const correo2 = document.getElementById("correo-usuario2");
+      const comparacionDiv = document.getElementById("correo-comparacion");
+
+      correo2.addEventListener("input", function () {
+        const original = correo1.value;
+        const comparado = correo2.value;
+
+        let resultado = "";
+        if (original === comparado && original.length > 0) {
+          // Mostrar ícono de visto bueno azul
+          comparacionDiv.innerHTML = `
+            <span class="text-blue-600 font-semibold flex items-center gap-2">
+              <i class="fa-solid fa-circle-check"></i>
+            </span>
+          `;
+          fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "correo_cliente_invitado", valor: original }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+          });
+        } else {
+          for (let i = 0; i < original.length; i++) {
+            const letraOriginal = original[i] || "";
+            const letraComparada = comparado[i] || "";
+
+            if (letraOriginal !== letraComparada) {
+              resultado += `<span style="color: red;">${letraOriginal}</span>`;
+            } else {
+              resultado += `<span>${letraOriginal}</span>`;
+            }
+          }
+
+          comparacionDiv.innerHTML = `
+            <span class="text-gray-500">Verificación</span><br>
+            <code class="font-mono">${resultado}</code>
+          `;
+        }
+      });      
+    });
+
+    // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
+    document.getElementById("menu-toggle").addEventListener("click", function () {
+      const mobileNav = document.getElementById("mobile-nav");
+      mobileNav.classList.toggle("hidden");
+    });   
+    
+    // Llenar el select de mascotas:
+    const clientes_mascotas = {{ clientes_mascotas | tojson }};
+
+    console.log("clientes_mascotas" + clientes_mascotas);
+    if(clientes_mascotas){
+      console("Llenando el select de mascotas");
+      const selectMascotas = document.getElementById("mascotaSeleccionada");
+
+      clientes_mascotas.forEach(mascota => {
+        const option = document.createElement("option");
+        option.value = mascota.id_clientes_mascotas;
+        option.textContent = mascota.nombre_mascota;
+        selectMascotas.appendChild(option);
+      });  
+    };
+
+
+    //Almacenar el valor de la mascota
+    //OJO que este script me sirve de ejemplo para cada vez que necesite almacenar una variable de sesión 
+    //en Python
+    document.getElementById("mascotaSeleccionada").addEventListener("change", function () {
+      const id = this.id;
+      const valor_mascotaSeleccionada = this.value;
+
+      fetch("/guardar_variable_sesion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: id, valor: valor_mascotaSeleccionada }),
+        credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Sesión actualizada:", data);
+      });
+    });
+
+
+    //Modifica el cuadro de valor de la reserva para pago en la consulta
+    document.getElementById("cash").addEventListener("click", function () {
+      const txt_msg_valor_a_pagar = document.getElementById("txt_msg_valor_a_pagar");
+      txt_msg_valor_a_pagar.innerHTML = "<strong>IMPORTANTE:</strong> Este valor deberá cancelarlo en la consulta<sup>(*)</sup>";
+
+      const valorBase = parseFloat({{ valor }});
+
+      if (!isNaN(valorBase)) {
+        // Cálculo
+        const cargoServicio = Math.round(valorBase * 0.03);
+        const cargoTotal = cargoServicio; //Es igual al cargoServicio, ya que est{a decidiendo pagar en la clinica}
+
+        // Formato tipo "1.234.567" (chileno/europeo)
+        const formatCL = n => n.toLocaleString("de-DE");
+
+        // Insertar en los elementos correspondientes
+        document.getElementById("cargo_servicio").textContent = `$${formatCL(cargoServicio)}`;
+        document.getElementById("cargo_total").textContent = `$${formatCL(cargoTotal)}`;
+        document.getElementById("txt_total").textContent = "Total a pagar para reservar hora";
+
+        fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "cargoTotal", valor: cargoTotal }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+        });
+
+
+        fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "cargoServicio", valor: cargoServicio }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+        });        
+      };    
+    });
+
+
+
+    //Modifica el cuadro de valor de la reserva para pago en la consulta
+    document.getElementById("card").addEventListener("click", function () {
+      const txt_msg_valor_a_pagar = document.getElementById("txt_msg_valor_a_pagar");
+      txt_msg_valor_a_pagar.textContent = "Total";
+
+      const valorBase = parseFloat({{ valor }});
+
+      if (!isNaN(valorBase)) {
+        // Cálculo
+        const cargoServicio = Math.round(valorBase * 0.03);
+        const cargoTotal = valorBase + cargoServicio;
+
+        // Formato tipo "1.234.567" (chileno/europeo)
+        const formatCL = n => n.toLocaleString("de-DE");
+
+        // Insertar en los elementos correspondientes
+        document.getElementById("cargo_servicio").textContent = `$${formatCL(cargoServicio)}`;
+        document.getElementById("cargo_total").textContent = `$${formatCL(cargoTotal)}`;
+        document.getElementById("txt_total").textContent = "Total a pagar";
+        
+        fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "cargoTotal", valor: cargoTotal }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+        });
+
+        fetch("/guardar_variable_sesion", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: "cargoServicio", valor: cargoServicio }),
+            credentials: "include" // <--- MUY IMPORTANTE para que las cookies viajen
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log("Sesión actualizada:", data);
+        });
+      };           
+ 
+    });
+
+
+    //Validaciòn del formulario para pagar
+    document.getElementById("btn-confirmar-pago").addEventListener("click", function () {
+      const select = document.getElementById("mascotaSeleccionada");
+      const valorSeleccionado = select.value.trim();
+      const petselection = document.getElementById("pet-selection");
+      const divcorreos= document.getElementById("correos");
+      const divcorreo1= document.getElementById("correo-usuario");
+      const divcorreo2= document.getElementById("correo-usuario2");
+
+      
+      const correoValor1 = divcorreo1.value.trim();
+      const correoValor2 = divcorreo1.value.trim();
+
+      if (!petselection.classList.contains("hidden")) {
+        if (!valorSeleccionado || valorSeleccionado === "Seleccionar mascota") {
+          select.focus();
+
+          let i = 0;
+          const max = 3;
+          const originalBg = getComputedStyle(select).backgroundColor;
+
+          const parpadeo = setInterval(() => {
+            select.style.backgroundColor = "#e5e7eb"; // gris claro (Tailwind gray-200)
+
+            setTimeout(() => {
+              select.style.backgroundColor = originalBg;
+            }, 300); // vuelve a blanco suavemente
+
+            i++;
+            if (i >= max) clearInterval(parpadeo);
+          }, 500); // cada 300ms
+
+          return;
+        }
+      }
+
+      // si el divcorreousuario no está oculto, entonces
+      // debo validarlo
+      // y luego entrego el correo para una variable de sesión
+      //alert("divcorreousuario.classList.contains('hidden')=" + divcorreousuario.classList.contains("hidden"));
+      if (!divcorreos.classList.contains("hidden") && (correoValor1 == correoValor2)) {
+        // ✅ Validar correo
+        const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoValor1);
+        if (!correoValido) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Correo inválido',
+            text: 'Por favor ingresa un correo electrónico válido para continuar.',
+            confirmButtonText: 'Entendido',
+            allowOutsideClick: false, // <- evita perder foco si se hace clic fuera
+            didClose: () => {
+              correoInput.focus();
+
+              // Opcional: parpadeo visual del input
+              let i = 0;
+              const max = 3;
+              const originalBg = getComputedStyle(correoInput).backgroundColor;
+
+              const parpadeo = setInterval(() => {
+                correoInput.style.backgroundColor = "#fdecea"; // rojo claro
+
+                setTimeout(() => {
+                  correoInput.style.backgroundColor = originalBg;
+                }, 300);
+
+                i++;
+                if (i >= max) clearInterval(parpadeo);
+              }, 500);
+            }
+          });
+          return;          
+        }
+
+      }
+      // Redirigir si todo está OK
+      window.location.href = "/api/pagar";
+    });
+ 
+    //Mostrar el campo del correo
+    document.getElementById("btn-invitado").addEventListener("click", function () {
+      const divcorreousuario = document.getElementById("correos");
+      divcorreousuario.classList.remove("hidden");
+      const btninvitado = document.getElementById("btn-invitado");
+      btninvitado.classList.remove("bg-white", "bg-neutral-50");
+      btninvitado.classList.add("bg-gray-200");
+      const petselection = document.getElementById("pet-selection");
+      petselection.classList.add("hidden");
+    });
+
+  </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>
+          

@@ -128,9 +128,9 @@
           <h1 class="text-4xl mb-4 text-[#2E2E2E]">¡Tu hora ha sido reservada con éxito!</h1>
           <p class="text-[#4A4A4A] text-lg"> 
             <script>
-              document.write("Tu cita con ", nombres_vetetinario, " ",
-              apellidos_vetetinario, " en la Clínica", nombre_clinica,
-              " está confirmada para el día " , fecha, " a las ", hora, ".");
+              document.write("Tu cita con ", reserva_en_proceso['nombresvet'], " ",
+              reserva_en_proceso['apellidosvet'], " en la Clínica", reserva_en_proceso['clinica'],
+              " está confirmada para el día " , reserva_en_proceso['fecha'], " a las ", reserva_en_proceso['hora'], ".");
             </script>
           </p>
         </div>
@@ -141,7 +141,7 @@
           <div class="grid md:grid-cols-2 gap-6">
             <div class="space-y-4">
               <div>
-                <p class="text-[#4A4A4A]">Clínica </p>
+                <p class="text-[#4A4A4A]"><strong>Clínica</strong></p>
                 <p class="text-[#2E2E2E]">
                   <script>
                     document.write( nombre_clinica );
@@ -149,18 +149,13 @@
                 </p>
               </div>
               <div>
-                <p class="text-[#4A4A4A]">Fecha y Hora</p>
+                <p class="text-[#4A4A4A]"><strong>Fecha y Hora</strong></p>
                 <p class="text-[#2E2E2E]">
-                  <script>
-                    //pasamos fecha a formato dd/mm/yyyy
-                    fecha = new Date("{{ fecha }}").toLocaleDateString('es-ES', { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-                    document.write(fecha, " - ", hora);
-                  </script>
+                  {{ fecha }} - {{ hora }}
                 </p>
               </div>
               <div>
-                <p class="text-[#4A4A4A]">Veterinario</p>
+                <p class="text-[#4A4A4A]"><strong>Veterinario</strong></p>
                 <p class="text-[#2E2E2E]">
                   <script>
                     document.write(nombres_veterinario, " ", apellidos_veterinario);
@@ -171,17 +166,21 @@
             
             <div class="space-y-4">
               <div>
-                <p class="text-[#4A4A4A]">Mascota</p>
-                <p class="text-[#2E2E2E]"><script>document.write(nombre_mascota)</script></p>
+                <p class="text-[#4A4A4A]"><strong>Dirección</strong></p>
+                <p class="text-[#2E2E2E]">{{ direccion_clinica }}</p>
               </div>
               <div>
-                <p class="text-[#4A4A4A]">Tarjeta terminada en</p>
+                <p class="text-[#4A4A4A]"><strong>Tarjeta terminada en</strong></p>
                 <p class="text-[#2E2E2E]">
                   <script>
                     document.write(numero_tarjeta);
                   </script>
                 </p>
               </div>
+              <div>
+                <p class="text-[#4A4A4A]"><strong>Mascota</strong></p>
+                <p class="text-[#2E2E2E]"><script>document.write(nombre_mascota)</script></p>
+              </div>              
             </div>
           </div>
 
@@ -341,10 +340,26 @@
   console.log('datosReserva: ', datosReserva);
   
   function agregarACalendario() {
-    const { fecha, hora, direccion } = datosReserva;
+    const { fecha, hora, direccion, nombre_clinica } = datosReserva;
+
+    cuerpo_del_correo = 'Tu cita es el ' + fecha + " "
+    cuerpo_del_correo += 'a las ' + hora + "Hrs.<br>"
+    cuerpo_del_correo += 'En ' + nombre_clinica + '<br>'
+    cuerpo_del_correo += 'Direccion ' + direccion + '<br><br><br>'
+    cuerpo_del_correo += 'Reserva automática realizada desde PawCare.'
+ 
+    titulo_correo = 'Cita en clinica veterinaria' + nombre_clinica
+
+    // Reordenar fecha al formato ISO (YYYY-MM-DD)
+    const partes = fecha.split("-");
+    const fechaISO = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    console.log("fecha en agregarACalendario=" + fechaISO)
+    console.log("hora en agregarACalendario=" + hora)
   
-    const start = new Date(`${fecha}T${hora}:00`);
+    const start = new Date(`${fechaISO}T${hora}:00`);
     const end = new Date(start.getTime() + 60 * 60 * 1000); // 1 hora después
+
+    console.log("start en agregarACalendario=" + start)
   
     const formatDate = d => {
       const pad = n => n.toString().padStart(2, '0');
@@ -356,10 +371,16 @@
   
     const params = new URLSearchParams({
       action: 'TEMPLATE',
-      text: 'Cita en clinica veterinaria',
+      text: titulo_correo,
       dates: `${startUTC}/${endUTC}`,
-      details: 'Reserva automática realizada desde PawCare.',
-      location: direccion
+      details: cuerpo_del_correo,
+      location: direccion,
+      reminders: {
+        "useDefault": false,
+        "overrides": [
+          { "method": "popup", "minutes": 24 * 60 }
+        ]
+      }
     });
   
     const url = `https://calendar.google.com/calendar/render?${params.toString()}`;

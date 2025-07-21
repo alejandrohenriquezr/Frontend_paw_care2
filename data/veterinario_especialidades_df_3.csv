@@ -1,0 +1,343 @@
+id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellidos;sexo;especialidad;id_clinica
+1;1;13;3;Oscar Orlando;Aburto Bravo;MASCULINO;Cirugía;1
+2;1;67;14;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición natural;1
+3;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1
+4;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1
+5;1;18;4;Oscar Orlando;Aburto Bravo;MASCULINO;Dermatología;1
+6;1;44;9;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición animal;1
+7;2;32;7;Mario Oscar;Acevedo Sánchez;MASCULINO;Oncología;1
+8;2;66;14;Mario Oscar;Acevedo Sánchez;MASCULINO;Nutrición natural;1
+9;2;52;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1
+10;2;56;12;Mario Oscar;Acevedo Sánchez;MASCULINO;Gastroenterología;1
+11;2;54;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;5
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;12
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;15
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;17
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;5
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;12
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;15
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;17
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;5
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;12
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;15
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;17
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO;Gastroenterología;9
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO;Gastroenterología;19
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO;Gastroenterología;20
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO;Urgencias veterinarias;9
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO;Urgencias veterinarias;19
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO;Urgencias veterinarias;20
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO;Nutrición natural;9
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO;Nutrición natural;19
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO;Nutrición natural;20
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO;Cirugía;9
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO;Cirugía;19
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO;Cirugía;20
+19;5;17;4;Fernando Andrés;Aránguiz Rojas;MASCULINO;Dermatología;14
+20;5;45;9;Fernando Andrés;Aránguiz Rojas;MASCULINO;Nutrición animal;14
+21;5;66;14;Fernando Andrés;Aránguiz Rojas;MASCULINO;Nutrición natural;14
+22;5;18;4;Fernando Andrés;Aránguiz Rojas;MASCULINO;Dermatología;14
+23;5;31;7;Fernando Andrés;Aránguiz Rojas;MASCULINO;Oncología;14
+24;5;70;14;Fernando Andrés;Aránguiz Rojas;MASCULINO;Nutrición natural;14
+25;6;67;14;Paulina Alejandra;Arias Díaz;FEMENINO;Nutrición natural;5
+26;6;14;3;Paulina Alejandra;Arias Díaz;FEMENINO;Cirugía;5
+27;6;33;7;Paulina Alejandra;Arias Díaz;FEMENINO;Oncología;5
+28;6;10;2;Paulina Alejandra;Arias Díaz;FEMENINO;Urgencias veterinarias;5
+29;6;20;4;Paulina Alejandra;Arias Díaz;FEMENINO;Dermatología;5
+30;6;8;2;Paulina Alejandra;Arias Díaz;FEMENINO;Urgencias veterinarias;5
+31;6;53;11;Paulina Alejandra;Arias Díaz;FEMENINO;Etología;5
+32;6;63;13;Paulina Alejandra;Arias Díaz;FEMENINO;Geriatría;5
+33;7;43;9;Mauricio Andrés;Arias Monsalve;MASCULINO;Nutrición animal;16
+34;7;34;7;Mauricio Andrés;Arias Monsalve;MASCULINO;Oncología;16
+35;8;65;13;Patricio Sebastian;Asencio Schmidt;MASCULINO;Geriatría;8
+35;8;65;13;Patricio Sebastian;Asencio Schmidt;MASCULINO;Geriatría;13
+36;9;56;12;Daniel Ignacio;Avila Avila;MASCULINO;Gastroenterología;20
+37;10;61;13;Belén Alejandra;Barra Pérez;FEMENINO;Geriatría;18
+38;10;38;8;Belén Alejandra;Barra Pérez;FEMENINO;Radiología;18
+39;10;29;6;Belén Alejandra;Barra Pérez;FEMENINO;Oftalmología;18
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Fisioterapia;10
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Fisioterapia;12
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Fisioterapia;20
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Cirugía;10
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Cirugía;12
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Cirugía;20
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;10
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;12
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;20
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Etología;10
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Etología;12
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Etología;20
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Nutrición animal;10
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Nutrición animal;12
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Nutrición animal;20
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;10
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;12
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;20
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oftalmología;10
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oftalmología;12
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oftalmología;20
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Medicina interna;10
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Medicina interna;12
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Medicina interna;20
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO;Fisioterapia;2
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO;Fisioterapia;8
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO;Fisioterapia;9
+49;13;59;12;Héctor Andrés;Bilbao Matus;MASCULINO;Gastroenterología;11
+50;13;53;11;Héctor Andrés;Bilbao Matus;MASCULINO;Etología;11
+51;13;45;9;Héctor Andrés;Bilbao Matus;MASCULINO;Nutrición animal;11
+52;13;6;2;Héctor Andrés;Bilbao Matus;MASCULINO;Urgencias veterinarias;11
+53;13;43;9;Héctor Andrés;Bilbao Matus;MASCULINO;Nutrición animal;11
+54;13;28;6;Héctor Andrés;Bilbao Matus;MASCULINO;Oftalmología;11
+55;13;36;8;Héctor Andrés;Bilbao Matus;MASCULINO;Radiología;11
+56;13;47;10;Héctor Andrés;Bilbao Matus;MASCULINO;Endocrinología;11
+57;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;4
+57;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;17
+58;14;24;5;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Fisioterapia;4
+58;14;24;5;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Fisioterapia;17
+59;14;29;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;4
+59;14;29;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;17
+60;14;41;9;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición animal;4
+60;14;41;9;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición animal;17
+61;14;28;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;4
+61;14;28;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;17
+62;14;18;4;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Dermatología;4
+62;14;18;4;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Dermatología;17
+63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;4
+63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;17
+64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;1
+64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;3
+65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;1
+65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;3
+66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;1
+66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;3
+67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1
+67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3
+68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;1
+68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;3
+69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1
+69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3
+70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1
+70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3
+71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;1
+71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;3
+72;16;28;6;Camila Fernanda;Cabezón Marchant;FEMENINO;Oftalmología;1
+73;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1
+74;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1
+75;16;53;11;Camila Fernanda;Cabezón Marchant;FEMENINO;Etología;1
+76;17;68;14;Carlos Luis;Campos Paiva;MASCULINO;Nutrición natural;1
+77;17;17;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1
+78;17;16;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1
+79;17;63;13;Carlos Luis;Campos Paiva;MASCULINO;Geriatría;1
+80;17;3;1;Carlos Luis;Campos Paiva;MASCULINO;Medicina interna;1
+81;17;34;7;Carlos Luis;Campos Paiva;MASCULINO;Oncología;1
+82;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1
+83;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1
+84;17;36;8;Carlos Luis;Campos Paiva;MASCULINO;Radiología;1
+85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;1
+85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;6
+86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;1
+86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;6
+87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;1
+87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;6
+88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;1
+88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;6
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;4
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;7
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;12
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;14
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;18
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;4
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;7
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;12
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;14
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;18
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;4
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;7
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;12
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;14
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;18
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;4
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;7
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;12
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;14
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;18
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;4
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;7
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;12
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;14
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;18
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;4
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;7
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;12
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;14
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;18
+95;20;65;13;Bárbara Carolina;Casagran Marchánt;FEMENINO;Geriatría;15
+96;20;23;5;Bárbara Carolina;Casagran Marchánt;FEMENINO;Fisioterapia;15
+97;20;12;3;Bárbara Carolina;Casagran Marchánt;FEMENINO;Cirugía;15
+98;20;43;9;Bárbara Carolina;Casagran Marchánt;FEMENINO;Nutrición animal;15
+99;20;16;4;Bárbara Carolina;Casagran Marchánt;FEMENINO;Dermatología;15
+100;20;30;6;Bárbara Carolina;Casagran Marchánt;FEMENINO;Oftalmología;15
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;4
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;8
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;10
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;18
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;4
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;8
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;10
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;18
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;4
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;8
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;10
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;18
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;4
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;8
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;10
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;18
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;4
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;8
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;10
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;18
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;4
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;8
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;10
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;18
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;4
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;8
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;10
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;18
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;4
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;8
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;10
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;18
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;4
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;8
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;10
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;18
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;1
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;2
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;7
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;11
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;11
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;16
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;2
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;7
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;16
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;1
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;2
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;7
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;11
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;11
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;16
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;2
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;7
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;16
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;1
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;2
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;7
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;11
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;11
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;16
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;1
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;2
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;7
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;11
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;11
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;16
+116;23;33;7;Cristian Emilio;Catalán Arias;MASCULINO;Oncología;3
+116;23;33;7;Cristian Emilio;Catalán Arias;MASCULINO;Oncología;13
+117;23;16;4;Cristian Emilio;Catalán Arias;MASCULINO;Dermatología;3
+117;23;16;4;Cristian Emilio;Catalán Arias;MASCULINO;Dermatología;13
+118;23;46;10;Cristian Emilio;Catalán Arias;MASCULINO;Endocrinología;3
+118;23;46;10;Cristian Emilio;Catalán Arias;MASCULINO;Endocrinología;13
+119;23;2;1;Cristian Emilio;Catalán Arias;MASCULINO;Medicina interna;3
+119;23;2;1;Cristian Emilio;Catalán Arias;MASCULINO;Medicina interna;13
+120;23;55;11;Cristian Emilio;Catalán Arias;MASCULINO;Etología;3
+120;23;55;11;Cristian Emilio;Catalán Arias;MASCULINO;Etología;13
+121;24;3;1;William Adrian;Césped Muñoz;MASCULINO;Medicina interna;15
+121;24;3;1;William Adrian;Césped Muñoz;MASCULINO;Medicina interna;19
+122;24;58;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;15
+122;24;58;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;19
+123;24;52;11;William Adrian;Césped Muñoz;MASCULINO;Etología;15
+123;24;52;11;William Adrian;Césped Muñoz;MASCULINO;Etología;19
+124;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;15
+124;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;19
+125;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;15
+125;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;19
+126;24;34;7;William Adrian;Césped Muñoz;MASCULINO;Oncología;15
+126;24;34;7;William Adrian;Césped Muñoz;MASCULINO;Oncología;19
+127;24;23;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;15
+127;24;23;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;19
+128;24;56;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;15
+128;24;56;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;19
+129;24;21;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;15
+129;24;21;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;19
+130;25;69;14;Exequiel Fernando;Collao López;MASCULINO;Nutrición natural;5
+130;25;69;14;Exequiel Fernando;Collao López;MASCULINO;Nutrición natural;10
+131;25;33;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;5
+131;25;33;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;10
+132;25;5;1;Exequiel Fernando;Collao López;MASCULINO;Medicina interna;5
+132;25;5;1;Exequiel Fernando;Collao López;MASCULINO;Medicina interna;10
+133;25;34;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;5
+133;25;34;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;10
+134;25;61;13;Exequiel Fernando;Collao López;MASCULINO;Geriatría;5
+134;25;61;13;Exequiel Fernando;Collao López;MASCULINO;Geriatría;10
+135;26;48;10;Miguel Mario;Contreras Lusardi;MASCULINO;Endocrinología;6
+136;26;31;7;Miguel Mario;Contreras Lusardi;MASCULINO;Oncología;6
+137;26;40;8;Miguel Mario;Contreras Lusardi;MASCULINO;Radiología;6
+138;26;57;12;Miguel Mario;Contreras Lusardi;MASCULINO;Gastroenterología;6
+139;26;19;4;Miguel Mario;Contreras Lusardi;MASCULINO;Dermatología;6
+140;26;1;1;Miguel Mario;Contreras Lusardi;MASCULINO;Medicina interna;6
+141;26;15;3;Miguel Mario;Contreras Lusardi;MASCULINO;Cirugía;6
+142;26;26;6;Miguel Mario;Contreras Lusardi;MASCULINO;Oftalmología;6
+143;26;69;14;Miguel Mario;Contreras Lusardi;MASCULINO;Nutrición natural;6
+144;27;65;13;Pablo José;Cortés López;MASCULINO;Geriatría;3
+144;27;65;13;Pablo José;Cortés López;MASCULINO;Geriatría;13
+145;27;58;12;Pablo José;Cortés López;MASCULINO;Gastroenterología;3
+145;27;58;12;Pablo José;Cortés López;MASCULINO;Gastroenterología;13
+146;27;25;5;Pablo José;Cortés López;MASCULINO;Fisioterapia;3
+146;27;25;5;Pablo José;Cortés López;MASCULINO;Fisioterapia;13
+147;27;51;11;Pablo José;Cortés López;MASCULINO;Etología;3
+147;27;51;11;Pablo José;Cortés López;MASCULINO;Etología;13
+148;28;16;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;2
+148;28;16;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;17
+149;28;19;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;2
+149;28;19;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;17
+150;28;36;8;Macarena Cecilia;Cortéz Jara;FEMENINO;Radiología;2
+150;28;36;8;Macarena Cecilia;Cortéz Jara;FEMENINO;Radiología;17
+151;28;13;3;Macarena Cecilia;Cortéz Jara;FEMENINO;Cirugía;2
+151;28;13;3;Macarena Cecilia;Cortéz Jara;FEMENINO;Cirugía;17
+152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO;Gastroenterología;2
+152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO;Gastroenterología;17
+153;29;47;10;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Endocrinología;1
+154;29;59;12;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Gastroenterología;1
+155;30;42;9;José Leonardo;Cuevas Pavéz;MASCULINO;Nutrición animal;1
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;6
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;7
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;9
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO;Nutrición animal;6
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO;Nutrición animal;7
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO;Nutrición animal;9
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO;Etología;6
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO;Etología;7
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO;Etología;9
+159;32;9;2;Daniela Fernanda;De La Barra González;FEMENINO;Urgencias veterinarias;14
+160;32;45;9;Daniela Fernanda;De La Barra González;FEMENINO;Nutrición animal;14
+161;33;52;11;Raúl Marcelo;De La Fuente García;MASCULINO;Etología;16
+161;33;52;11;Raúl Marcelo;De La Fuente García;MASCULINO;Etología;19
+162;33;57;12;Raúl Marcelo;De La Fuente García;MASCULINO;Gastroenterología;16
+162;33;57;12;Raúl Marcelo;De La Fuente García;MASCULINO;Gastroenterología;19
+163;33;48;10;Raúl Marcelo;De La Fuente García;MASCULINO;Endocrinología;16
+163;33;48;10;Raúl Marcelo;De La Fuente García;MASCULINO;Endocrinología;19
+164;33;11;3;Raúl Marcelo;De La Fuente García;MASCULINO;Cirugía;16
+164;33;11;3;Raúl Marcelo;De La Fuente García;MASCULINO;Cirugía;19
+165;33;17;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;16
+165;33;17;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;19
+166;33;20;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;16
+166;33;20;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;19

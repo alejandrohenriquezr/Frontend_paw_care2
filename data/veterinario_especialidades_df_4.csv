@@ -1,0 +1,343 @@
+id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellidos;sexo;especialidad;id_clinica;nombre_clinica;direccion;n_calificaciones;calificacion;latitud;longitud;dpa
+1;1;13;3;Oscar Orlando;Aburto Bravo;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+2;1;67;14;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+3;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+4;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+5;1;18;4;Oscar Orlando;Aburto Bravo;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+6;1;44;9;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición animal;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+7;2;32;7;Mario Oscar;Acevedo Sánchez;MASCULINO;Oncología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+8;2;66;14;Mario Oscar;Acevedo Sánchez;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+9;2;52;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+10;2;56;12;Mario Oscar;Acevedo Sánchez;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+11;2;54;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Fisioterapia;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Oncología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO;Gastroenterología;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO;Gastroenterología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO;Gastroenterología;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO;Urgencias veterinarias;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO;Urgencias veterinarias;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO;Urgencias veterinarias;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO;Nutrición natural;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO;Nutrición natural;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO;Nutrición natural;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO;Cirugía;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO;Cirugía;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO;Cirugía;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+19;5;17;4;Fernando Andrés;Aránguiz Rojas;MASCULINO;Dermatología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+20;5;45;9;Fernando Andrés;Aránguiz Rojas;MASCULINO;Nutrición animal;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+21;5;66;14;Fernando Andrés;Aránguiz Rojas;MASCULINO;Nutrición natural;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+22;5;18;4;Fernando Andrés;Aránguiz Rojas;MASCULINO;Dermatología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+23;5;31;7;Fernando Andrés;Aránguiz Rojas;MASCULINO;Oncología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+24;5;70;14;Fernando Andrés;Aránguiz Rojas;MASCULINO;Nutrición natural;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+25;6;67;14;Paulina Alejandra;Arias Díaz;FEMENINO;Nutrición natural;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+26;6;14;3;Paulina Alejandra;Arias Díaz;FEMENINO;Cirugía;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+27;6;33;7;Paulina Alejandra;Arias Díaz;FEMENINO;Oncología;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+28;6;10;2;Paulina Alejandra;Arias Díaz;FEMENINO;Urgencias veterinarias;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+29;6;20;4;Paulina Alejandra;Arias Díaz;FEMENINO;Dermatología;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+30;6;8;2;Paulina Alejandra;Arias Díaz;FEMENINO;Urgencias veterinarias;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+31;6;53;11;Paulina Alejandra;Arias Díaz;FEMENINO;Etología;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+32;6;63;13;Paulina Alejandra;Arias Díaz;FEMENINO;Geriatría;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+33;7;43;9;Mauricio Andrés;Arias Monsalve;MASCULINO;Nutrición animal;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+34;7;34;7;Mauricio Andrés;Arias Monsalve;MASCULINO;Oncología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+35;8;65;13;Patricio Sebastian;Asencio Schmidt;MASCULINO;Geriatría;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+35;8;65;13;Patricio Sebastian;Asencio Schmidt;MASCULINO;Geriatría;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+36;9;56;12;Daniel Ignacio;Avila Avila;MASCULINO;Gastroenterología;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+37;10;61;13;Belén Alejandra;Barra Pérez;FEMENINO;Geriatría;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+38;10;38;8;Belén Alejandra;Barra Pérez;FEMENINO;Radiología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+39;10;29;6;Belén Alejandra;Barra Pérez;FEMENINO;Oftalmología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Fisioterapia;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Fisioterapia;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Fisioterapia;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Cirugía;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Cirugía;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Cirugía;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Etología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Etología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Etología;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Nutrición animal;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Nutrición animal;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Nutrición animal;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oncología;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oftalmología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oftalmología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Oftalmología;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Medicina interna;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Medicina interna;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO;Medicina interna;20;Clínica 20;Huérfanos 2653;68;3,6;-33.4418933;-70.6727172;13101
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO;Fisioterapia;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO;Fisioterapia;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO;Fisioterapia;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+49;13;59;12;Héctor Andrés;Bilbao Matus;MASCULINO;Gastroenterología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+50;13;53;11;Héctor Andrés;Bilbao Matus;MASCULINO;Etología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+51;13;45;9;Héctor Andrés;Bilbao Matus;MASCULINO;Nutrición animal;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+52;13;6;2;Héctor Andrés;Bilbao Matus;MASCULINO;Urgencias veterinarias;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+53;13;43;9;Héctor Andrés;Bilbao Matus;MASCULINO;Nutrición animal;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+54;13;28;6;Héctor Andrés;Bilbao Matus;MASCULINO;Oftalmología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+55;13;36;8;Héctor Andrés;Bilbao Matus;MASCULINO;Radiología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+56;13;47;10;Héctor Andrés;Bilbao Matus;MASCULINO;Endocrinología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+57;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+57;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+58;14;24;5;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Fisioterapia;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+58;14;24;5;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Fisioterapia;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+59;14;29;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+59;14;29;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+60;14;41;9;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición animal;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+60;14;41;9;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición animal;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+61;14;28;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+61;14;28;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Oftalmología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+62;14;18;4;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Dermatología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+62;14;18;4;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Dermatología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+72;16;28;6;Camila Fernanda;Cabezón Marchant;FEMENINO;Oftalmología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+73;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+74;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+75;16;53;11;Camila Fernanda;Cabezón Marchant;FEMENINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+76;17;68;14;Carlos Luis;Campos Paiva;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+77;17;17;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+78;17;16;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+79;17;63;13;Carlos Luis;Campos Paiva;MASCULINO;Geriatría;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+80;17;3;1;Carlos Luis;Campos Paiva;MASCULINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+81;17;34;7;Carlos Luis;Campos Paiva;MASCULINO;Oncología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+82;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+83;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+84;17;36;8;Carlos Luis;Campos Paiva;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO;Dermatología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO;Endocrinología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO;Urgencias veterinarias;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+95;20;65;13;Bárbara Carolina;Casagran Marchánt;FEMENINO;Geriatría;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+96;20;23;5;Bárbara Carolina;Casagran Marchánt;FEMENINO;Fisioterapia;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+97;20;12;3;Bárbara Carolina;Casagran Marchánt;FEMENINO;Cirugía;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+98;20;43;9;Bárbara Carolina;Casagran Marchánt;FEMENINO;Nutrición animal;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+99;20;16;4;Bárbara Carolina;Casagran Marchánt;FEMENINO;Dermatología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+100;20;30;6;Bárbara Carolina;Casagran Marchánt;FEMENINO;Oftalmología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO;Medicina interna;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO;Radiología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO;Geriatría;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oftalmología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO;Oncología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO;Urgencias veterinarias;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+116;23;33;7;Cristian Emilio;Catalán Arias;MASCULINO;Oncología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+116;23;33;7;Cristian Emilio;Catalán Arias;MASCULINO;Oncología;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+117;23;16;4;Cristian Emilio;Catalán Arias;MASCULINO;Dermatología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+117;23;16;4;Cristian Emilio;Catalán Arias;MASCULINO;Dermatología;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+118;23;46;10;Cristian Emilio;Catalán Arias;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+118;23;46;10;Cristian Emilio;Catalán Arias;MASCULINO;Endocrinología;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+119;23;2;1;Cristian Emilio;Catalán Arias;MASCULINO;Medicina interna;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+119;23;2;1;Cristian Emilio;Catalán Arias;MASCULINO;Medicina interna;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+120;23;55;11;Cristian Emilio;Catalán Arias;MASCULINO;Etología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+120;23;55;11;Cristian Emilio;Catalán Arias;MASCULINO;Etología;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+121;24;3;1;William Adrian;Césped Muñoz;MASCULINO;Medicina interna;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+121;24;3;1;William Adrian;Césped Muñoz;MASCULINO;Medicina interna;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+122;24;58;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+122;24;58;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+123;24;52;11;William Adrian;Césped Muñoz;MASCULINO;Etología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+123;24;52;11;William Adrian;Césped Muñoz;MASCULINO;Etología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+124;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+124;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+125;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+125;24;70;14;William Adrian;Césped Muñoz;MASCULINO;Nutrición natural;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+126;24;34;7;William Adrian;Césped Muñoz;MASCULINO;Oncología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+126;24;34;7;William Adrian;Césped Muñoz;MASCULINO;Oncología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+127;24;23;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+127;24;23;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+128;24;56;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+128;24;56;12;William Adrian;Césped Muñoz;MASCULINO;Gastroenterología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+129;24;21;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
+129;24;21;5;William Adrian;Césped Muñoz;MASCULINO;Fisioterapia;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+130;25;69;14;Exequiel Fernando;Collao López;MASCULINO;Nutrición natural;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+130;25;69;14;Exequiel Fernando;Collao López;MASCULINO;Nutrición natural;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+131;25;33;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+131;25;33;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+132;25;5;1;Exequiel Fernando;Collao López;MASCULINO;Medicina interna;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+132;25;5;1;Exequiel Fernando;Collao López;MASCULINO;Medicina interna;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+133;25;34;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+133;25;34;7;Exequiel Fernando;Collao López;MASCULINO;Oncología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+134;25;61;13;Exequiel Fernando;Collao López;MASCULINO;Geriatría;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
+134;25;61;13;Exequiel Fernando;Collao López;MASCULINO;Geriatría;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
+135;26;48;10;Miguel Mario;Contreras Lusardi;MASCULINO;Endocrinología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+136;26;31;7;Miguel Mario;Contreras Lusardi;MASCULINO;Oncología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+137;26;40;8;Miguel Mario;Contreras Lusardi;MASCULINO;Radiología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+138;26;57;12;Miguel Mario;Contreras Lusardi;MASCULINO;Gastroenterología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+139;26;19;4;Miguel Mario;Contreras Lusardi;MASCULINO;Dermatología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+140;26;1;1;Miguel Mario;Contreras Lusardi;MASCULINO;Medicina interna;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+141;26;15;3;Miguel Mario;Contreras Lusardi;MASCULINO;Cirugía;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+142;26;26;6;Miguel Mario;Contreras Lusardi;MASCULINO;Oftalmología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+143;26;69;14;Miguel Mario;Contreras Lusardi;MASCULINO;Nutrición natural;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+144;27;65;13;Pablo José;Cortés López;MASCULINO;Geriatría;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+144;27;65;13;Pablo José;Cortés López;MASCULINO;Geriatría;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+145;27;58;12;Pablo José;Cortés López;MASCULINO;Gastroenterología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+145;27;58;12;Pablo José;Cortés López;MASCULINO;Gastroenterología;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+146;27;25;5;Pablo José;Cortés López;MASCULINO;Fisioterapia;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+146;27;25;5;Pablo José;Cortés López;MASCULINO;Fisioterapia;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+147;27;51;11;Pablo José;Cortés López;MASCULINO;Etología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
+147;27;51;11;Pablo José;Cortés López;MASCULINO;Etología;13;Clínica 13;Huérfanos 2653;50;2,4;-33.4418933;-70.6727172;13101
+148;28;16;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+148;28;16;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+149;28;19;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+149;28;19;4;Macarena Cecilia;Cortéz Jara;FEMENINO;Dermatología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+150;28;36;8;Macarena Cecilia;Cortéz Jara;FEMENINO;Radiología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+150;28;36;8;Macarena Cecilia;Cortéz Jara;FEMENINO;Radiología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+151;28;13;3;Macarena Cecilia;Cortéz Jara;FEMENINO;Cirugía;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+151;28;13;3;Macarena Cecilia;Cortéz Jara;FEMENINO;Cirugía;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO;Gastroenterología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
+152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO;Gastroenterología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
+153;29;47;10;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+154;29;59;12;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+155;30;42;9;José Leonardo;Cuevas Pavéz;MASCULINO;Nutrición animal;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO;Nutrición animal;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO;Nutrición animal;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO;Nutrición animal;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO;Etología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO;Etología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO;Etología;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101
+159;32;9;2;Daniela Fernanda;De La Barra González;FEMENINO;Urgencias veterinarias;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+160;32;45;9;Daniela Fernanda;De La Barra González;FEMENINO;Nutrición animal;14;Clínica 14;Huérfanos 2653;96;4,9;-33.4418933;-70.6727172;13101
+161;33;52;11;Raúl Marcelo;De La Fuente García;MASCULINO;Etología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+161;33;52;11;Raúl Marcelo;De La Fuente García;MASCULINO;Etología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+162;33;57;12;Raúl Marcelo;De La Fuente García;MASCULINO;Gastroenterología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+162;33;57;12;Raúl Marcelo;De La Fuente García;MASCULINO;Gastroenterología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+163;33;48;10;Raúl Marcelo;De La Fuente García;MASCULINO;Endocrinología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+163;33;48;10;Raúl Marcelo;De La Fuente García;MASCULINO;Endocrinología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+164;33;11;3;Raúl Marcelo;De La Fuente García;MASCULINO;Cirugía;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+164;33;11;3;Raúl Marcelo;De La Fuente García;MASCULINO;Cirugía;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+165;33;17;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+165;33;17;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101
+166;33;20;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
+166;33;20;4;Raúl Marcelo;De La Fuente García;MASCULINO;Dermatología;19;Clínica 19;Huérfanos 2653;42;2,9;-33.4418933;-70.6727172;13101

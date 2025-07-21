@@ -202,6 +202,8 @@ navigator.geolocation.getCurrentPosition(
             });
         });
 
+        
+
 
       async function cargarUsuarios() {
           let respuesta = await fetch("/tipo_usuarios");
@@ -309,7 +311,7 @@ navigator.geolocation.getCurrentPosition(
   </header>
   
   <!-- Hero Section -->
-  <section id="hero" class="pt-24 h-[1100px] bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
+  <section id="hero" class="pt-24 h-auto bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8]">
     <div class="flex justify-center">
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl mb-4 text-[#2E2E2E]">Atención veterinaria a tu alcance</h1>
@@ -360,18 +362,192 @@ navigator.geolocation.getCurrentPosition(
         </div>
        <br><br>   
        <div class="flex justify-center">
-        <div class="w-full max-w-7xl px-4">
-          
-          <!-- Resultados -->
-          <div id="resultados" class="mt-6 grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          </div>
-      
-          <!-- Paginador -->
-          <div id="paginador" class="paginador-container mt-4"></div>
+          <div class="w-full max-w-7xl px-4">
+            <!-- Resultados -->
+       <!-- Results Content -->
+        <section id="resultados" class="py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Specialists View -->
+                <div id="specialists-view" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Specialist Card 1  class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow"-->
+                    {% for veterinario in veterinario_especialidades %}
+                    <div  class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow" data-id-clinica="{{ veterinario.id_clinica }}">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="static/images/vet_{{ veterinario['id_veterinario'] }}.jpg" 
+                                alt="{{ veterinario['nombres'] }} {{ veterinario['apellidos'] }}" 
+                                class="w-16 h-16 rounded-full object-cover"
+                                 onerror="this.onerror=null; this.src='static/images/foto_generica.png';">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-900">
+                                      {% if veterinario['sexo']=="MASCULINO" %}
+                                      Dr.
+                                      {% else %}
+                                      Dra.
+                                      {% endif %}
+                                      {{ veterinario['nombres'] }} {{ veterinario['apellidos'] }}</h3>
+                                    
+                                    <p class="text-pawcare-teal font-medium">{{ veterinario['nombre_clinica'] }}</p>
+                                    <button onclick="window.open('https://waze.com/ul?ll={{veterinario['latitud']}},{{veterinario['longitud']}}&navigate=yes&z=10', '_blank')"
+                                      class="text-gray-500 text-sm flex items-center"
+                                      title="Abrir mapa en Waze">
+                                      <i class="fas fa-map-marker-alt mr-1"></i>
+                                      {{ veterinario['direccion'] }}, {{ veterinario['Nombre_Comuna'] }}                                      
+                                    </button>
 
-          <script src="static/script2.js"></script>
-      
-        </div>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500">
+                                <i class="far fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex text-yellow-400 items-center">
+                              {% set calificacion_raw = veterinario['calificacion'] %}
+                              {% set calificacion = calificacion_raw.replace(',', '.') | float %}
+                              
+                              {% set enteras = calificacion|int %}
+                              {% set decimal = calificacion - enteras %}
+
+                              {# Estrellas completas #}
+                              {% for i in range(enteras) %}
+                                <i class="fas fa-star text-yellow-400 items-center"></i>
+                              {% endfor %}
+
+                              {# Estrella parcial si decimal > 0.1 (para evitar casos como 3.0) #}
+                              {% if decimal >= 0.5 %}
+                                <i class="fas fa-star text-yellow-400"></i>
+                              {% endif %}
+
+                              {# Opcional: Estrellas vacías para completar 5 #}
+                              {% for i in range(5 - enteras - (1 if decimal >= 0.5 else 0) ) %}
+                                <i class="far fa-star text-gray-300"></i>
+                              {% endfor %}
+                            </div>
+                            <span class="text-gray-600 text-sm">{{ veterinario['calificacion'] }} ({{ veterinario['n_calificaciones'] }} opiniones)</span>
+                        </div>
+                        <p>
+                          {% set id_vet = veterinario['id_veterinario'] %}
+                          {% set prestaciones_vet = [] %}
+                          {% for prest in veterinario_prestaciones %}
+                            {% if prest.id_veterinario == id_vet %}
+                              {% set _ = prestaciones_vet.append(prest) %}
+                            {% endif %}
+                          {% endfor %}
+                          
+                            {% for p in prestaciones_vet %}
+                              <span class="text-gray-600 text-sm text-left">
+                                <li>{{ p.prestacion }}</li>
+                              </span>
+                            {% endfor %}
+                        </p>
+
+
+
+                        <div class="mb-4">
+                            <p class="text-lg font-semibold text-gray-900">Desde ${{ "{:,.0f}".format(veterinario['valor']).replace(",", ".") }}</p>
+                        </div>
+                        <div class="bg-pawcare-light rounded-lg p-4">
+                            <div class="flex items-center justify-between mb-3">
+                              <button
+                                class="btn-ayer text-blue-600 hover:text-blue-800"
+                                data-ayer-clinica="{{ veterinario['id_clinica'] }}" 
+                                data-ayer-veterinario="{{ veterinario['id_veterinario'] }}" 
+                                onclick="cambiarFecha(this, -1)" class="text-blue-600 hover:text-blue-800"
+                                >&laquo; Ayer
+                                
+                              </button>
+                              <h4 id="fecha-label"                        
+                                class="font-medium text-gray-900">
+                                Horas disponibles para 
+                                <span id="fecha-mostrada_{{ veterinario['id_clinica'] }}_{{ veterinario['id_veterinario'] }}" 
+                                data-idclinica= "{{ veterinario['id_clinica'] }}" 
+                                data-idveterinario= "{{ veterinario['id_veterinario'] }}">
+                                </span>
+                              </h4>
+                              <button 
+                                class="btn-manana text-blue-600 hover:text-blue-800"
+                                data-manana-clinica="{{ veterinario['id_clinica'] }}" 
+                                data-manana-veterinario="{{ veterinario['id_veterinario'] }}"                              
+                                onclick="cambiarFecha(this, 1)" 
+                                >
+                                Mañana &raquo;
+                              </button>
+                            </div>
+
+
+                            <div id="horas-disponibles-{{ veterinario.id_veterinario }}">
+                              {% set horas_ocupadas = reservas | map(attribute='hora_hhmm') | list %}
+
+                              {% set hora_inicio = namespace(hora="09:30") %}
+                              {% set pasos = [0, 45, 90, 135, 180, 225, 270, 315, 360, 405, 450, 495, 540, 585] %}
+                              {% for paso in pasos %}
+                                {% set partes = hora_inicio.hora.split(":") %}
+                                {% set minutos_totales = partes[0] | int * 60 + partes[1] | int + paso %}
+                                {% set hora = "{:02d}:{:02d}".format(minutos_totales // 60, minutos_totales % 60) %}
+
+                                {% if hora in horas_ocupadas %}
+                                  <button
+                                    class="hora-btn bg-gray-200 border border-gray-700 px-4 py-2 rounded-full text-gray-500 line-through cursor-not-allowed"
+                                    data-clinica="{{ veterinario.id_clinica }}"
+                                    data-veterinario="{{ veterinario.id_veterinario }}"
+                                    data-hora="{{ hora }}"
+                                    data-idprestacion = "{{ veterinario.id_prestacion }}"
+                                    data-idespecialidad = "{{ veterinario.id_especialidad }}"
+                                    data-especialidad = "{{ veterinario.especialidad }}"
+                                    data-valor = "{{ veterinario.valor }}"
+                                    onclick="seleccionar_hora(this)"                                     
+                                    >{{ hora }}
+                                  </button>
+                                {% else %}
+                                  <button
+                                    class="hora-btn bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50"
+                                    data-clinica="{{ veterinario.id_clinica }}"
+                                    data-veterinario="{{ veterinario.id_veterinario }}"
+                                    data-hora="{{ hora }}"
+                                    data-idprestacion = "{{ veterinario.id_prestacion }}"
+                                    data-idespecialidad = "{{ veterinario.id_especialidad }}"
+                                    data-especialidad = "{{ veterinario.especialidad }}"
+                                    data-valor = "{{ veterinario.valor }}"
+                                    onclick="seleccionar_hora(this)" 
+                                    >{{ hora }}
+                                  </button>
+                                {% endif %}
+                              {% endfor %}
+
+                                <!-- Aquí se renderizarán los botones de horas vía fetch -->
+                            </div>
+                            <button 
+                              data-idclinica="{{ veterinario.id_clinica }}"
+                              data-direccion="{{ veterinario['direccion'] }}"
+                              data-nombresvet="{{ veterinario['nombres'] }}"
+                              data-apellidosvet="{{veterinario['apellidos'] }}"
+                              data-ncalificaciones = "{{ veterinario['n_calificaciones'] }}"
+                              data-veterinario="{{ veterinario.id_veterinario }}"
+                              data-calificacion = "{{calificacion}}"
+                              data-comuna= "{{ veterinario['Nombre_Comuna'] }} "
+                              data-clinica = "{{veterinario['nombre_clinica']}}"
+
+
+                              class="btn-agendar mt-4 px-6 py-3 rounded-full bg-green-500 text-white"
+                              onclick="" >
+                              Agendar
+                          </button>
+                        </div>
+                    </div>
+                    {%endfor%}
+
+                    
+
+                    
+                </div>
+
+
+            </div>
+        </section>
+        
+          <script src="static/script2X.js"></script>
+
       </div>
       
       </div>
@@ -438,7 +614,7 @@ navigator.geolocation.getCurrentPosition(
     selectComunas.classList.remove("hidden");
     selectTeleconsulta.classList.add("hidden");
     const comunaInicial = sessionStorage.getItem("comuna");
-    alert("comunaInicial=", comunaInicial);
+    //alert("comunaInicial=", comunaInicial);
     cargarComunas(comunaInicial);
 
     // Evento botón presencial
@@ -481,8 +657,8 @@ navigator.geolocation.getCurrentPosition(
   });
 </script>
 
-    <script>
-          document.addEventListener("DOMContentLoaded", function() {
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
               const user = {
                   picture: "{{ user['picture'] if user else '' }}",
               };
@@ -499,15 +675,456 @@ navigator.geolocation.getCurrentPosition(
           
               }
           });
-      </script>
+</script>
 
 <script>
   // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
-    document.getElementById("menu-toggle").addEventListener("click", function () {
+  document.getElementById("menu-toggle").addEventListener("click", function () {
     const mobileNav = document.getElementById("mobile-nav");
     mobileNav.classList.toggle("hidden");
   });
+
+  document.addEventListener("DOMContentLoaded", function () {  
+    const searchInput = document.getElementById("search-input");
+    const params = new URLSearchParams(window.location.search);
+    const suggestionsContainer = document.getElementById("suggestions");
+    const comunaParam = params.get("comuna");
+    const searchParam = params.get("search");
+    if (searchInput) {
+          searchInput.placeholder = searchParam && searchParam.trim() !== ""
+              ? searchParam
+              : "Especialidad, clínica o veterinario";
+      }
+
+      searchInput.addEventListener("focus", async () => {
+          const data = await fetchSugerencias("");
+          suggestionsContainer.innerHTML = "";
+          if (data.length > 0) {
+              suggestionsContainer.style.display = "block";
+              data.forEach(sugerencia => {
+                  const div = document.createElement("div");
+                  div.classList.add("suggestion-item");
+                  div.innerHTML = `<i class="fa fa-graduation-cap text-green-600 mr-2"></i> ${sugerencia}`;
+                  div.onclick = () => {
+                      searchInput.value = sugerencia;
+                      suggestionsContainer.innerHTML = "";
+                      suggestionsContainer.style.display = "none";
+                  };
+                  suggestionsContainer.appendChild(div);
+              });
+          } else {
+              suggestionsContainer.style.display = "none";
+          }
+      });
+
+      async function fetchSugerencias(query) {
+          const comuna = document.getElementById("comunas")?.value || "";
+          const res = await fetch(`/sugerencias?q=${encodeURIComponent(query)}&comuna=${comuna}`);
+          return await res.json();
+      }
+    })
 </script>
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const hoy = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+
+    // Recorremos todos los bloques de horarios
+    document.querySelectorAll("[id^='horas-disponibles-']").forEach(div => {
+        const idVeterinario = div.id.split("-")[2];
+        const card = div.closest(".veterinario-card");
+        const idClinica = card ? card.dataset.idClinica : null;
+
+        if (idClinica && idVeterinario) {
+            fetch(`/api/reservas_veterinario?fecha=${hoy}&id_clinica=${idClinica}&id_veterinario=${idVeterinario}`)
+                .then(res => res.text())
+                .then(html => {
+                    div.innerHTML = html;
+                })
+                .catch(err => {
+                    div.innerHTML = "<p class='text-red-500'>Error al cargar horas.</p>";
+                    console.error(err);
+                });
+        }
+    });
+});
+</script>
+
+<script>
+  let fechaActual = new Date();
+
+  document.addEventListener("DOMContentLoaded", () => {
+      actualizarFechaLabel();
+      cargarHorasDisponibles();
+  });
+
+
+function seleccionar_hora(boton) {
+  const clinica = boton.dataset.clinica;
+  const veterinario = boton.dataset.veterinario;
+
+  // 1. Desactivar todos los botones con la misma clínica y veterinario
+  document.querySelectorAll(".hora-btn").forEach(function (btn) {
+    if (
+      btn.dataset.clinica === clinica &&
+      btn.dataset.veterinario === veterinario &&
+      !btn.classList.contains("line-through")
+    ) {
+      btn.classList.remove("bg-gray-200", "border-gray-700", "text-gray-500", "selected");
+      btn.classList.add("bg-white", "border-gray-300", "text-gray-700", "hover:bg-gray-50");
+    }
+  });
+
+  // 2. Activar solo el botón seleccionado
+  boton.classList.remove("bg-white", "border-gray-300", "text-gray-700", "hover:bg-gray-50");
+  boton.classList.add("bg-gray-200", "border-gray-700", "text-gray-500", "selected");
+}
+
+
+
+
+
+  function cambiarFecha(boton, dias) {
+      fechaActual.setDate(fechaActual.getDate() + dias);
+      //alert("cambiando fecha");
+      //const boton = document.querySelector('.btn-manana'); //se usa para acceder por nombre y . para buscar por clase
+      //alert("dias=" + dias);
+      const id_clinica = boton.dataset.mananaClinica || boton.dataset.ayerClinica;
+      const id_veterinario = boton.dataset.mananaVeterinario || boton.dataset.ayerVeterinario;
+
+     //alert("cambiarFecha id_clinica=" + id_clinica + "id_veterinario=" + id_veterinario);
+
+      //alert("id_veterinario=" + id_veterinario);
+
+      actualizarFechaLabel(id_clinica, id_veterinario);
+
+      cargarHorasDisponibles(id_clinica, id_veterinario);
+  }
+
+  function actualizarFechaLabel(id_clinica, id_veterinario) {
+      fechaStr = fechaActual.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      
+
+      if(!id_clinica){
+        let fechaActual = new Date();
+
+        const dia = String(fechaActual.getDate()).padStart(2, '0');
+        const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+        const año = fechaActual.getFullYear();
+
+        const fechaStr = `${dia}-${mes}-${año}`; // → formato "dd/mm/yyyy"
+        console.log("fechaStr=", fechaStr)
+        //fechaStr = fechaActual.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+        // Selecciona todos los elementos span con clases que comienzan con "mi-span-"
+        const elementos = document.querySelectorAll('span[id^="fecha-mostrada"]');
+
+        // Itera sobre los elementos seleccionados
+        elementos.forEach(elemento => {
+          // Asigna un nuevo contenido
+          elemento.textContent = fechaStr;
+
+
+        });
+      }else{
+        //alert("actualizar FechaLabel id_clinica=" + id_clinica + "id_veterinario=" + id_veterinario);
+
+        const fecha_mostrada = "fecha-mostrada_" +id_clinica + "_" + id_veterinario; 
+        console.log("ID buscado:", fecha_mostrada); // 🔍 Verifica el ID correcto
+        const span = document.getElementById(fecha_mostrada);
+
+        if (span) {
+          span.textContent = fechaStr;
+          console.log("Fecha actualizada:", fechaStr);
+        } else {
+          console.warn("No se encontró el span con ID:", fecha_mostrada);
+        }
+      }
+
+
+  }
+
+  async function cargarHorasDisponibles(id_clinica, id_veterinario, fecha_inicial ) {
+      //acá debo recoger la fecha del span correspondiente a id_clinica, id_veterinario
+      const fecha_mostrada = "fecha-mostrada_" +id_clinica + "_" + id_veterinario; 
+
+      console.log("ID buscado:", fecha_mostrada); // 🔍 Verifica el ID correcto
+      const span = document.getElementById(fecha_mostrada); 
+
+      fechaActual2 = span.textContent;
+      //alert("fechaActual2=" + fechaActual2);
+
+        console.warn("fechaActual en el span es" +fechaActual2);
+
+      //const fechaFormateada = fechaActual2.toISOString().split('T')[0];
+      const fechaFormateada = fechaActual2
+      try {
+          const response = await fetch('/api/reservas_por_fecha', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ fecha: fechaFormateada })
+          });
+          const data = await response.json();
+
+
+          console.log("Reservas para la fecha:", data.reservas);
+          if (data.reservas && Array.isArray(data.reservas)) {
+            console.log("data=");
+            console.warn(data);
+            actualizarBotones(id_clinica, id_veterinario, data.reservas);  // 👈 Aquí se llama correctamente
+          } else {
+            console.warn("No se encontraron reservas para la fecha:", fecha);
+          }
+
+          // 🔥 Comparar con la fecha de hoy para habilitar o deshabilitar el botón ayer
+          const hoy = new Date();
+          const hoyStr = hoy.toISOString().split("T")[0]; // formato yyyy-mm-dd
+          console.log("hoyStr", hoyStr)
+          console.log("fecha buscada", fechaFormateada)
+
+          const btnAyer = document.getElementById("btn-ayer");
+          if (fechaFormateada === hoyStr) {
+            btnAyer.disabled = true;
+            btnAyer.classList.add("opacity-50", "cursor-not-allowed");
+          } else {
+            btnAyer.disabled = false;
+            btnAyer.classList.remove("opacity-50", "cursor-not-allowed");
+          }
+          
+          // Aquí podrías llamar a una función que recorra `veterinario_especialidades`
+          // y actualice los botones de horas por cada veterinario.
+      } catch (error) {
+          console.error("Error al obtener reservas:", error);
+      }
+  }
+
+  function actualizarBotones(id_clinica, id_veterinario, reservas) {
+  // Primero, restablece todos los botones al estado disponible
+
+    //alert("actualizarBotones");
+    if(!id_clinica){
+      const selector1 = `.hora-btn`; //si no existe id_clinica, significa que estamos cargando la página y se deben limpiar todos los botones
+      document.querySelectorAll(selector1).forEach(btn => {
+        clinica = btn.dataset.clinica;
+        veterinario = btn.dataset.veterinario;
+        btn.className = "hora-btn bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50";
+        btn.disabled = false;
+      });      
+    }else{
+      //alert("actualizarBotones");
+      console.log("actualizarBotones id_clinica=" + id_clinica);
+      console.log("actualizarBotones id_veterinario=" + id_veterinario);
+      console.log("actualizarBotones reservas" + reservas);      
+      const selector1 = `.hora-btn[data-clinica="${id_clinica}"][data-veterinario="${id_veterinario}"]`;
+      document.querySelectorAll(selector1).forEach(btn => {
+        clinica = btn.dataset.clinica;
+        veterinario = btn.dataset.veterinario;
+        btn.className = "hora-btn bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50";
+        btn.disabled = false;
+
+      });      
+    };
+
+    // Luego, desactiva y cambia clase a las horas ocupadas
+    reservas.forEach(reserva => {
+      if(reserva.id_clinica==id_clinica && reserva.medico_que_atendio==id_veterinario){
+
+        const selector = `.hora-btn[data-clinica="${reserva.id_clinica}"][data-veterinario="${reserva.medico_que_atendio}"][data-hora="${reserva.hora}"]`;
+        //alert(selector);
+        const boton = document.querySelector(selector);
+        //alert("BOTON=" + boton);
+        if (boton) {
+          //alert("Boton Existe");
+          boton.classList.remove(
+            "bg-white",
+            "border-gray-300",
+            "text-gray-700",
+            "hover:bg-gray-50"
+          );
+
+          boton.classList.add(
+            "bg-gray-200",
+            "border-gray-700",
+            "text-gray-500",
+            "line-through",
+            "cursor-not-allowed"
+          );
+
+          boton.disabled = true;
+        }
+      }
+    });
+}
+
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const botonesHora = document.querySelectorAll(".hora-btn");
+
+  // Extraer combinaciones únicas de id_clinica e id_veterinario desde los botones
+  const combinaciones = new Set();
+  botonesHora.forEach(btn => {
+    const idClinica = btn.dataset.clinica;
+    const idVeterinario = btn.dataset.veterinario;
+    const clave = `${idClinica}-${idVeterinario}`;
+    combinaciones.add(clave);
+  });
+
+  const fechaHoy = new Date();
+  const fechaStr = fechaHoy.toISOString().split("T")[0];
+
+  for (const clave of combinaciones) {
+    const [idClinica, idVeterinario] = clave.split("-");
+    await cargarHorasDisponibles(idClinica, idVeterinario, fechaStr);
+  }
+});
+</script>
+
+<!--Función para ir a agendar hora-->
+<script>
+document.querySelectorAll(".btn-agendar").forEach(function(button) {
+  button.addEventListener("click", function () {
+    const btnAgendar = this;
+    const id_clinica = btnAgendar.dataset.idclinica;
+    const clinica = btnAgendar.dataset.clinica;
+    const nombresvet=btnAgendar.dataset.nombresvet;
+    const apellidosvet=btnAgendar.dataset.apellidosvet;
+    const direccion = btnAgendar.dataset.direccion;
+    const id_veterinario = btnAgendar.dataset.veterinario;
+    const comuna = btnAgendar.dataset.comuna;
+    const calificacion = btnAgendar.dataset.calificacion;
+    const ncalificaciones = btnAgendar.dataset.ncalificaciones;
+
+    console.log("btnAgendar=" + btnAgendar)
+
+    const botonSeleccionado = document.querySelector(
+      `.hora-btn[data-clinica="${id_clinica}"][data-veterinario="${id_veterinario}"].selected`
+    );
+
+    if (!botonSeleccionado) {
+      alert("Debes seleccionar una hora antes de agendar.");
+      return;
+    }
+
+    const fecha_span = document.querySelector(
+      `#fecha-mostrada_${id_clinica}_${id_veterinario}`
+    );
+    const hora = botonSeleccionado.dataset.hora;
+    const idprestacion = botonSeleccionado.dataset.idprestacion;
+    const idespecialidad = botonSeleccionado.dataset.idespecialidad;
+    const especialidad = botonSeleccionado.dataset.especialidad;
+    const valor = botonSeleccionado.dataset.valor;    
+
+    fecha= fecha_span.textContent;
+
+    // Crear formulario dinámico
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/finalizar_pago"; // Ruta Flask, no archivo HTML
+
+    const inputIdClinica = document.createElement("input");
+    inputIdClinica.type = "hidden";
+    inputIdClinica.name = "id_clinica";
+    inputIdClinica.value = id_clinica;
+
+    const inputClinica = document.createElement("input");
+    inputClinica.type = "hidden";
+    inputClinica.name = "clinica";
+    inputClinica.value = clinica;
+
+    const inputDireccion = document.createElement("input");
+    inputDireccion.type = "hidden";
+    inputDireccion.name = "direccion";
+    inputDireccion.value = direccion;    
+
+
+    const inputComuna = document.createElement("input");
+    inputComuna.type = "hidden";
+    inputComuna.name = "comuna";
+    inputComuna.value = comuna;
+
+    const inputNombresvet = document.createElement("input");
+    inputNombresvet.type = "hidden";
+    inputNombresvet.name = "nombresvet";
+    inputNombresvet.value = nombresvet;    
+
+    const inputApellidosvet = document.createElement("input");
+    inputApellidosvet.type = "hidden";
+    inputApellidosvet.name = "apellidosvet";
+    inputApellidosvet.value = apellidosvet;
+    
+    const inputCalificacion = document.createElement("input");
+    inputCalificacion.type = "hidden";
+    inputCalificacion.name = "calificacion";
+    inputCalificacion.value = calificacion;  
+    
+    const inputNCalificaciones = document.createElement("input");
+    inputNCalificaciones.type = "hidden";
+    inputNCalificaciones.name = "ncalificaciones";
+    inputNCalificaciones.value = ncalificaciones;      
+
+    const inputVeterinario = document.createElement("input");
+    inputVeterinario.type = "hidden";
+    inputVeterinario.name = "veterinario";
+    inputVeterinario.value = id_veterinario;
+
+    const inputHora = document.createElement("input");
+    inputHora.type = "hidden";
+    inputHora.name = "hora";
+    inputHora.value = hora;
+
+    const inputIdPrestacion = document.createElement("input");
+    inputIdPrestacion.type = "hidden";
+    inputIdPrestacion.name = "idprestacion";
+    inputIdPrestacion.value = idprestacion;
+
+    const inputIdEspecialidad = document.createElement("input");
+    inputIdEspecialidad.type = "hidden";
+    inputIdEspecialidad.name = "idespecialidad";
+    inputIdEspecialidad.value = idespecialidad;
+
+    const inputEspecialidad = document.createElement("input");
+    inputEspecialidad.type = "hidden";
+    inputEspecialidad.name = "especialidad";
+    inputEspecialidad.value = especialidad;
+
+    const inputValor = document.createElement("input");
+    inputValor.type = "hidden";
+    inputValor.name = "valor";
+    inputValor.value = valor;
+
+    const inputFecha = document.createElement("input");
+    inputFecha.type = "hidden";
+    inputFecha.name = "fecha";
+    inputFecha.value = fecha;
+
+    form.appendChild(inputIdClinica);
+    form.appendChild(inputClinica);
+    form.appendChild(inputComuna);
+    form.appendChild(inputDireccion);
+    form.appendChild(inputNombresvet);
+    form.appendChild(inputApellidosvet);
+    form.appendChild(inputCalificacion);
+    form.appendChild(inputNCalificaciones);
+    form.appendChild(inputVeterinario);
+    form.appendChild(inputHora);
+    form.appendChild(inputIdPrestacion);
+    form.appendChild(inputIdEspecialidad);
+    form.appendChild(inputEspecialidad);
+    form.appendChild(inputValor);
+    form.appendChild(inputFecha);
+    document.body.appendChild(form);
+    form.submit();
+  });
+});
+</script>
+
 
 
   </body>

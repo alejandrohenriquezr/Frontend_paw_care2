@@ -11,6 +11,7 @@ from fpdf import FPDF
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.units import inch, cm
+from reportlab.lib import colors
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from flask_session import Session
@@ -22,7 +23,10 @@ from math import radians, cos, sin, sqrt, atan2
 from transbank.webpay.webpay_plus.transaction import Transaction
 from docx import Document
 from io import BytesIO
-#from docx2pdf import convert
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from flask import render_template_string
 
 import os
 import base64
@@ -39,12 +43,6 @@ import fitz  # PyMuPDF
 import pypandoc
 import pytz
 import numpy as np  # importar numpy para usar np.nan
-
-
-
-
-
-
 
 
 #configuración de la APP
@@ -65,6 +63,7 @@ app.config['MAIL_USERNAME'] = 'alhen1970@gmail.com'
 app.config['MAIL_PASSWORD'] = 'ptjt fgco uoia jgyx'
 
 mail = Mail(app)
+
 # Detecta si está en Render o en local
 RENDER = os.environ.get('RENDER', False)
 
@@ -106,10 +105,122 @@ ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg"}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Cargar una vez el CSV
+staff_clinica_df=pd.read_csv("data/staff_clinica.csv", sep=";")
+clinicas_df = pd.read_csv("data/clinicas.csv", sep=";")
+staff_df = pd.read_csv("data/staff.csv", sep=";")
+clinicas_especialidades_df = pd.read_csv("data/clinicas_especialidades.csv", sep=";")
+especialidades_df = pd.read_csv("data/especialidades.csv", sep=";")
+precios_df = pd.read_csv("data/precios.csv", sep=";")
+dpa_df = pd.read_csv("data/dpa.csv", sep=";")
+reservas_df = pd.read_csv("data/reservas.csv", sep=";")
+
+
+prestaciones_df = pd.read_csv("data/prestaciones.csv", sep=";")
+veterinario_especialidades_df = pd.read_csv("data/veterinario_prestaciones.csv", sep=";")
+veterinario_prestaciones_df = veterinario_especialidades_df.copy()
+
+
+#eliminamos los registros duplicado de id_especialidad para cada id_veterinario
+
+#####################
+## Preparamos el dataframe del listado de veterinarios, sus especialidad, las clínicas en que 
+## trabajan y los precios que cobre
+
+# 1. A veterinario_especialidades_df le unimos los datos del veterinario
+veterinario_especialidades_df = veterinario_especialidades_df.merge(
+    staff_df[["id_veterinario", "nombres", "apellidos", "sexo"]],
+    left_on="id_veterinario",
+    right_on="id_veterinario",
+    how="left"    
+)
+veterinario_especialidades_df.to_csv("data/veterinario_especialidades_df_1.csv", sep=";", index=False)
+
+# 2. A veterinario_especialidades_df le unimos los datos de las especialidades
+veterinario_especialidades_df = veterinario_especialidades_df.merge(
+    especialidades_df[["id_especialidad", "especialidad"]],
+    left_on="id_especialidad",
+    right_on="id_especialidad",
+    how="left"
+)
+veterinario_especialidades_df.to_csv("data/veterinario_especialidades_df_2.csv", sep=";", index=False)
+
+# 3. A veterinario_especialidades_df le unimos el id_clinica de donde trabajan
+veterinario_especialidades_df = veterinario_especialidades_df.merge(
+    staff_clinica_df[["id_veterinario", "id_clinica"]],
+    left_on="id_veterinario",
+    right_on="id_veterinario",
+    how="left"
+)
+veterinario_especialidades_df.to_csv("data/veterinario_especialidades_df_3.csv", sep=";", index=False)
+
+# 4. A veterinario_especialidades_df le unimos los datos de la clínica donde trabajan
+veterinario_especialidades_df = veterinario_especialidades_df.merge(
+    clinicas_df[["id_clinica", "nombre", "direccion", "n_calificaciones", "calificacion", "latitud", "longitud", "dpa"]],
+    left_on="id_clinica",
+    right_on="id_clinica",
+    how="left"
+)
+veterinario_especialidades_df["latitud"] = pd.to_numeric(veterinario_especialidades_df["latitud"].str.replace(",", "."), errors="coerce")
+veterinario_especialidades_df["longitud"] = pd.to_numeric(veterinario_especialidades_df["longitud"].str.replace(",", "."), errors="coerce")
+# 4.1 renombramos nombre por nombre_clinica
+veterinario_especialidades_df.rename(columns={"nombre": "nombre_clinica"}, inplace=True)
+
+veterinario_especialidades_df.to_csv("data/veterinario_especialidades_df_4.csv", sep=";", index=False)
+
+# 5. obtenemos los precios mínimos para la combinación de id_clinica y id_especialidad
+minimos_df = precios_df.groupby(["id_clinica", "id_especialidad"], as_index=False)["valor"].min()
+precios_df.to_csv("data/precios_df_1.csv", sep=";", index=False)
+
+# 6. A veterinario_especialidades_df le unimos los precios mínimos
+veterinario_especialidades_df = veterinario_especialidades_df.merge(
+    minimos_df[["id_clinica", "id_especialidad", "valor"]],
+    left_on=["id_clinica", "id_especialidad"],
+    right_on=["id_clinica", "id_especialidad"],
+    how="left"
+)
+
+#6.1 Reemplazamos los "." por "," en valor
+#veterinario_especialidades_df["valor"] = veterinario_especialidades_df["valor"].astype(str).str.replace(".", ",")
+#si veterinario_especialidades_df["valor"] es vacio o nulo le asignamos un 0
+veterinario_especialidades_df["valor"] = veterinario_especialidades_df["valor"].fillna(0)
+
+# Pasamos la columna valor a numero entero sin decimales
+veterinario_especialidades_df["valor"] = veterinario_especialidades_df["valor"].astype(int)
+
+veterinario_especialidades_df.to_csv("data/veterinario_especialidades_df_5.csv", sep=";", index=False)
+
+# 7. a veterinario_especialidades_df le agregamos el nombre de la comuna
+veterinario_especialidades_df = veterinario_especialidades_df.merge(
+    dpa_df[["id_dpa", "Nombre_Comuna"]],
+    left_on="dpa",
+    right_on="id_dpa",
+    how="left"
+)
+
+##FIN de Preparamos el dataframe del listado de veterinarios
+
+###################
+## Preparamos veterinario_prestaciones_df
+
+# 1. A veterinario_prestaciones_df le unimos los datos de prestaciones_df
+veterinario_prestaciones_df = veterinario_prestaciones_df.merge(
+    prestaciones_df[["id_prestacion", "prestacion"]],
+    left_on="id_prestacion",
+    right_on="id_prestacion",
+    how="left"
+)
+
+
+
+
+
+
 # 📌 Ruta principal
 @app.route("/")
 def index():
     #si no hay argumentos ni rutas en la url, entonces eliminamos las variables de sesion comuna
+    resultado_busqueda = None  # ✅ Definición inicial
     if not request.args:
         #eliminar las variables de session
         session["comuna"] = None
@@ -117,19 +228,24 @@ def index():
         session["comuna2"] = None
         print("[INFO] No hay argumentos en la URL, eliminando variables de sesión comuna y busqueda")
     else:
+
         print("[INFO] Hay argumentos en la URL, no se eliminan las variables de sesión comuna y busqueda")
         if "comuna" in request.args:
             comuna = request.args.get("comuna")
             session["comuna"] = comuna
             session["comuna2"] = comuna
 
-        if "busqueda" in request.args:
+        if "search" in request.args:
             busqueda = request.args.get("search")
             session["busqueda"] = busqueda
 
         print(f"[INFO] Comuna obtenida de la URL del INDEX: {comuna}")
-    
+        print(f"[INFO] busqueda obtenida de la URL del INDEX: {busqueda}")
+        #ejecutamos la función obtener_clinicas()
+        
+        resultado_busqueda = obtener_resultado(busqueda, comuna)
 
+        
     user=session.get("user", None)
     print(f"[INFO] user: {user}")
     # Verificar si el usuario está autenticado
@@ -137,22 +253,322 @@ def index():
     if user:
         print(f"[INFO] usuario autenticado: {user}")
         # Redirigir a la página de inicio de sesión
-        return render_template("index.html", user=user)
+        if resultado_busqueda:
+            return render_template("index.html", user=user, veterinario_especialidades=resultado_busqueda[0], veterinario_prestaciones=resultado_busqueda[1], reservas=resultado_busqueda[2])
+        else:
+            return render_template("index.html", user=user)
     else:
         print(f"[INFO] usuario no autenticado: {user}")
         # Redirigir a la página de inicio de sesión
-        return render_template(("index.html"))
+        if resultado_busqueda:
+            return render_template("index.html", veterinario_especialidades=resultado_busqueda[0], veterinario_prestaciones=resultado_busqueda[1], reservas=resultado_busqueda[2])
+        else:
+            return render_template("index.html")
     #return render_template("index.html", user=user)
 
-# Cargar una vez el CSV
-clinicas_df = pd.read_csv("data/clinicas.csv", sep=";")
-dpa_df = pd.read_csv("data/dpa.csv", sep=";")
-clinicas_df = clinicas_df.merge(
-    dpa_df[["id_dpa", "Nombre_Comuna"]],
-    left_on="dpa",
-    right_on="id_dpa",
-    how="left"
-)
+
+
+@app.route("/agendar2", methods=["POST"])
+def agendar2():
+    id_clinica = request.form.get("id_clinica")
+    clinica = request.form.get("clinica")
+    calificacion = request.form.get("calificacion")
+    ncalificaciones = request.form.get("ncalificaciones")
+    comuna = request.form.get("comuna")
+    id_veterinario = request.form.get("veterinario")
+    hora = request.form.get("hora")
+    idprestacion = request.form.get("idprestacion")
+    idespecialidad = request.form.get("idespecialidad")
+    especialidad = request.form.get("especialidad")
+    valor = request.form.get("valor")
+    fecha = request.form.get("fecha")
+
+    print("IdClínica:", id_clinica)
+    print("Clínica:", clinica)
+    print("comuna:", comuna)
+    print("calificacion:", calificacion)
+    print("ncalificaciones:", ncalificaciones)
+    print("Veterinario:", id_veterinario)
+    print("Hora:", hora)
+    print("idprestacion:", idprestacion)
+    print("idespecialidad:", idespecialidad)
+    print("especialidad:", especialidad)
+    print("valor:", valor)
+    print("fecha:", fecha)
+
+    staff_filtrado_df = staff_df.copy()
+    print("staff_filtrado_df_1")
+    print(staff_filtrado_df)
+
+    staff_filtrado_df = staff_filtrado_df[staff_filtrado_df["id_veterinario"] == int(id_veterinario)]   
+    print("staff_filtrado_df")
+    print(staff_filtrado_df)
+
+
+    # Puedes ahora renderizar tu template con esos datos
+    return render_template("agendar2.html", 
+                           id_clinica=id_clinica, 
+                           clinica=clinica, 
+                           comuna=comuna,
+                           calificacion=calificacion,
+                           ncalificaciones=ncalificaciones,
+                           id_veterinario=id_veterinario, 
+                           hora=hora,
+                           idprestacion=idprestacion,
+                           idespecialidad=idespecialidad,
+                           especialidad=especialidad,
+                           valor=valor,
+                           fecha=fecha, 
+
+                           veterinario=staff_filtrado_df.to_dict(orient="records"))
+
+
+@app.route("/finalizar_pago", methods=["POST", "GET"])
+def finalizar_pago():
+    print(f"request.method={request.method}")
+    if request.method == "POST":
+        datos_reserva = request.form.to_dict()
+        session["reserva_en_proceso"] = datos_reserva
+        print("POST")
+        return redirect("finalizar_pago")
+
+    elif request.method == "GET":
+        datos = session.get("reserva_en_proceso")
+        user = session.get("user")
+        print(f"datos={datos}")
+        print(f"user={user}")
+        if not datos and not user:
+            print("not datos and not user")
+            return redirect("/")  # si no hay datos, volver al inicio
+        elif datos and user:
+            email_user=user["email"]
+            clientes_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+            clientes_mascotas = clientes_mascotas[clientes_mascotas["correo_cliente"]==email_user]
+            print(f"clientes_mascotas{clientes_mascotas}")
+            clientes_mascotas=clientes_mascotas.to_dict(orient="records")
+            return render_template("finalizar_pago.html", **datos, user=user,clientes_mascotas=clientes_mascotas)
+
+        return render_template("finalizar_pago.html", **datos, user=None,clientes_mascotas=None)
+
+
+
+
+@app.route("/finalizar_pago0", methods=["POST"])
+def finalizar_pago0():
+    id_clinica = request.form.get("id_clinica")
+    clinica = request.form.get("clinica")
+    nombresvet = request.form.get("nombresvet")
+    apellidosvet = request.form.get("apellidosvet")
+    calificacion = request.form.get("calificacion")
+    ncalificaciones = request.form.get("ncalificaciones")
+    comuna = request.form.get("comuna")
+    direccion = request.form.get("direccion")
+    id_veterinario = request.form.get("veterinario")
+    hora = request.form.get("hora")
+    idprestacion = request.form.get("idprestacion")
+    idespecialidad = request.form.get("idespecialidad")
+    especialidad = request.form.get("especialidad")
+    valor = request.form.get("valor")
+    fecha = request.form.get("fecha")
+
+    print("IdClínica:", id_clinica)
+    print("Clínica:", clinica)
+    print("comuna:", comuna)
+    print("direccion:", direccion)
+    print("calificacion:", calificacion)
+    print("ncalificaciones:", ncalificaciones)
+    print("Veterinario:", id_veterinario)
+    print("Hora:", hora)
+    print("idprestacion:", idprestacion)
+    print("idespecialidad:", idespecialidad)
+    print("especialidad:", especialidad)
+    print("valor:", valor)
+    print("fecha:", fecha)
+
+    staff_filtrado_df = staff_df.copy()
+    print("staff_filtrado_df_1")
+    print(staff_filtrado_df)
+
+    staff_filtrado_df = staff_filtrado_df[staff_filtrado_df["id_veterinario"] == int(id_veterinario)]   
+    print("staff_filtrado_df")
+    print(staff_filtrado_df)
+
+
+    # Puedes ahora renderizar tu template con esos datos
+    return render_template("finalizar_pago.html", 
+                           id_clinica=id_clinica, 
+                           clinica=clinica, 
+                           comuna=comuna,
+                           direccion=direccion,
+                           nombresvet=nombresvet,
+                           apellidosvet=apellidosvet,
+                           calificacion=calificacion,
+                           ncalificaciones=ncalificaciones,
+                           id_veterinario=id_veterinario, 
+                           hora=hora,
+                           idprestacion=idprestacion,
+                           idespecialidad=idespecialidad,
+                           especialidad=especialidad,
+                           valor=valor,
+                           fecha=fecha, 
+
+                           veterinario=staff_filtrado_df.to_dict(orient="records"))
+
+
+# 📌 Ruta nuevo agendar
+@app.route("/agendar3")
+def agendar3():
+    #si no hay argumentos ni rutas en la url, entonces eliminamos las variables de sesion comuna
+    resultado_busqueda = None  # ✅ Definición inicial
+    if not request.args:
+        #eliminar las variables de session
+        session["comuna"] = None
+        session["busqueda"] = None
+        session["comuna2"] = None
+        print("[INFO] No hay argumentos en la URL, eliminando variables de sesión comuna y busqueda")
+    else:
+
+        print("[INFO] Hay argumentos en la URL, no se eliminan las variables de sesión comuna y busqueda")
+        if "comuna" in request.args:
+            comuna = request.args.get("comuna")
+            session["comuna"] = comuna
+            session["comuna2"] = comuna
+
+        if "search" in request.args:
+            busqueda = request.args.get("search")
+            session["busqueda"] = busqueda
+
+        print(f"[INFO] Comuna obtenida de la URL del INDEX: {comuna}")
+        print(f"[INFO] busqueda obtenida de la URL del INDEX: {busqueda}")
+        #ejecutamos la función obtener_clinicas()
+        
+        resultado_busqueda = obtener_resultado(busqueda, comuna)
+
+        
+    user=session.get("user", None)
+    print(f"[INFO] user: {user}")
+    # Verificar si el usuario está autenticado
+    #si el usuario está autenticado, entonces redirigie a intex.html y entregar los datos del usuario
+    if user:
+        print(f"[INFO] usuario autenticado: {user}")
+        # Redirigir a la página de inicio de sesión
+        if resultado_busqueda:
+            return render_template("index.html", user=user, veterinario_especialidades=resultado_busqueda[0], veterinario_prestaciones=resultado_busqueda[1], reservas=resultado_busqueda[2])
+        else:
+            return render_template("index.html", user=user)
+    else:
+        print(f"[INFO] usuario no autenticado: {user}")
+        # Redirigir a la página de inicio de sesión
+        if resultado_busqueda:
+            return render_template("index.html", veterinario_especialidades=resultado_busqueda[0], veterinario_prestaciones=resultado_busqueda[1], reservas=resultado_busqueda[2])
+        else:
+            return render_template("index.html")
+    #return render_template("index.html", user=user)
+
+
+def obtener_resultado(busqueda, comuna):
+    ################
+    ## Preparamos el dataframe para clinicas_filtrada_df para entregarlo en la respuesta
+    clinicas_filtrada_df = veterinario_especialidades_df.copy()
+    clinicas_filtrada_df = clinicas_filtrada_df[clinicas_filtrada_df["dpa"]==int(comuna)]
+    clinicas_filtrada_df = clinicas_filtrada_df[clinicas_filtrada_df["especialidad"] == busqueda]
+
+    ## FIN de preparamos el dataframe para clinicas_filtrada_df para entregarlo en la respuesta
+
+    ###############
+    ## Preparamos el dataframe para veterinario_prestaciones_filtrada_df para entregarlo en la respuesta
+
+    veterinario_prestaciones_filtrada_df = veterinario_prestaciones_df.copy()
+
+
+    # 1. Obtenemos el valor id_especialidad desde el primer registro de clinicas_filtrada_df
+    id_especialidad = clinicas_filtrada_df["id_especialidad"].values[0]
+
+    # 2. filtramos veterinario_prestaciones_filtrada_df por el campo id_especialidad para el valor id_especialidad
+    veterinario_prestaciones_filtrada_df = veterinario_prestaciones_filtrada_df[veterinario_prestaciones_filtrada_df["id_especialidad"] == id_especialidad]
+
+    ###############
+    #FIN de preparamos el dataframe para veterinario_prestaciones_filtrada_df para entregarlo en la respuesta
+
+    ###############
+    #INICIO filtrasmos reservas_df para la fecha de hoy
+    reservas_filtradas_df = reservas_df.copy()
+    #en reservas_filtradas_df nos quedamos con las columnas id_clinica,	fecha, hora, estado, medico_que_atendio
+    reservas_filtradas_df = reservas_filtradas_df[["id_clinica", "fecha", "hora", "estado", "medico_que_atendio"]]
+  
+
+    reservas_filtradas_df = reservas_filtradas_df[reservas_filtradas_df["estado"] == 1]
+
+    # Obtenemos la fecha de hoy
+    fecha_hoy = datetime.now().strftime("%Y-%m-%d")
+    # Filtramos reservas_df por la fecha de hoy
+    reservas_filtradas_df["fecha"] = pd.to_datetime(reservas_filtradas_df["fecha"], format='mixed', dayfirst=True, errors='coerce')
+
+    reservas_filtradas_df = reservas_filtradas_df[reservas_filtradas_df["fecha"] == fecha_hoy]
+    reservas_filtradas_df["hora_hhmm"] = reservas_filtradas_df["hora"].apply(lambda x: datetime.strptime(x, "%H:%M:%S").strftime("%H:%M"))
+    print("reservas_filtradas_df_3:")
+    print(reservas_filtradas_df)
+
+    return clinicas_filtrada_df.to_dict(orient="records"), veterinario_prestaciones_filtrada_df.to_dict(orient="records"), reservas_filtradas_df.to_dict(orient="records")
+
+
+
+@app.route("/api/reservas_veterinario")
+def reservas_veterinario():
+    fecha_str = request.args.get("fecha")
+    id_clinica = int(request.args.get("id_clinica"))
+    id_veterinario = int(request.args.get("id_veterinario"))
+
+    fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+
+    reservas_filtradas = reservas_df[
+        (reservas_df["fecha"] == fecha) &
+        (reservas_df["id_clinica"] == id_clinica) &
+        (reservas_df["medico_que_atendio"] == id_veterinario)
+    ]
+    reservas_dict = reservas_filtradas.to_dict(orient="records")
+
+    #return render_template("bloque_horas.html", reservas=reservas_dict)
+
+    return jsonify({"reservas": reservas_dict})
+
+
+@app.route('/api/reservas_por_fecha', methods=['POST'])
+def reservas_por_fecha():
+    data = request.get_json()
+    fecha_str = data.get("fecha")
+    print("fecha_str")
+    print(fecha_str)
+    print(type(fecha_str))
+
+    try:
+        #fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
+        fecha = datetime.strptime(fecha_str, "%d-%m-%Y")
+
+        fecha = fecha.strftime("%Y-%m-%d")
+        fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
+        print("fecha")
+        print(fecha)
+    except ValueError:
+        return jsonify({"error": "Formato de fecha inválido"}), 400
+
+    reservas_df = pd.read_csv("data/reservas.csv", sep=";")
+    
+    # Asegurarse de que la columna 'fecha' sea de tipo datetime.date
+    reservas_df["fecha"] = pd.to_datetime(reservas_df["fecha"], dayfirst=True, errors="coerce").dt.date
+
+    reservas_df["hora"] = pd.to_datetime(reservas_df["hora"],  errors="coerce").dt.strftime("%H:%M")
+    
+
+    print("reservas_df[fecha]=", reservas_df["fecha"])
+    print("reservas_df[hora]=", reservas_df["hora"])
+
+    reservas_filtradas = reservas_df[reservas_df["fecha"] == fecha][["id_clinica", "fecha", "hora", "medico_que_atendio"]]
+    reservas_filtradas["hora"] = reservas_filtradas["hora"].astype(str).str[:5]  # dejar sólo HH:MM
+    print("reservas_filtradas=", reservas_filtradas)
+
+    reservas_dict = reservas_filtradas.to_dict(orient="records")
+    return jsonify({"reservas": reservas_dict})
 
 def calcular_distancia(lat1, lon1, lat2, lon2):
     R = 6371  # Radio de la Tierra en km
@@ -236,18 +652,15 @@ def guardar_datos():
     else:
         return jsonify({'Datos guardados en la sesión'}), 200
 
-    #return 'Datos guardados en la sesión', 200
-
-# Guardar datos que provienen de JS en la sesión de python
-#@app.route('/guardar_mascota', methods=['POST'])
-#def guardar_mascota():
-#    data = request.json
-
-#    session['mascotaSeleccionada'] = data.get('mascotaSeleccionada')
-#    return jsonify({'mascotaSeleccionada': data.get('mascotaSeleccionada')}), 200
-    #return 'Datos guardados en la sesión', 200
 
 
+@app.route("/guardar_variable_sesion", methods=["POST"])
+def guardar_variable_sesion():
+    data = request.json  # esperamos un JSON como { id: "mis_mascotas", valor: "2" }
+    session[data['id']] = data['valor']
+    print(f"Guardando variable de sesión, {data['id']} con valor {data['valor']}")
+    print(f"session[data['id']]= {session[data['id']]}")
+    return jsonify({"status": "ok", "mensaje": f"Guardado {data['id']} = {data['valor']}"})
 
 def generate_nonce(length=16):
     """Genera un valor único para el nonce."""
@@ -281,8 +694,8 @@ def login():
     redireccion = request.args.get('redirect')
     print(f"[INFO redireccion] next: {redireccion}")
     #if request.full_path.startswith("/agendar"):
-    if redireccion=="agendar":
-        session['next'] = request.full_path
+    if redireccion in ["agendar", "finalizar_pago"]:
+        session['next'] = f"/{redireccion}"
     
     nonce = generate_nonce()
     session['nonce'] = nonce
@@ -342,6 +755,14 @@ def callback():
     # Recupera la ruta original (relativa) desde el decorador
     next_path = session.get("next", None)
     print(f"Ruta de redirección en el callback es: {next_path}")
+
+    if next_path == "/agendar":
+        return redirect(url_for("agendar"))
+    elif next_path == "/finalizar_pago":
+        return redirect(url_for("finalizar_pago"))  # usará GET y cargará los datos desde sesión
+
+    return redirect("/")
+
     # Si no existe next_path, redirige home
     if not next_path:
         # Alternativamente, puedes pasar un parámetro a /login?tipo=profesional (más limpio)
@@ -378,6 +799,9 @@ def callback():
             #id_veterinario=params.get("id_veterinario", [None])[0]
             id_veterinario=session.get("id_veterinario")
         ))
+    elif next_path == "/finalizar_pago":
+        print("[INFO] Redirigiendo a finalizar_pago")
+        return redirect(url_for("finalizar_pago"))
 
     # Redirige a la ruta original completa con sus parámetros
     return redirect(next_path + ("?" + parsed.query if parsed.query else ""))
@@ -597,14 +1021,6 @@ def authorize():
         return 'Error: Nonce no coincide'
     # Procesar el token y la sesión del usuario
     return redirect(url_for('mis_mascotas', user=user))
-
-#@app.route('/mis_mascotas')
-#def mis_mascotas():
-#    user = session.get("user")
-#    print(session.get("user"))
-#    if "user" not in session:
-#        return redirect(url_for("login"))
-#    return render_template('mis_mascotas.html', user=user)
 
 
 @app.route('/mis_mascotas')
@@ -1163,21 +1579,32 @@ def guardar_vet_fecha_hora():
 
 @app.route("/api/insertar_reservas", methods=["GET"])
 #insertar una reserva
-#def insert_reservation(id_clinica, correo_cliente, id_clientes_mascotas, fecha, hora):
 def insert_reservation():
     #imprimo en la consola todas las variables de sesión y sus valores
     print("Variables de sesión:")
     for key, value in session.items():  
         print(f"{key}: {value}")    
 
-
+    reserva_en_proceso= session.get('reserva_en_proceso')
+    
     # recuperamos las variables de sesion fechaSeleccionada, horaSeleccionada, mascotaSeleccionada, id_clinica y correo_cliente
-    id_clinica = session.get('id_clinica') 
+    id_clinica = reserva_en_proceso['id_clinica'] 
     #correo_cliente corresponde al valor de email de la variavle de sesion user
-    correo_cliente = session.get('user')['email']
-    nombre_cliente = session.get('user')['name']
-    id_veterinario = session.get('id_veterinario')
+    if(session.get('user')):
+        print("Usuario LOGEADO")
+        correo_cliente = session.get('user')['email']
+        nombre_cliente = session.get('user')['name']
+    else:
+        print("Usuario invitado")
+        correo_cliente = session.get('correo_cliente_invitado')
+        print(f"Correo del usuasrio invitado es {session.get('correo_cliente_invitado')}")
+        nombre_cliente = "Usuario invitado"
+    id_veterinario = reserva_en_proceso['veterinario'] 
     mascotaSeleccionada = session.get('mascotaSeleccionada')
+    if(not mascotaSeleccionada):
+       print("Mascota no seleccionada ya que usuario es invitado")
+       session['mascotaSeleccionada']=0
+       mascotaSeleccionada=0
     
     #si mascotaseleccionada==999, entonces la insertamos en la tabla clientes_mascotas
     #y después insertamos la reserva, ya que primero debemos actualizar el valor de mascotaSeleccionada
@@ -1231,14 +1658,18 @@ def insert_reservation():
             writer = csv.DictWriter(f, fieldnames=new_mascota.keys(), delimiter=';')
             writer.writerow(new_mascota)
     
-    fechaSeleccionada = session.get('fechaSeleccionada')
-    precio = session.get('precio') 
+    fechaSeleccionada = reserva_en_proceso['fecha'] 
+
+    cargoServicio = int(session.get('cargoServicio', 0))
+    cargoTotal = int(session.get('cargoTotal', 0))
+    precio = int(reserva_en_proceso['valor'] )
+ 
     print(f"Precio: {precio}")
     token = session.get('token')
     #si fechaSeleccionada está vacia, entonces le asignamos el valor de fechaSeleccionada de la url
     if not fechaSeleccionada:
         fechaSeleccionada = session.get('fecha')
-    horaSeleccionada = session.get('horaSeleccionada')
+    horaSeleccionada = reserva_en_proceso['hora'] 
     if not horaSeleccionada:
         horaSeleccionada = session.get('hora')    
 #si el largo de horaSeleccionada es 5, entonces le agregamos un 0 al final
@@ -1250,15 +1681,25 @@ def insert_reservation():
         reader = csv.DictReader(f, delimiter=';')
         reservations = list(reader)
     # Verificar si la reserva ya existe
-    for reservation in reservations:
-        if (reservation['id_clinica'] == int(id_clinica) and
-            reservation['correo_cliente'] == correo_cliente and
-            reservation['mascota'] == int(mascotaSeleccionada) and  
-            reservation['fecha'] == fechaSeleccionada and
-            reservation['hora'] == horaSeleccionada and
-            reservation['medico_que_atendio'] == id_veterinario and
-            reservation['estado'] == 1):
-            return jsonify({"error": "La reserva ya existe"}), 400
+    #for reservation in reservations:
+    #    print(">>> Comparando:")
+    #    print("id_clinica:", reservation['id_clinica']," ? ", id_clinica)
+    #    print("correo_cliente:", reservation['correo_cliente']," ? ", correo_cliente)
+    #    print("mascota:", reservation['mascota']," ? ", mascotaSeleccionada)
+    #    print("fecha:", reservation['fecha']," ? ", fechaSeleccionada)
+    #    print("hora:", reservation['hora']," ? ", horaSeleccionada)
+    #    print("medico_que_atendio:", reservation['medico_que_atendio']," ? ", id_veterinario)
+    #    print("estado:", reservation['estado'])
+    #    print("Tipos de dato en reservation:")
+    #    if ((reservation['id_clinica']) == str(id_clinica) and
+    #        reservation['correo_cliente'] == correo_cliente and
+    #        (reservation['mascota']) == str(mascotaSeleccionada) and  
+    #        reservation['fecha'] == str(fechaSeleccionada) and
+    #        reservation['hora'] == str(horaSeleccionada) and
+    #        (reservation['medico_que_atendio']) == str(id_veterinario) and
+    #        (reservation['estado']) == str(1)):
+    #        print("La reserva ya existe")
+    #        return jsonify({"error": "La reserva ya existe"}), 400
 
     
     #transformar reservations en un data frame
@@ -1267,8 +1708,11 @@ def insert_reservation():
     #
     reservations_df['id_reserva'] = reservations_df['id_reserva'].astype(int)
     max_id_reserva = reservations_df['id_reserva'].max()
+    print("IDENTIFICANDO EL NÚMERO DE LA RESERVA MÁXIMA}}")
+    print(f"max_id_reserva={max_id_reserva}")
     #Almacenamos max_id_reserva en una variable de seción
     session['max_id_reserva'] = int(max_id_reserva)
+    print(f"session['max_id_reserva'] ={int(max_id_reserva)}")
     # Creamos el objeto con los datos de la nueva reserva
     session_id = session.get('session_id')
 
@@ -1279,7 +1723,9 @@ def insert_reservation():
         'mascota': mascotaSeleccionada,
         'fecha': fechaSeleccionada,
         'hora': horaSeleccionada,
-        'precio': precio,
+        'precio': precio, #Precio de la consulta
+        'cargo_servicio': cargoServicio, #3% del precio de la consulta
+        'valor_pagado': cargoTotal, #valor efectivamente pagado
         'estado': 1, # 0 = pendiente, 1 = pagado, 2 = cancelado
         'fecha_agrega_reserva': pd.Timestamp.now().strftime('%Y-%m-%d'),
         'hora_agrega_reserva': pd.Timestamp.now().strftime('%H:%M:%S'),
@@ -1293,14 +1739,45 @@ def insert_reservation():
         writer = csv.DictWriter(f, fieldnames=new_reservation.keys(), delimiter=';')
         writer.writerow(new_reservation)
     
-
-
-    #retornamos un código 200
-    #return jsonify({"message": "Reserva creada", "session_id": session_id}), 200
+    ###############################
+    ## Enviar correo al usuario con datos de la reserva
+    datos_correo = {
+    "nombresvet": reserva_en_proceso['nombresvet'] ,
+    "apellidosvet": reserva_en_proceso['apellidosvet'] ,
+    "fecha": reserva_en_proceso['hora'] ,
+    "hora": reserva_en_proceso['hora'] ,
+    "centro": reserva_en_proceso['clinica'] ,
+    "direccion": reserva_en_proceso['direccion'] ,
+    "comuna": reserva_en_proceso['comuna'] ,
+    "reserva": session.get('max_id_reserva'),
+    "valor": session.get('precio'),
+    "tarjeta": session.get('numero_tarjeta')
+    }
+    print(f"Daros para el correo: {datos_correo}")
+    enviar_correo_reserva(correo_cliente, datos_correo)
+    
     return jsonify({"message": "Reserva creada exitosamente"}), 200
-    #return
-# Endpoint para confirmar o cancelar la reserva
 
+
+@app.route("/limpiar_sesion_parcial")
+def limpiar_sesion_parcial():
+    claves_a_conservar = {"user", 
+                          "correo_cliente_invitado", 
+                          "max_id_reserva",
+                          "reserva_en_proceso",
+                          "nombre_mascota",
+                          "cargoServicio",
+                          "cargoTotal",
+                          "numero_tarjeta",
+                          "nombre_cliente"}
+
+    claves_actuales = list(session.keys())
+
+    for clave in claves_actuales:
+        if clave not in claves_a_conservar:
+            session.pop(clave)
+
+    return "Sesión limpiada (excepto user y correo_cliente_invitado)"
 
 @app.route('/api/estado_autenticacion')
 def estado_autenticacion():
@@ -2116,7 +2593,14 @@ def prestaciones_clinica_respaldo():
 
     return prestaciones_unicas
 
-    
+@app.template_filter('formato_miles')
+def formato_miles(valor):
+    try:
+        session['precio']=int(valor)+int(int(valor)*0.03)
+        return f"{int(valor):,}".replace(",", ".")
+    except:
+        return valor
+
 @app.route('/api/pagar', methods=['GET'])
 def api_pagar():
     try:
@@ -2127,8 +2611,14 @@ def api_pagar():
         session_id = str(uuid.uuid4())
         session['session_id'] = session_id
         #pasamos session.get('precio', 1000) a vormato decimal con 0 decimal
-        amount = float(session.get('precio', 1000))
 
+
+        print("Variables de sesión en api/pagar:")
+        for key, value in session.items():  
+            print(f"{key}: {value}")  
+
+        amount = float(session.get('cargoTotal'))
+        print(f"cargoTotal={session.get('cargoTotal')}")
         #amount = int(session.get('precio', 1000))
         return_url = url_for('respuesta_pago', _external=True)
 
@@ -2173,32 +2663,47 @@ def respuesta_pago():
 
 @app.route('/cita_pagada')
 def cita_pagada():
+    print("Variables de sesión en /cita_pagada:")
+    for key, value in session.items():  
+        print(f"{key}: {value}")    
+
     if not session.get('pago_confirmado'):
         return "<script>alert('No puedes reservar sin pagar'); window.location.href='/';</script>"
+    
+    reserva_en_proceso= session.get('reserva_en_proceso')
+    user=session.get("user", None)
+    print(f"User en cita_pagada= {user}" )
+    print(f"correo_cliente_invitado= {session.get('correo_cliente_invitado')}" )
+    if (not user) and (not session.get('correo_cliente_invitado')):
+         return "<script>alert('No puedes reservar sin pagar'); window.location.href='/';</script>"    #
+    elif not session.get('pago_confirmado'):
+        return redirect(url_for("finalizar_pago"))
+    elif user:
+        email=user.get("email")
+    else:
+        email=session.get('correo_cliente_invitado')
 
     response, status_code = insert_reservation()
-    user=session.get("user", None)
-    id_clinica= int(session.get('id_clinica'))
-    fecha= session.get('fecha')
-    hora= session.get('hora')
-    id_veterinario= int(session.get('id_veterinario'))
+
+    id_clinica= int(reserva_en_proceso['id_clinica'] )
+    fecha= reserva_en_proceso['fecha'] 
+    hora= reserva_en_proceso['hora'] 
+    id_veterinario= int(reserva_en_proceso['veterinario'] )
     id_mascota= int(session.get('mascotaSeleccionada'))
     token   = session.get('token')
     numero_tarjeta = session.get('numero_tarjeta')
-    print(user)
-    if not user:
-        return redirect(url_for("login"))    
-    email=user.get("email")
+
+    
 
     df_clinica = pd.read_csv("data/clinicas.csv", sep=";")
     df_clinica = df_clinica[(df_clinica["id_clinica"] == id_clinica)]
-    nombre_clinica = session.get('nombre_clinica')    
-    direccion_clinica = df_clinica.iloc[0]["direccion"]
+    nombre_clinica = reserva_en_proceso['clinica']     
+    direccion_clinica = reserva_en_proceso['direccion'] 
     session['nombre_clinica'] = nombre_clinica
     session['direccion_clinica'] = direccion_clinica
     #si id_mascota != 999
     #si id_mascota es 999, entonces no hay mascota seleccionada
-    if id_mascota != 999:
+    if (id_mascota != 999 and id_mascota !=0):
         df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
         df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["id_clientes_mascotas"] == id_mascota)]
         nombre_mascota = df_mis_mascotas.iloc[0]["nombre_mascota"]
@@ -2207,35 +2712,27 @@ def cita_pagada():
     session['nombre_mascota'] = nombre_mascota
     df_veterinario = pd.read_csv("data/staff.csv", sep=";")
     df_veterinario = df_veterinario[(df_veterinario["id_veterinario"] == id_veterinario)]
-    nombres_veterinario = df_veterinario.iloc[0]["nombres"]
-    apellidos_veterinario = df_veterinario.iloc[0]["apellidos"]
+    nombres_veterinario = reserva_en_proceso['nombresvet'] 
+    apellidos_veterinario = reserva_en_proceso['apellidosvet'] 
     session['nombres_veterinario'] = nombres_veterinario
     session['apellidos_veterinario'] = apellidos_veterinario
     
     if status_code == 200:
-
-        #imprimir todo el contenido del objeto card_detail
-        #
-        
-
-        #session.pop('pago_confirmado', None)
-        #return render_template('cita_pagada.html', user=user)
+        limpiar_sesion_parcial()
         return render_template("cita_pagada.html", 
-                            user=user, 
-                            correo=email,
-                            nombre_clinica = nombre_clinica,
-                            direccion_clinica = direccion_clinica,
-                            nombre_mascota=nombre_mascota, 
-                            nombres_veterinario=nombres_veterinario,
-                            apellidos_veterinario=apellidos_veterinario,
-                            numero_tarjeta=numero_tarjeta,
-                            fecha=fecha,
-                            hora= hora
-                        )
-
-
+                user=user, 
+                correo=email,
+                nombre_clinica = nombre_clinica,
+                direccion_clinica = direccion_clinica,
+                nombre_mascota=nombre_mascota, 
+                nombres_veterinario=nombres_veterinario,
+                apellidos_veterinario=apellidos_veterinario,
+                numero_tarjeta=numero_tarjeta,
+                fecha=fecha,
+                hora= hora
+            )
     else:
-        return "<script>alert('Error al registrar la reserva. Inténtalo nuevamente.'); window.location.href='/agendar';</script>"
+        return "<script>alert('La cita ya existe, no recargue la página después de haber pagado.'); window.location.href='/mis_citas';</script>"
 
 
 
@@ -2269,78 +2766,187 @@ def almacenar_mascota():
 
 @app.route('/generar_pdf', methods=['GET', 'POST'])
 def generar_pdf():
-    nombre_archivo = 'reserva.pdf'
-    # Crear PDF en memoria
+    reserva = session.get('reserva_en_proceso')
+    nombre_mascota = session.get('nombre_mascota', '')
+
+    cargoServicio = int(session.get('cargoServicio', 0))
+    cargoServicio = f"${cargoServicio:,}".replace(",", ".")
+    cargoTotal = int(session.get('cargoTotal', 0))
+    cargoTotal = f"${cargoTotal:,}".replace(",", ".")   
+    precio = int(reserva['valor'])
+    precio = f"${precio:,}".replace(",", ".")     
+
+    numero_tarjeta = session.get('numero_tarjeta')
+    hora = session.get('hora', '08:40')
+    id_reserva = session.get('max_id_reserva')
+    print(f"En generar PDF id_reserva={id_reserva}")
+    id_reserva = int(id_reserva) + 1
+    cliente = session.get('nombre_cliente', 'Estimado/a Cliente')
+
     buffer = io.BytesIO()
-    #c = canvas.Canvas(nombre_archivo, pagesize=LETTER)
     c = canvas.Canvas(buffer, pagesize=LETTER)
     width, height = LETTER
-
-    # Márgenes y ajustes
     x_margin = inch
-    y_start = height - inch
+    y = height - inch
 
-    #mostrar los valores de datos
-    #print(f"Datos recibidos en generar_pdf: {datos}")
-    #Insertar la imagen cabecera_cita.png (100% por 100%) a 1 centìmetro del borde superior de la hoja
-    #c.drawImage("static/images/cabecera_cita.png", 0, height - 1*inch, width=width, height=1*inch, mask='auto')
-    c.drawImage("static/images/cabecera_cita.png", 25, height - 1*inch, width=589, height=60, mask=None, preserveAspectRatio=True, anchor='c')
-    #cual es la sintaxis de drawImage
-    
-    # Fuente
-    #c.setFont("Helvetica-Bold", 16)
-    #c.drawCentredString(width / 2, y_start, "Detalles de la Reserva")
 
-    # Cambiar a fuente estándar
+    # === ENCABEZADO CON FONDO CELESTE ===
+    alto_encabezado = 80
+    y_encabezado = height - alto_encabezado
+
+    c.setFillColorRGB(0.87, 0.94, 0.98)  # celeste suave
+    c.rect(0, y_encabezado, width, alto_encabezado, fill=True, stroke=0)
+
+    # Logo dentro del encabezado
+    c.drawImage(
+        "static/images/icono paw care/android-chrome-192x192.png",
+        x_margin,
+        y_encabezado + 10,
+        width=60,
+        height=60,
+        preserveAspectRatio=True,
+        mask='auto'
+    )
+
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(x_margin + 120, y+20, "PawCare")
+
+    # Actualizar posición de Y para el resto del contenido
+    y = y_encabezado - 30  # bajar contenido general bajo el encabezado
+
+    ##==== CUERPO ===
+    # Título
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 16)
+    texto = "Confirmación de reserva"
+    x_centro = width / 2
+    y_texto = y
+
+    # Dibujar el texto centrado
+    c.drawCentredString(x_centro, y_texto, texto)
+
+    # Calcular ancho del texto para subrayado
+    ancho_texto = c.stringWidth(texto, "Helvetica-Bold", 16)
+    x_inicio = x_centro - (ancho_texto / 2)
+    x_final = x_centro + (ancho_texto / 2)
+    y_linea = y_texto - 2  # 2 puntos debajo del texto
+
+    # Dibujar la línea de subrayado
+    c.setLineWidth(1)
+    c.line(x_inicio, y_linea, x_final, y_linea)
+
+    y -= 40
+
+    # Cuerpo del mensaje
     c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y, f"{cliente},")
+    y -= 20
 
-    y = y_start - 120
-    fecha=session.get('fecha')
-    #pasamos fecha a formato dd/mm/aaaa
-    fecha = datetime.strptime(fecha, "%Y-%m-%d").strftime("%d/%m/%Y")
+    c.drawString(x_margin, y, f"Su cita se agendó correctamente con el/la especialista: {reserva['nombresvet']} {reserva['apellidosvet']}.")
+    y -= 20
+    #c.setFont("Helvetica-Bold", 12)
+    #c.drawString(x_margin, y, f"Dr. {reserva['nombresvet']}")
+    #y -= 20
 
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y, f"El día {reserva['fecha']} a las {reserva['hora']} horas.")
+    y -= 20
+    c.drawString(x_margin, y, f"En el centro de atención: {reserva['clinica']}.")
+    y -= 20
+    c.drawString(x_margin, y, f"Dirección: {reserva['direccion']}, {reserva['comuna']}.")
+    y -= 30
 
-    nombres_veterinario = session.get('nombres_veterinario')
-    apellidos_veterinario = session.get('apellidos_veterinario')
-    nombre_mascota = session.get('nombre_mascota')
-    precio = session.get('precio')
-    #pasamos precio a tipo entero
-    precio = int(precio)
-    #cambiamos el formato de precio, con "." como separador de miles y din decimales
+    # Detalles
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Nº de reserva:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{id_reserva}")
+    y -= 20
 
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Valor pagado:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{cargoTotal}")
+    y -= 20
 
-    # Contenido
-    lineas = [
-        f"Veterinario: {nombres_veterinario} {apellidos_veterinario}",	
-        f"Mascota: {nombre_mascota}",	
-        f"Fecha: {fecha}",
-        f"Hora: {session.get('hora')}",
-        f"Valor cancelado: ${precio}",
-        f"Tarjeta terminada en: {session.get('numero_tarjeta')}",
-        "",
-        "Te recomendamos llegar 10 minutos antes de tu cita para evitar retrasos.",
-        "",
-        "Atte.,",
-        "El equipo de PawCare"
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Cargo por servicio pagado:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{cargoServicio}")
+    y -= 20
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Valor de la consulta:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{precio}")
+    y -= 20    
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Tarjeta utilizada terminada en:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, numero_tarjeta)
+    y -= 40
+
+    # Recomendaciones
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y, "Le solicitamos llegar 20 minutos antes de la hora de su cita para una mejor atención.")
+    y -= 30
+
+    c.drawString(x_margin, y, "Agradecemos su preferencia en nuestros servicios.")
+    y -= 40
+    
+    c.drawString(x_margin, y, "Atentamente,")
+    y -= 20
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "El equipo de PawCare")
+    y -= 60
+
+    # Línea separadora
+    c.setStrokeColor(colors.grey)
+    c.setLineWidth(0.5)
+    c.line(x_margin, y, width - x_margin, y)
+    y -= 25
+
+        # === PIE CON FONDO CELESTE ===
+    alto_pie = 110
+    y_pie = 0
+    c.setFillColorRGB(0.87, 0.94, 0.98)  # celeste suave
+    c.rect(0, y_pie, width, alto_pie, fill=True, stroke=0)
+
+    # Texto del encabezado del pie
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y_pie + alto_pie - 20, "Si tienes alguna pregunta o requieres asistencia adicional, contáctanos")
+
+    # Subtítulos
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y_pie + alto_pie - 50, "Teléfono")
+    c.drawString(x_margin + 120, y_pie + alto_pie - 50, "Dirección")
+    c.drawString(x_margin + 420, y_pie + alto_pie - 50, "Síguenos en")
+
+    # Datos
+    c.drawString(x_margin, y_pie + alto_pie - 70, "2 2520 5900")
+    c.drawString(x_margin + 120, y_pie + alto_pie - 70, "Av. Luis Pasteur 5917. Vitacura")
+
+    # Redes sociales
+    redes = [
+        ("facebook.png", "https://www.facebook.com/pawcare_oficial"),
+        ("instagram.png", "https://www.instagram.com/pawcare_oficial"),
+        ("x.png", "https://twitter.com/pawcare_oficial")
     ]
+    x_icon = x_margin + 400
+    y_icon = y_pie + alto_pie - 90  # alineado con texto
 
-    for linea in lineas:
-        c.drawString(x_margin, y, linea)
-        y -= 20
+    for icon_file, url in redes:
+        icon_path = f"static/images/social/{icon_file}"
+        c.linkURL(url, (x_icon, y_icon, x_icon + 32, y_icon + 32))
+        c.drawImage(icon_path, x_icon, y_icon, width=32, height=32, mask='auto')
+        x_icon += 40  # espacio entre íconos
 
     c.save()
-
-
-
-    #print(f"PDF generado en: {os.path.abspath(nombre_archivo)}")
-
-
-    # entregar el archivo c al cliente
     buffer.seek(0)
-    # descargar el archivo en el computador del usuario
-    #return send_file(nombre_archivo, as_attachment=True, download_name=nombre_archivo, mimetype='application/pdf')
 
-    # Devolver el archivo al usuario
     return send_file(
         buffer,
         as_attachment=True,
@@ -2352,10 +2958,12 @@ def generar_pdf():
 @app.route('/enviar-cita-calendario', methods=['POST'])
 def enviar_cita_calendario():
     # Variables desde sesión
-    direccion = session.get('direccion_clinica')
-    correo = session.get('correo_cliente')
-    fecha = session.get('fecha')  # formato: YYYY-MM-DD
-    hora = session.get('hora')    # formato: HH:MM
+    reserva_en_proceso = session.get('reserva_en_proceso')
+    user=session.get('user')
+    direccion = reserva_en_proceso['direccion']
+    correo = user['email']
+    fecha = reserva_en_proceso['fecha']  # formato: YYYY-MM-DD
+    hora = reserva_en_proceso['hora']  # formato: HH:MM
     print(f"Datos recibidos en enviar_cita_calendario: {direccion}, {correo}, {fecha}, {hora}")
     if not all([direccion, correo, fecha, hora]):
         return jsonify({"success": False, "message": "Faltan datos"}), 400
@@ -2883,6 +3491,39 @@ def obtener_nombre_comuna(id_dpa):
             return jsonify({"error": "Comuna no encontrada"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# 📌 Ruta de agendar
+@app.route("/reservar")
+def reservar():
+
+
+    return render_template("reservar.html", user=session.get("user", None), next=session.get("next", None))
+
+
+# Cargar plantilla HTML desde archivo
+def cargar_plantilla():
+    with open("templates/plantilla_correo_reserva.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+# Enviar correo
+def enviar_correo_reserva(destinatario, datos):
+    # Datos dinámicos para el correo
+    html_template = cargar_plantilla()
+    cuerpo_html = render_template_string(html_template, **datos)
+
+    msg = Message(
+            subject="Confirmación de reserva - PawCare",
+            sender="alhen1970@gmail.com",
+            recipients=[destinatario],
+            html=cuerpo_html
+        )
+
+    try:
+        mail.send(msg)
+        print("Correo enviado correctamente.")
+    except Exception as e:
+        print("Error al enviar el correo:", e)
 
 
 if __name__ == "__main__":

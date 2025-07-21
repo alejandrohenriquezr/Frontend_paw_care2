@@ -1,0 +1,355 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pawcare-teal": "#7BAAB0",
+        "pawcare-light": "#E8F4F5"
+      },
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <header id="header" class="bg-white shadow-sm fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-paw text-pawcare-teal text-2xl mr-2"></i>
+                        <span class="font-bold text-xl text-gray-900">PawCare</span>
+                    </div>
+                    <nav class="hidden md:ml-10 md:flex space-x-8">
+                        <span class="text-gray-700 hover:text-pawcare-teal font-medium cursor-pointer">Inicio</span>
+                        <span class="text-gray-700 hover:text-pawcare-teal font-medium cursor-pointer">Mis Mascotas</span>
+                        <span class="text-gray-700 hover:text-pawcare-teal font-medium cursor-pointer">Mis Citas</span>
+                        <span class="text-gray-700 hover:text-pawcare-teal font-medium cursor-pointer">Favoritos</span>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 text-gray-400 hover:text-pawcare-teal">
+                        <i class="fas fa-bell text-lg"></i>
+                    </button>
+                    <button class="bg-pawcare-teal text-white px-4 py-2 rounded-lg font-medium hover:bg-opacity-90">
+                        Iniciar sesión
+                    </button>
+                    <button class="md:hidden p-2 text-gray-400">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-16 min-h-screen">
+        <!-- Results Header -->
+        <section id="results-header" class="bg-white border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Resultados en Temuco para "Odontología Veterinaria"</h1>
+                <p class="text-gray-600 text-lg">Selecciona un profesional o clínica para agendar tu hora</p>
+            </div>
+        </section>
+
+        <!-- Filters Bar -->
+        <section id="filters-bar" class="bg-white border-b sticky top-16 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pawcare-teal focus:border-transparent">
+                        <option>Temuco</option>
+                        <option>Santiago</option>
+                        <option>Valparaíso</option>
+                    </select>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pawcare-teal focus:border-transparent">
+                        <option>Odontología Veterinaria</option>
+                        <option>Cardiología</option>
+                        <option>Dermatología</option>
+                    </select>
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pawcare-teal focus:border-transparent">
+                        <option>Hoy</option>
+                        <option>Esta semana</option>
+                        <option>Fin de semana</option>
+                    </select>
+                    <button class="ml-auto px-4 py-2 bg-pawcare-light text-pawcare-teal rounded-lg font-medium hover:bg-opacity-80 flex items-center">
+                        <i class="fas fa-map-marker-alt mr-2"></i>
+                        Ver en mapa
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Type Tabs -->
+        <section id="result-tabs" class="bg-white border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-8">
+                    <button id="specialists-tab" class="py-4 px-2 border-b-2 border-pawcare-teal text-pawcare-teal font-medium tab-active">
+                        Especialistas
+                    </button>
+                    <button id="clinics-tab" class="py-4 px-2 border-b-2 border-transparent text-gray-500 font-medium hover:text-gray-700">
+                        Clínicas
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Content -->
+        <section id="results-content" class="py-8">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Specialists View -->
+                <div id="specialists-view" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Specialist Card 1 -->
+                    <div id="specialist-card-1" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="Dr. María González" class="w-16 h-16 rounded-full object-cover">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-900">Dr. María González</h3>
+                                    <p class="text-pawcare-teal font-medium">Odontología Veterinaria</p>
+                                    <p class="text-gray-600 text-sm">Clínica Veterinaria San Martín</p>
+                                    <p class="text-gray-500 text-sm flex items-center"><i class="fas fa-map-marker-alt mr-1"></i>Temuco Centro</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500">
+                                <i class="far fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm">4.9 (127 opiniones)</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Especialista en limpieza dental felina y profilaxis avanzada.</p>
+                        <div class="mb-4">
+                            <p class="text-lg font-semibold text-gray-900">Desde $20.000</p>
+                        </div>
+                        <div class="bg-pawcare-light rounded-lg p-4">
+                            <h4 class="font-medium text-gray-900 mb-3">Horas disponibles hoy:</h4>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <button class="bg-pawcare-teal text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-90">
+                                    Reservar 11:00
+                                </button>
+                                <button class="bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50">
+                                    14:30
+                                </button>
+                                <button class="bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50">
+                                    16:15
+                                </button>
+                                <button class="bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50">
+                                    18:00
+                                </button>
+                            </div>
+                            <span class="text-pawcare-teal text-sm hover:underline cursor-pointer">Ver más disponibilidad</span>
+                        </div>
+                    </div>
+
+                    <!-- Specialist Card 2 -->
+                    <div id="specialist-card-2" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" alt="Dr. Carlos Mendoza" class="w-16 h-16 rounded-full object-cover">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-900">Dr. Carlos Mendoza</h3>
+                                    <p class="text-pawcare-teal font-medium">Odontología Veterinaria</p>
+                                    <p class="text-gray-600 text-sm">Centro Médico Veterinario</p>
+                                    <p class="text-gray-500 text-sm flex items-center"><i class="fas fa-map-marker-alt mr-1"></i>Temuco Norte</p>
+                                </div>
+                            </div>
+                            <button class="text-red-500">
+                                <i class="fas fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm">4.7 (89 opiniones)</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Experto en cirugía oral y tratamientos periodontales caninos.</p>
+                        <div class="mb-4">
+                            <p class="text-lg font-semibold text-gray-900">Desde $25.000</p>
+                        </div>
+                        <div class="bg-gray-100 rounded-lg p-4">
+                            <h4 class="font-medium text-gray-600 mb-2">No tiene horas hoy disponibles</h4>
+                            <span class="text-pawcare-teal text-sm hover:underline cursor-pointer">Ver más disponibilidad</span>
+                        </div>
+                    </div>
+
+                    <!-- Specialist Card 3 -->
+                    <div id="specialist-card-3" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" alt="Dra. Ana Ruiz" class="w-16 h-16 rounded-full object-cover">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-900">Dra. Ana Ruiz</h3>
+                                    <p class="text-pawcare-teal font-medium">Odontología Veterinaria</p>
+                                    <p class="text-gray-600 text-sm">Clínica Veterinaria Integral</p>
+                                    <p class="text-gray-500 text-sm flex items-center"><i class="fas fa-map-marker-alt mr-1"></i>Temuco Sur</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500">
+                                <i class="far fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm">5.0 (45 opiniones)</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Especialista en odontología preventiva para mascotas senior.</p>
+                        <div class="mb-4">
+                            <p class="text-lg font-semibold text-gray-900">Desde $18.000</p>
+                        </div>
+                        <div class="bg-pawcare-light rounded-lg p-4">
+                            <h4 class="font-medium text-gray-900 mb-3">Horas disponibles hoy:</h4>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <button class="bg-pawcare-teal text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-90">
+                                    Reservar 10:30
+                                </button>
+                                <button class="bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50">
+                                    15:00
+                                </button>
+                                <button class="bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50">
+                                    17:30
+                                </button>
+                            </div>
+                            <span class="text-pawcare-teal text-sm hover:underline cursor-pointer">Ver más disponibilidad</span>
+                        </div>
+                    </div>
+
+                    <!-- Specialist Card 4 -->
+                    <div id="specialist-card-4" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" alt="Dr. Roberto Silva" class="w-16 h-16 rounded-full object-cover">
+                                <div>
+                                    <h3 class="font-semibold text-lg text-gray-900">Dr. Roberto Silva</h3>
+                                    <p class="text-pawcare-teal font-medium">Odontología Veterinaria</p>
+                                    <p class="text-gray-600 text-sm">Veterinaria Las Encinas</p>
+                                    <p class="text-gray-500 text-sm flex items-center"><i class="fas fa-map-marker-alt mr-1"></i>Temuco Centro</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500">
+                                <i class="far fa-heart text-xl"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm">4.6 (73 opiniones)</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">Tratamientos de endodoncia y rehabilitación oral.</p>
+                        <div class="mb-4">
+                            <p class="text-lg font-semibold text-gray-900">Desde $22.000</p>
+                        </div>
+                        <div class="bg-pawcare-light rounded-lg p-4">
+                            <h4 class="font-medium text-gray-900 mb-3">Horas disponibles hoy:</h4>
+                            <div class="flex flex-wrap gap-2 mb-3">
+                                <button class="bg-pawcare-teal text-white px-4 py-2 rounded-full font-medium hover:bg-opacity-90">
+                                    Reservar 09:00
+                                </button>
+                                <button class="bg-white border border-gray-300 px-4 py-2 rounded-full text-gray-700 hover:bg-gray-50">
+                                    13:30
+                                </button>
+                            </div>
+                            <span class="text-pawcare-teal text-sm hover:underline cursor-pointer">Ver más disponibilidad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clinics View (Hidden by default) -->
+                <div id="clinics-view" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Clinic Card 1 -->
+                    <div id="clinic-card-1" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img class="w-full h-48 object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e16d2b22c7-8b9b38e15addcb8eb354.png" alt="modern veterinary clinic exterior with green plants">
+                        <div class="p-6">
+                            <h3 class="font-semibold text-xl text-gray-900 mb-2">Clínica Veterinaria San Martín</h3>
+                            <p class="text-gray-500 text-sm flex items-center mb-3">
+                                <i class="fas fa-map-marker-alt mr-1"></i>Temuco Centro
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-pawcare-light text-pawcare-teal px-3 py-1 rounded-full text-sm">Odontología</span>
+                                <span class="bg-pawcare-light text-pawcare-teal px-3 py-1 rounded-full text-sm">Cardiología</span>
+                                <span class="bg-pawcare-light text-pawcare-teal px-3 py-1 rounded-full text-sm">Cirugía</span>
+                            </div>
+                            <p class="text-green-600 font-medium mb-4">Con profesionales disponibles</p>
+                            <button class="w-full bg-pawcare-teal text-white py-3 rounded-lg font-medium hover:bg-opacity-90">
+                                Ver especialistas
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Clinic Card 2 -->
+                    <div id="clinic-card-2" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <img class="w-full h-48 object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/ca65b121ec-f3927f6606717942eeb2.png" alt="veterinary clinic waiting room with modern furniture">
+                        <div class="p-6">
+                            <h3 class="font-semibold text-xl text-gray-900 mb-2">Centro Médico Veterinario</h3>
+                            <p class="text-gray-500 text-sm flex items-center mb-3">
+                                <i class="fas fa-map-marker-alt mr-1"></i>Temuco Norte
+                            </p>
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                <span class="bg-pawcare-light text-pawcare-teal px-3 py-1 rounded-full text-sm">Odontología</span>
+                                <span class="bg-pawcare-light text-pawcare-teal px-3 py-1 rounded-full text-sm">Dermatología</span>
+                                <span class="bg-pawcare-light text-pawcare-teal px-3 py-1 rounded-full text-sm">Neurología</span>
+                            </div>
+                            <p class="text-green-600 font-medium mb-4">Con profesionales disponibles</p>
+                            <button class="w-full bg-pawcare-teal text-white py-3 rounded-lg font-medium hover:bg-opacity-90">
+                                Ver especialistas
+                            </button>
+                        </div>
+                    </div>
+                </div></div></section></main></body></html>

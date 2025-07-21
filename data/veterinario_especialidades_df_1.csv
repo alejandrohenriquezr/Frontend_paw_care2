@@ -1,0 +1,167 @@
+id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellidos;sexo
+1;1;13;3;Oscar Orlando;Aburto Bravo;MASCULINO
+2;1;67;14;Oscar Orlando;Aburto Bravo;MASCULINO
+3;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO
+4;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO
+5;1;18;4;Oscar Orlando;Aburto Bravo;MASCULINO
+6;1;44;9;Oscar Orlando;Aburto Bravo;MASCULINO
+7;2;32;7;Mario Oscar;Acevedo Sánchez;MASCULINO
+8;2;66;14;Mario Oscar;Acevedo Sánchez;MASCULINO
+9;2;52;11;Mario Oscar;Acevedo Sánchez;MASCULINO
+10;2;56;12;Mario Oscar;Acevedo Sánchez;MASCULINO
+11;2;54;11;Mario Oscar;Acevedo Sánchez;MASCULINO
+12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO
+13;3;25;5;Patricia Verónica ;Acevedo Chamorro;FEMENINO
+14;3;31;7;Patricia Verónica ;Acevedo Chamorro;FEMENINO
+15;4;60;12;Ennio Aldo;Aguirre Ducler;MASCULINO
+16;4;7;2;Ennio Aldo;Aguirre Ducler;MASCULINO
+17;4;66;14;Ennio Aldo;Aguirre Ducler;MASCULINO
+18;4;13;3;Ennio Aldo;Aguirre Ducler;MASCULINO
+19;5;17;4;Fernando Andrés;Aránguiz Rojas;MASCULINO
+20;5;45;9;Fernando Andrés;Aránguiz Rojas;MASCULINO
+21;5;66;14;Fernando Andrés;Aránguiz Rojas;MASCULINO
+22;5;18;4;Fernando Andrés;Aránguiz Rojas;MASCULINO
+23;5;31;7;Fernando Andrés;Aránguiz Rojas;MASCULINO
+24;5;70;14;Fernando Andrés;Aránguiz Rojas;MASCULINO
+25;6;67;14;Paulina Alejandra;Arias Díaz;FEMENINO
+26;6;14;3;Paulina Alejandra;Arias Díaz;FEMENINO
+27;6;33;7;Paulina Alejandra;Arias Díaz;FEMENINO
+28;6;10;2;Paulina Alejandra;Arias Díaz;FEMENINO
+29;6;20;4;Paulina Alejandra;Arias Díaz;FEMENINO
+30;6;8;2;Paulina Alejandra;Arias Díaz;FEMENINO
+31;6;53;11;Paulina Alejandra;Arias Díaz;FEMENINO
+32;6;63;13;Paulina Alejandra;Arias Díaz;FEMENINO
+33;7;43;9;Mauricio Andrés;Arias Monsalve;MASCULINO
+34;7;34;7;Mauricio Andrés;Arias Monsalve;MASCULINO
+35;8;65;13;Patricio Sebastian;Asencio Schmidt;MASCULINO
+36;9;56;12;Daniel Ignacio;Avila Avila;MASCULINO
+37;10;61;13;Belén Alejandra;Barra Pérez;FEMENINO
+38;10;38;8;Belén Alejandra;Barra Pérez;FEMENINO
+39;10;29;6;Belén Alejandra;Barra Pérez;FEMENINO
+40;11;23;5;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+41;11;12;3;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+42;11;35;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+43;11;53;11;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+44;11;41;9;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+45;11;32;7;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+46;11;29;6;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+47;11;5;1;Gonzalo Raúl;Bascuñan Haag;MASCULINO
+48;12;24;5;José Luis;Becerra Martínez;MASCULINO
+49;13;59;12;Héctor Andrés;Bilbao Matus;MASCULINO
+50;13;53;11;Héctor Andrés;Bilbao Matus;MASCULINO
+51;13;45;9;Héctor Andrés;Bilbao Matus;MASCULINO
+52;13;6;2;Héctor Andrés;Bilbao Matus;MASCULINO
+53;13;43;9;Héctor Andrés;Bilbao Matus;MASCULINO
+54;13;28;6;Héctor Andrés;Bilbao Matus;MASCULINO
+55;13;36;8;Héctor Andrés;Bilbao Matus;MASCULINO
+56;13;47;10;Héctor Andrés;Bilbao Matus;MASCULINO
+57;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+58;14;24;5;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+59;14;29;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+60;14;41;9;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+61;14;28;6;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+62;14;18;4;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO
+64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO
+65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO
+66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO
+67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO
+68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO
+69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO
+70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO
+71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO
+72;16;28;6;Camila Fernanda;Cabezón Marchant;FEMENINO
+73;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO
+74;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO
+75;16;53;11;Camila Fernanda;Cabezón Marchant;FEMENINO
+76;17;68;14;Carlos Luis;Campos Paiva;MASCULINO
+77;17;17;4;Carlos Luis;Campos Paiva;MASCULINO
+78;17;16;4;Carlos Luis;Campos Paiva;MASCULINO
+79;17;63;13;Carlos Luis;Campos Paiva;MASCULINO
+80;17;3;1;Carlos Luis;Campos Paiva;MASCULINO
+81;17;34;7;Carlos Luis;Campos Paiva;MASCULINO
+82;17;13;3;Carlos Luis;Campos Paiva;MASCULINO
+83;17;13;3;Carlos Luis;Campos Paiva;MASCULINO
+84;17;36;8;Carlos Luis;Campos Paiva;MASCULINO
+85;18;60;12;Juan Andrés;Caro Galan;MASCULINO
+86;18;51;11;Juan Andrés;Caro Galan;MASCULINO
+87;18;13;3;Juan Andrés;Caro Galan;MASCULINO
+88;18;67;14;Juan Andrés;Caro Galan;MASCULINO
+89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO
+90;19;18;4;José Miguel;Carrizo Nuñez;MASCULINO
+91;19;20;4;José Miguel;Carrizo Nuñez;MASCULINO
+92;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO
+93;19;48;10;José Miguel;Carrizo Nuñez;MASCULINO
+94;19;10;2;José Miguel;Carrizo Nuñez;MASCULINO
+95;20;65;13;Bárbara Carolina;Casagran Marchánt;FEMENINO
+96;20;23;5;Bárbara Carolina;Casagran Marchánt;FEMENINO
+97;20;12;3;Bárbara Carolina;Casagran Marchánt;FEMENINO
+98;20;43;9;Bárbara Carolina;Casagran Marchánt;FEMENINO
+99;20;16;4;Bárbara Carolina;Casagran Marchánt;FEMENINO
+100;20;30;6;Bárbara Carolina;Casagran Marchánt;FEMENINO
+101;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO
+102;21;40;8;Ricardo Alejandro;Castillo Pablos;MASCULINO
+103;21;2;1;Ricardo Alejandro;Castillo Pablos;MASCULINO
+104;21;37;8;Ricardo Alejandro;Castillo Pablos;MASCULINO
+105;21;62;13;Ricardo Alejandro;Castillo Pablos;MASCULINO
+106;21;30;6;Ricardo Alejandro;Castillo Pablos;MASCULINO
+107;21;32;7;Ricardo Alejandro;Castillo Pablos;MASCULINO
+108;21;7;2;Ricardo Alejandro;Castillo Pablos;MASCULINO
+109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO
+116;23;33;7;Cristian Emilio;Catalán Arias;MASCULINO
+117;23;16;4;Cristian Emilio;Catalán Arias;MASCULINO
+118;23;46;10;Cristian Emilio;Catalán Arias;MASCULINO
+119;23;2;1;Cristian Emilio;Catalán Arias;MASCULINO
+120;23;55;11;Cristian Emilio;Catalán Arias;MASCULINO
+121;24;3;1;William Adrian;Césped Muñoz;MASCULINO
+122;24;58;12;William Adrian;Césped Muñoz;MASCULINO
+123;24;52;11;William Adrian;Césped Muñoz;MASCULINO
+124;24;70;14;William Adrian;Césped Muñoz;MASCULINO
+125;24;70;14;William Adrian;Césped Muñoz;MASCULINO
+126;24;34;7;William Adrian;Césped Muñoz;MASCULINO
+127;24;23;5;William Adrian;Césped Muñoz;MASCULINO
+128;24;56;12;William Adrian;Césped Muñoz;MASCULINO
+129;24;21;5;William Adrian;Césped Muñoz;MASCULINO
+130;25;69;14;Exequiel Fernando;Collao López;MASCULINO
+131;25;33;7;Exequiel Fernando;Collao López;MASCULINO
+132;25;5;1;Exequiel Fernando;Collao López;MASCULINO
+133;25;34;7;Exequiel Fernando;Collao López;MASCULINO
+134;25;61;13;Exequiel Fernando;Collao López;MASCULINO
+135;26;48;10;Miguel Mario;Contreras Lusardi;MASCULINO
+136;26;31;7;Miguel Mario;Contreras Lusardi;MASCULINO
+137;26;40;8;Miguel Mario;Contreras Lusardi;MASCULINO
+138;26;57;12;Miguel Mario;Contreras Lusardi;MASCULINO
+139;26;19;4;Miguel Mario;Contreras Lusardi;MASCULINO
+140;26;1;1;Miguel Mario;Contreras Lusardi;MASCULINO
+141;26;15;3;Miguel Mario;Contreras Lusardi;MASCULINO
+142;26;26;6;Miguel Mario;Contreras Lusardi;MASCULINO
+143;26;69;14;Miguel Mario;Contreras Lusardi;MASCULINO
+144;27;65;13;Pablo José;Cortés López;MASCULINO
+145;27;58;12;Pablo José;Cortés López;MASCULINO
+146;27;25;5;Pablo José;Cortés López;MASCULINO
+147;27;51;11;Pablo José;Cortés López;MASCULINO
+148;28;16;4;Macarena Cecilia;Cortéz Jara;FEMENINO
+149;28;19;4;Macarena Cecilia;Cortéz Jara;FEMENINO
+150;28;36;8;Macarena Cecilia;Cortéz Jara;FEMENINO
+151;28;13;3;Macarena Cecilia;Cortéz Jara;FEMENINO
+152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO
+153;29;47;10;Nicolás Ignacio;Cozzolino Puelma;MASCULINO
+154;29;59;12;Nicolás Ignacio;Cozzolino Puelma;MASCULINO
+155;30;42;9;José Leonardo;Cuevas Pavéz;MASCULINO
+156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO
+157;31;41;9;Rodrigo;Contreras Diaz;MASCULINO
+158;31;53;11;Rodrigo;Contreras Diaz;MASCULINO
+159;32;9;2;Daniela Fernanda;De La Barra González;FEMENINO
+160;32;45;9;Daniela Fernanda;De La Barra González;FEMENINO
+161;33;52;11;Raúl Marcelo;De La Fuente García;MASCULINO
+162;33;57;12;Raúl Marcelo;De La Fuente García;MASCULINO
+163;33;48;10;Raúl Marcelo;De La Fuente García;MASCULINO
+164;33;11;3;Raúl Marcelo;De La Fuente García;MASCULINO
+165;33;17;4;Raúl Marcelo;De La Fuente García;MASCULINO
+166;33;20;4;Raúl Marcelo;De La Fuente García;MASCULINO
