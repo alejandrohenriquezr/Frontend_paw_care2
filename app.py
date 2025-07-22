@@ -3526,6 +3526,42 @@ def enviar_correo_reserva(destinatario, datos):
         print("Error al enviar el correo:", e)
 
 
+@app.route('/api/especies')
+def obtener_especies():
+    especies = []
+    with open('data/species.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        for row in reader:
+            especies.append({
+                'id_especie': row['id_especie'],
+                'especie': row['especie'],
+                'icono': row['icono']
+            })
+    return jsonify(especies)
+
+
+@app.route('/api/especie_raza')
+def especie_raza():
+    razas_df = pd.read_csv("data/razas.csv", sep=";")
+    especie_raza_df = pd.read_csv("data/especie_raza.csv", sep=";")
+
+
+    # 1. A veterinario_especialidades_df le unimos los datos del veterinario
+    especie_raza_df = especie_raza_df.merge(
+        razas_df[["id_raza", "nombre_raza"]],
+        left_on="id_raza",
+        right_on="id_raza",
+        how="left"    
+    )
+
+    resultado = especie_raza_df[[
+        "id_especie", "id_raza", "nombre_raza"
+    ]].to_dict(orient="records")
+
+    return jsonify(resultado)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)
 

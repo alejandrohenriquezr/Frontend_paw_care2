@@ -2,6 +2,18 @@
 <html lang="es">
               
 <head>
+  <!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- jQuery (debe ir antes de Select2 JS) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -12,7 +24,8 @@
   <title>Paw Care</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+
+
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -27,7 +40,6 @@
   * {
     font-family: "Inter", sans-serif;
   }
-
 
 </style>
 
@@ -233,6 +245,35 @@ navigator.geolocation.getCurrentPosition(
               <select id="mascotaSeleccionada" class="w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300">
                 <option>Seleccionar mascota</option>
               </select>
+            </div>
+
+            <div id="nueva_mascota" class="bg-white p-6 rounded-xl shadow-lg hidden">
+
+              <!-- Primera línea: solo nombre -->
+              <div class="flex flex-col md:flex-row gap-4 w-full mb-4">
+                <div id="div-nombre-nueva-mascota" class="flex-1 bg-white p-6 rounded-xl shadow-lg">
+                  <input type="text" 
+                        id="nombre-nueva-mascota" 
+                        class="w-full p-3 border border-neutral-300 rounded-lg text-blue-600 bg-white transition-colors duration-300"
+                        placeholder="Nombre de tu mascota"
+                        required/>
+                </div>
+              </div>
+
+              <!-- Segunda línea: especie, raza y calendario -->
+              <div class="flex flex-col md:flex-row gap-4 w-full">
+                <div id="div-especie" class="flex-1 bg-white p-6 rounded-xl shadow-lg">
+                  <select id="especie"
+                    class="select2-custom w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300">
+                  </select>
+                </div>
+                <div id="div-raza" class="flex-1 bg-white p-6 rounded-xl shadow-lg">
+                  <select id="raza" class="w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300"></select>
+                </div>  
+                <div id="div-calendario" class="flex-1 bg-white p-6 rounded-xl shadow-lg">
+                  <input type="date" id="calendario" class="w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300"/>
+                </div>  
+              </div>
 
             </div>
 
@@ -352,6 +393,30 @@ navigator.geolocation.getCurrentPosition(
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
+      function convertirFechaA_ddmmyyyy(fechaISO) {
+        const [año, mes, dia] = fechaISO.split("-");
+        return `${dia}-${mes}-${año}`;
+      }
+
+      function guardarVariableSesion(id, valor) {
+        console.log("Variable almacenada=" , id, " con valor=", valor);
+        fetch("/guardar_variable_sesion", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: id, valor: valor }),
+          credentials: "include" // MUY IMPORTANTE para que las cookies viajen
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log(`Sesión actualizada: ${id} = ${valor}`, data);
+          })
+          .catch(error => {
+            console.error(`Error al guardar ${id}:`, error);
+          });
+      }
+
       const user = {
         picture: "{{ user['picture'] if user else '' }}",
       };
@@ -415,6 +480,7 @@ navigator.geolocation.getCurrentPosition(
       const divcorreos = document.getElementById("correos");
       const btnGoogle = document.getElementById("btn-google");
       const btnInvitado = document.getElementById("btn-invitado");
+      const nueva_mascota = document.getElementById("nueva_mascota");
 
       if (!user2) {
         // Usuario no autenticado
@@ -427,8 +493,169 @@ navigator.geolocation.getCurrentPosition(
 
       } else {
         // Usuario autenticado
-        petselection.classList.remove("hidden");
-        divcorreos.classList.add("hidden");
+        cantidad_mascotas= llenar_mascotas();
+        if (cantidad_mascotas == 0){ //llenar esecies y razas
+
+          //Escuchamos si el nombre-nueva-mascota y guardamos su valos si pierde el foco y es no vacio
+          const inputNombre = document.getElementById("nombre-nueva-mascota");
+
+            inputNombre.addEventListener("blur", function () {
+              const valor = inputNombre.value.trim();
+              if (inputNombre.value.trim() !== ""){
+                guardarVariableSesion("nombre_nueva_mascota", valor);
+              }
+            });
+  
+          //Escuchamos si el nombre-nueva-mascota y guardamos su valos si pierde el foco y es no vacio
+          const inputFecha = document.getElementById("calendario");
+
+            inputFecha.addEventListener("change", function () {
+              const fechaOriginal = inputFecha.value;
+              const fechaFormateada = convertirFechaA_ddmmyyyy(fechaOriginal);
+              guardarVariableSesion("nombre_nueva_mascota", fechaFormateada);
+            });            
+
+          //Leemos las especies y llenamos el select especie
+           fetch('/api/especies')
+            .then(response => response.json())
+            .then(data => {
+              const select = document.getElementById('especie');
+              select.innerHTML = ''; // limpia el select
+
+              data.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id_especie;
+                option.text = item.especie;  // usado como texto de fallback
+                option.dataset.icono = item.icono;  // guardamos la clase del ícono
+                select.appendChild(option);
+              });
+              // Activar Select2 con formateo HTML
+                $('#especie').select2({
+                  width: '100%',
+                  templateResult: formatOptionWithIcon,
+                  templateSelection: formatOptionWithIcon,
+                  minimumResultsForSearch: Infinity  // opcional: oculta buscador
+
+                });
+                  $('#especie').on('change', function () {
+                    const valor = $(this).val();
+                    guardarVariableSesion("especie", valor);
+                  });
+                function formatOptionWithIcon(option) {
+                  if (!option.id) return option.text;  // para placeholder
+
+                  const icono = $(option.element).data('icono');
+                  const texto = option.text;
+
+                  return $(`
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                      <i class="${icono}" style="color:#4a4a4a;"></i>
+                      <span>${texto}</span>
+                    </span>
+                  `);
+                }
+
+
+
+            })
+            .catch(error => {
+              console.error('Error al cargar especies:', error);
+            });
+
+
+
+          //Llenar el select RAZA
+          let especieRazaData = []; // variable global para guardar la unión
+
+          // 1. Obtener la relación especie-raza una sola vez
+          fetch('/api/especie_raza')
+            .then(response => response.json())
+            .then(data => {
+              especieRazaData = data; // guardar globalmente
+
+              function toTitleCase(str) {
+                return str
+                  .toLowerCase()
+                  .split(' ')
+                  .map(palabra => palabra.charAt(0).toUpperCase() + palabra.slice(1))
+                  .join(' ');
+              }
+
+
+
+              // 2. Agregar listener al select especie
+              $('#especie').on('change', function () {
+                const id_especie = $(this).val();
+                const razaSelect = document.getElementById('raza');
+
+                // limpiar select
+                razaSelect.innerHTML = '';
+
+                // Filtrar por especie
+                const razasFiltradas = especieRazaData.filter(
+                  item => item.id_especie == id_especie
+                );
+
+                // Agregar opciones
+                razasFiltradas.forEach(item => {
+                  const option = document.createElement('option');
+                  option.value = item.id_raza;
+                  option.textContent = toTitleCase(item.nombre_raza);
+                  razaSelect.appendChild(option);
+                });
+
+                // Destruir Select2 previo si existe
+                if ($(razaSelect).hasClass("select2-hidden-accessible")) {
+                  $(razaSelect).select2('destroy');
+                }
+
+                // Volver a aplicar Select2
+                $(razaSelect).select2({
+                  width: '100%',
+                  templateResult: function (data) {
+                    if (!data.id) return data.text;
+                    return $(`<span style="text-align: left; display: block;">${data.text}</span>`);
+                  },
+                  templateSelection: function (data) {
+                    return $(`<span style="text-align: left; display: block;">${data.text}</span>`);
+                  }
+                });
+              // Seleccionar la primera raza y forzar evento change
+              if (razaSelect.options.length > 0) {
+                razaSelect.selectedIndex = 0;
+                $('#raza').trigger('change');
+              }                
+              });
+
+
+              // ✅ Listener para guardar variable de raza (solo una vez)
+              $('#raza').on('change', function () {
+                const valor = $(this).val();
+                guardarVariableSesion("raza", valor);
+              });
+
+
+            // Llenar razas para especie inicial seleccionada (si aplica)
+            $('#especie').trigger('change');
+          
+
+
+             
+            });
+
+ 
+
+          nueva_mascota.classList.remove("hidden");
+          petselection.classList.add("hidden");
+          //vamos a buscar las especies
+
+
+
+
+        }else{
+          petselection.classList.remove("hidden");
+          divcorreos.classList.add("hidden");
+        }
 
         // Fondo gris al botón Google
         btnGoogle?.classList.add("bg-gray-200");
@@ -535,21 +762,26 @@ navigator.geolocation.getCurrentPosition(
       mobileNav.classList.toggle("hidden");
     });   
     
-    // Llenar el select de mascotas:
-    const clientes_mascotas = {{ clientes_mascotas | tojson }};
+    function llenar_mascotas(){
+      // Llenar el select de mascotas:
+      const clientes_mascotas = {{ clientes_mascotas | tojson }};
 
-    console.log("clientes_mascotas" + clientes_mascotas);
-    if(clientes_mascotas){
-      console.log("Llenando el select de mascotas");
-      const selectMascotas = document.getElementById("mascotaSeleccionada");
+      console.log("clientes_mascotas" + clientes_mascotas);
+      i=0;      
+      if(clientes_mascotas){
+        console.log("Llenando el select de mascotas");
+        const selectMascotas = document.getElementById("mascotaSeleccionada");
 
-      clientes_mascotas.forEach(mascota => {
-        const option = document.createElement("option");
-        option.value = mascota.id_clientes_mascotas;
-        option.textContent = mascota.nombre_mascota;
-        selectMascotas.appendChild(option);
-      });  
-    };
+        clientes_mascotas.forEach(mascota => {
+          const option = document.createElement("option");
+          option.value = mascota.id_clientes_mascotas;
+          option.textContent = mascota.nombre_mascota;
+          selectMascotas.appendChild(option);
+          i++;
+        });  
+      }
+      return(i);
+    }
 
 
     //Almacenar el valor de la mascota
