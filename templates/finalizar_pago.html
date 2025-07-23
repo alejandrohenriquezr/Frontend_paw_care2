@@ -241,11 +241,6 @@ navigator.geolocation.getCurrentPosition(
             </div>
           {% endif %}
 
-            <div id="pet-selection" class="bg-white p-6 rounded-xl shadow-lg hidden" >
-              <select id="mascotaSeleccionada" class="w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300">
-                <option>Seleccionar mascota</option>
-              </select>
-            </div>
 
             <div id="nueva_mascota" class="bg-white p-6 rounded-xl shadow-lg hidden">
 
@@ -297,6 +292,12 @@ navigator.geolocation.getCurrentPosition(
               </div>
             </div>
 
+            
+            <div id="pet-selection" class="bg-white p-6 rounded-xl shadow-lg hidden" >
+              <select id="mascotaSeleccionada" class="w-full p-3 border border-neutral-300 rounded-lg bg-white transition-colors duration-300">
+                <option>Seleccionar mascota</option>
+              </select>
+            </div>
 
             <div id="payment-method" class="bg-white p-6 rounded-xl shadow-lg">
               <h3 class="text-lg mb-4">Método de Pago</h3>
@@ -429,8 +430,17 @@ navigator.geolocation.getCurrentPosition(
         avatar.classList.remove("hidden");
         const userNombre = document.getElementById("user-nombre");
         userNombre.classList.remove("hidden");
-       
-      };
+      
+      //Restringir el calendario de la fecha de nacimiento, para que no permita fechas mayores a hoy
+      const inputFecha = document.getElementById("calendario");
+      const hoy = new Date();
+      const yyyy = hoy.getFullYear();
+      const mm = String(hoy.getMonth() + 1).padStart(2, '0'); // meses van de 0 a 11
+      const dd = String(hoy.getDate()).padStart(2, '0');
+
+      const fechaHoy = `${yyyy}-${mm}-${dd}`;
+      inputFecha.max = fechaHoy;
+    };
 
       //Completar el cargo por servicio y el valor total
       const valorBase = parseFloat({{ valor }}); //Este es el valor de la consulta
@@ -494,6 +504,7 @@ navigator.geolocation.getCurrentPosition(
       } else {
         // Usuario autenticado
         cantidad_mascotas= llenar_mascotas();
+
         if (cantidad_mascotas == 0){ //llenar esecies y razas
 
           //Escuchamos si el nombre-nueva-mascota y guardamos su valos si pierde el foco y es no vacio
@@ -502,7 +513,7 @@ navigator.geolocation.getCurrentPosition(
             inputNombre.addEventListener("blur", function () {
               const valor = inputNombre.value.trim();
               if (inputNombre.value.trim() !== ""){
-                guardarVariableSesion("nombre_nueva_mascota", valor);
+                guardarVariableSesion("mascotaSeleccionada", valor);
               }
             });
   
@@ -512,7 +523,7 @@ navigator.geolocation.getCurrentPosition(
             inputFecha.addEventListener("change", function () {
               const fechaOriginal = inputFecha.value;
               const fechaFormateada = convertirFechaA_ddmmyyyy(fechaOriginal);
-              guardarVariableSesion("nombre_nueva_mascota", fechaFormateada);
+              guardarVariableSesion("fecha_nacimiento", fechaFormateada);
             });            
 
           //Leemos las especies y llenamos el select especie
@@ -643,14 +654,9 @@ navigator.geolocation.getCurrentPosition(
              
             });
 
- 
-
           nueva_mascota.classList.remove("hidden");
           petselection.classList.add("hidden");
           //vamos a buscar las especies
-
-
-
 
         }else{
           petselection.classList.remove("hidden");
@@ -724,6 +730,52 @@ navigator.geolocation.getCurrentPosition(
               <i class="fa-solid fa-circle-check"></i>
             </span>
           `;
+          //Si los correos coinciden
+          //vemos si el correo tiene mascotas asociadas
+          //si las tiene, mostramos el div pet-selection
+          //y llenamos su select
+          //Necesito ir a buscar a app.py del archivo data/clientes_mascotas.csv,  los campos id_clientes_mascotas, correo_cliente,	nombre_mascota donde correo_cliente== original, para ello le pasamos el valor de original a travès de una fetch y devolvemoa los calores en un json llamado clientesmascotas
+
+
+
+          fetch('/api/clientes_mascotas_por_correo', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ correo: original }),
+            credentials: 'include' // si usas sesión
+          })
+          .then(response => response.json())
+          .then(data => {
+              clientes_mascotas = data.clientes_mascotas;
+
+              console.log("Clientes Mascotas:", clientes_mascotas);
+              const petselection = document.getElementById("pet-selection");
+              petselection.classList.remove("hidden");
+
+              const selectMascotas = document.getElementById("mascotaSeleccionada");              
+
+              clientes_mascotas.forEach(mascota => {
+                console.log(`ID: ${mascota.id_clientes_mascotas}`);
+                console.log(`Correo: ${mascota.correo_cliente}`);
+                console.log(`Nombre: ${mascota.nombre_mascota}`);
+                const option = document.createElement("option");
+                option.value = mascota.id_clientes_mascotas;
+                option.textContent = mascota.nombre_mascota;
+                selectMascotas.appendChild(option);                
+              });
+
+             
+          })
+          .catch(error => {
+            console.error('El usuario invitado no tiene mascotas asociadas:', error);
+          });
+
+
+
+
+          //guardamos el correo en una variable de sesión
           fetch("/guardar_variable_sesion", {
             method: "POST",
             headers: {
@@ -753,7 +805,8 @@ navigator.geolocation.getCurrentPosition(
             <code class="font-mono">${resultado}</code>
           `;
         }
-      });      
+      });   
+
     });
 
     // Mostrar/ocultar menú móvil al hacer clic en el botón hamburguesa
@@ -764,7 +817,8 @@ navigator.geolocation.getCurrentPosition(
     
     function llenar_mascotas(){
       // Llenar el select de mascotas:
-      const clientes_mascotas = {{ clientes_mascotas | tojson }};
+      console.log("llenado mascotas");
+      clientes_mascotas = {{ clientes_mascotas | tojson }};
 
       console.log("clientes_mascotas" + clientes_mascotas);
       i=0;      
@@ -915,8 +969,10 @@ navigator.geolocation.getCurrentPosition(
       const divcorreos= document.getElementById("correos");
       const divcorreo1= document.getElementById("correo-usuario");
       const divcorreo2= document.getElementById("correo-usuario2");
-
+      const inputNombre = document.getElementById("nombre-nueva-mascota");
+      const fecha_nacimiento = document.getElementById("calendario");
       
+
       const correoValor1 = divcorreo1.value.trim();
       const correoValor2 = divcorreo1.value.trim();
 
@@ -979,8 +1035,75 @@ navigator.geolocation.getCurrentPosition(
           });
           return;          
         }
+      }
+
+      if(cantidad_mascotas==0){
+        nombre_mascota =inputNombre.value.trim();
+        if(nombre_mascota ==""){
+          Swal.fire({
+              icon: 'error',
+              title: 'Nombre nueva mascota',
+              text: 'Por favor ingresa el nombre de la mascota que será atendida.',
+              confirmButtonText: 'Entendido',
+              allowOutsideClick: false, // <- evita perder foco si se hace clic fuera
+              didClose: () => {
+                inputNombre.focus();
+
+                // Opcional: parpadeo visual del input
+                let i = 0;
+                const max = 3;
+                const originalBg = getComputedStyle(inputNombre).backgroundColor;
+
+                const parpadeo = setInterval(() => {
+                  inputNombre.style.backgroundColor = "#fdecea"; // rojo claro
+
+                  setTimeout(() => {
+                    inputNombre.style.backgroundColor = originalBg;
+                  }, 300);
+
+                  i++;
+                  if (i >= max) clearInterval(parpadeo);
+                }, 500);
+              }
+            });
+            return; 
+
+        }
+
+        if(!fecha_nacimiento.value){
+          Swal.fire({
+              icon: 'error',
+              title: 'Fecha de nacimiento',
+              text: 'Por favor ingresa la fecha de nacimiento de la mascota que será atendida.',
+              confirmButtonText: 'Entendido',
+              allowOutsideClick: false, // <- evita perder foco si se hace clic fuera
+              didClose: () => {
+                fecha_nacimiento.focus();
+
+                // Opcional: parpadeo visual del input
+                let i = 0;
+                const max = 3;
+                const originalBg = getComputedStyle(fecha_nacimiento).backgroundColor;
+
+                const parpadeo = setInterval(() => {
+                  fecha_nacimiento.style.backgroundColor = "#fdecea"; // rojo claro
+
+                  setTimeout(() => {
+                    fecha_nacimiento.style.backgroundColor = originalBg;
+                  }, 300);
+
+                  i++;
+                  if (i >= max) clearInterval(parpadeo);
+                }, 500);
+              }
+            });
+            return; 
+
+        }
+      
 
       }
+
       // Redirigir si todo está OK
       window.location.href = "/api/pagar";
     });
@@ -994,6 +1117,7 @@ navigator.geolocation.getCurrentPosition(
       btninvitado.classList.add("bg-gray-200");
       const petselection = document.getElementById("pet-selection");
       petselection.classList.add("hidden");
+     
     });
 
   </script>

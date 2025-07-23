@@ -1601,7 +1601,41 @@ def insert_reservation():
         nombre_cliente = "Usuario invitado"
     id_veterinario = reserva_en_proceso['veterinario'] 
     mascotaSeleccionada = session.get('mascotaSeleccionada')
-    if(not mascotaSeleccionada):
+
+    if (not str(mascotaSeleccionada).isdigit()): # Quiere decir que es una nueva mascota que proviene desde el proceso de agendar en finalizar_pago
+        with open('data/clientes_mascotas.csv', 'r', encoding='utf-8-sig') as f:
+            reader = csv.DictReader(f, delimiter=';')
+            clientes_mascotas = list(reader)
+        
+        nombre_mascota = mascotaSeleccionada
+        clientes_mascotas_df = pd.DataFrame(clientes_mascotas)
+        clientes_mascotas_df['id_clientes_mascotas'] = pd.to_numeric(clientes_mascotas_df['id_clientes_mascotas'], errors='coerce')
+        
+        id_clientes_mascotas = int(clientes_mascotas_df['id_clientes_mascotas'].max(skipna=True) or 0)   
+        id_clientes_mascotas = id_clientes_mascotas+1
+        session['mascotaSeleccionada'] = id_clientes_mascotas
+        
+        correo_cliente = session.get('correo_cliente')
+   
+        fecha_nacimiento = session.get('fecha_nacimiento')
+        #especie = session.get('especie')
+        id_especie_raza = session.get('raza')
+        new_mascota = {
+            'id_clientes_mascotas': (id_clientes_mascotas),
+            'correo_cliente': correo_cliente,
+            'nombre_mascota': nombre_mascota,
+            'fecha_nacimiento': fecha_nacimiento,
+            'sexo': 0,
+            #transformamos peso a decimal con un decimal
+            'peso': 0,  # Aseguramos que peso sea un número
+            'id_especie_raza': int(id_especie_raza)
+        }
+        # Append the new reservation to the CSV file
+        with open('data/clientes_mascotas.csv', 'a', newline='') as f:
+            writer = csv.DictWriter(f, fieldnames=new_mascota.keys(), delimiter=';')
+            writer.writerow(new_mascota)        
+
+    if((not mascotaSeleccionada)):
        print("Mascota no seleccionada ya que usuario es invitado")
        session['mascotaSeleccionada']=0
        mascotaSeleccionada=0
@@ -3560,6 +3594,26 @@ def especie_raza():
 
     return jsonify(resultado)
 
+
+#Fetch que recibe el correo del cliente y retorna sus mascotas
+@app.route('/api/clientes_mascotas_por_correo', methods=['POST'])
+def clientes_mascotas_por_correo():
+    data = request.get_json()
+    correo = data.get('correo')
+
+    if not correo:
+        return jsonify({'error': 'Correo no proporcionado'}), 400
+
+    clientes_mascotas_df = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    clientes_mascotas_df = clientes_mascotas_df[clientes_mascotas_df['correo_cliente']==correo]
+    print("clientes_mascotas_df:" , clientes_mascotas_df)
+
+    resultados = clientes_mascotas_df[[
+        "id_clientes_mascotas", "correo_cliente", "nombre_mascota"
+    ]].to_dict(orient="records")
+    print("Resultados:", resultados)
+
+    return jsonify({'clientes_mascotas': resultados})
 
 
 if __name__ == "__main__":
