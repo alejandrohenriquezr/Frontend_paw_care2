@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuario</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-[#E8EFF1] to-[#D8E5E8] flex items-center justify-center">
+  <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-xl">
+    <h1 class="text-2xl font-bold text-center mb-6">Registro de Usuario</h1>
+    <form id="registro-form" class="space-y-4">
+      <input type="text" id="nombres" placeholder="Nombres" class="w-full p-3 border rounded-lg" required>
+      <input type="text" id="apellidos" placeholder="Apellidos" class="w-full p-3 border rounded-lg" required>
+      <input type="email" id="correo" placeholder="Correo electrónico" class="w-full p-3 border rounded-lg" required>
+      <input type="email" id="correo2" placeholder="Repetir correo electrónico" class="w-full p-3 border rounded-lg" required>
+
+      <input type="password" id="password" placeholder="Contraseña segura" class="w-full p-3 border rounded-lg" required>
+      <input type="password" id="password2" placeholder="Repetir contraseña" class="w-full p-3 border rounded-lg" required>
+
+      <div class="flex gap-4 mt-6">
+        <button
+          class="g-recaptcha flex-1 bg-[#5A8F99] hover:bg-[#4F7F88] text-white p-3 rounded-lg transition"
+          data-sitekey="6LfZ0YwrAAAAAOMdadlGG_VcvJgvWWK5BCpXQxhX"
+          data-callback="registrarUsuario"
+          data-size="invisible"
+          type="submit">Aceptar</button>
+
+        <button type="button" onclick="cancelarRegistro()" class="flex-1 bg-gray-300 hover:bg-gray-400 p-3 rounded-lg">Cancelar</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function cancelarRegistro() {
+      window.location.href = "/finalizar_pago";
+    }
+
+    function registrarUsuario(token) {
+      const nombres = document.getElementById("nombres").value.trim();
+      const apellidos = document.getElementById("apellidos").value.trim();
+      const correo = document.getElementById("correo").value.trim();
+      const correo2 = document.getElementById("correo2").value.trim();
+      const password = document.getElementById("password").value;
+      const password2 = document.getElementById("password2").value;
+
+      // Validaciones
+      if (correo !== correo2) {
+        alert("Los correos no coinciden.");
+        return;
+      }
+      if (password !== password2) {
+        alert("Las contraseñas no coinciden.");
+        return;
+      }
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+      if (!regex.test(password)) {
+        alert("La contraseña debe tener mayúsculas, minúsculas y un carácter especial (mínimo 8 caracteres).");
+        return;
+      }
+
+      fetch("/api/registrar_usuario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombres, apellidos, correo, password,
+          recaptcha_token: token
+        }),
+        credentials: "include"
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert("¡Registro exitoso!");
+          window.location.href = "/finalizar_pago";
+        } else {
+          alert("Error: " + data.error);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error al registrar usuario.");
+      });
+    }
+  </script>
+</body>
+</html>

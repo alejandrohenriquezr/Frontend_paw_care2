@@ -1,0 +1,12 @@
+id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;prestacion
+1;1;13;3;Cirugía neurológica
+18;4;13;3;Cirugía neurológica
+26;6;14;3;Cirugía reconstructiva
+41;11;12;3;Cirugía de tejidos blandos
+82;17;13;3;Cirugía neurológica
+83;17;13;3;Cirugía neurológica
+87;18;13;3;Cirugía neurológica
+97;20;12;3;Cirugía de tejidos blandos
+141;26;15;3;Cirugía laparoscópica
+151;28;13;3;Cirugía neurológica
+164;33;11;3;Cirugía ortopédica

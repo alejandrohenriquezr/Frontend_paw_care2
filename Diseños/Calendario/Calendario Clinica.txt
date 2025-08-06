@@ -1,0 +1,719 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+    
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "pawcare-teal": "#7BAAB0",
+        "pawcare-light": "#E8F4F5",
+        "pawcare-gray": "#F5F7F8",
+        "pawcare-yellow": "#FFF3CD",
+        "pawcare-green": "#D1E7DD"
+      },
+      "fontFamily": {
+        "inter": [
+          "Inter",
+          "sans-serif"
+        ],
+        "sans": [
+          "Inter",
+          "sans-serif"
+        ]
+      }
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap"><style>
+      body {
+        font-family: 'Inter', sans-serif !important;
+      }
+      
+      /* Preserve Font Awesome icons */
+      .fa, .fas, .far, .fal, .fab {
+        font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+      }
+    </style><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Left Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 z-20">
+        <div class="p-6">
+            <div class="flex items-center mb-8">
+                <div class="w-10 h-10 rounded-md bg-pawcare-teal flex items-center justify-center text-white mr-3">
+                    <i class="fa-solid fa-paw"></i>
+                </div>
+                <h1 class="text-xl font-semibold">PawCare</h1>
+            </div>
+            
+            <p class="text-xs text-gray-500 mb-6">Gestión Veterinaria</p>
+            
+            <nav class="space-y-1">
+                <span class="flex items-center px-4 py-3 text-pawcare-teal bg-pawcare-light rounded-md font-medium cursor-pointer">
+                    <i class="fa-regular fa-calendar mr-3"></i>
+                    <span>Agenda</span>
+                </span>
+                <span class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                    <i class="fa-regular fa-clock mr-3"></i>
+                    <span>Horarios disponibles</span>
+                </span>
+                <span class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                    <i class="fa-solid fa-history mr-3"></i>
+                    <span>Historial de citas</span>
+                </span>
+                <span class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                    <i class="fa-solid fa-folder mr-3"></i>
+                    <span>Historial de pacientes</span>
+                </span>
+                <span class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                    <i class="fa-solid fa-credit-card mr-3"></i>
+                    <span>Gestión de pagos</span>
+                </span>
+                <span class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
+                    <i class="fa-regular fa-user mr-3"></i>
+                    <span>Mi perfil</span>
+                </span>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content" class="ml-64 mr-72">
+        <!-- Header -->
+        <div id="header" class="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <h3 class="text-lg font-semibold text-gray-900">Dr. López</h3>
+                
+                <div class="flex items-center space-x-3">
+                    <button class="p-2 rounded-md hover:bg-gray-100">
+                        <i class="fa-solid fa-chevron-left text-gray-600"></i>
+                    </button>
+                    <h2 class="text-xl font-semibold">24 – 30 Julio 2023</h2>
+                    <button class="p-2 rounded-md hover:bg-gray-100">
+                        <i class="fa-solid fa-chevron-right text-gray-600"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-md flex">
+                    <button class="px-4 py-2 text-gray-600 hover:bg-gray-100">Diario</button>
+                    <button class="px-4 py-2 bg-pawcare-teal text-white">Semanal</button>
+                    <button class="px-4 py-2 text-gray-600 hover:bg-gray-100">Mensual</button>
+                </div>
+            </div>
+            
+            <div class="relative">
+                <select id="vet-selector" class="appearance-none bg-white border border-gray-200 rounded-md px-4 py-2 pr-8 cursor-pointer w-40">
+                    <option value="dr-lopez">Dr. López</option>
+                    <option value="dra-garcia">Dra. García</option>
+                    <option value="dr-rodriguez">Dr. Rodríguez</option>
+                    <option value="dr-martinez">Dr. Martínez</option>
+                </select>
+                <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-chevron-down text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Calendar -->
+        <div id="calendar" class="bg-white border border-gray-200 rounded-md mt-4 overflow-hidden relative">
+            <!-- Days Header -->
+            <div class="grid grid-cols-8 border-b border-gray-200">
+                <div class="w-16"></div>
+                <div class="p-4 text-center border-r border-gray-200">
+                    <p class="text-sm font-medium text-gray-900">LUN</p>
+                    <p class="text-lg font-semibold mt-1">24</p>
+                </div>
+                <div class="p-4 text-center border-r border-gray-200">
+                    <p class="text-sm font-medium text-gray-900">MAR</p>
+                    <p class="text-lg font-semibold mt-1">25</p>
+                </div>
+                <div class="p-4 text-center border-r border-gray-200 bg-blue-50 border-b-2 border-b-blue-500">
+                    <p class="text-sm font-medium text-blue-600">MIÉ</p>
+                    <p class="text-lg font-semibold mt-1 text-blue-600">26</p>
+                    <div class="w-6 h-0.5 bg-blue-500 mx-auto mt-1 rounded"></div>
+                </div>
+                <div class="p-4 text-center border-r border-gray-200">
+                    <p class="text-sm font-medium text-gray-900">JUE</p>
+                    <p class="text-lg font-semibold mt-1">27</p>
+                </div>
+                <div class="p-4 text-center border-r border-gray-200">
+                    <p class="text-sm font-medium text-gray-900">VIE</p>
+                    <p class="text-lg font-semibold mt-1">28</p>
+                </div>
+                <div class="p-4 text-center border-r border-gray-200">
+                    <p class="text-sm font-medium text-gray-900">SÁB</p>
+                    <p class="text-lg font-semibold mt-1">29</p>
+                </div>
+                <div class="p-4 text-center">
+                    <p class="text-sm font-medium text-gray-900">DOM</p>
+                    <p class="text-lg font-semibold mt-1">30</p>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-2 p-4 border-b border-gray-200 bg-gray-50">
+                <button class="px-3 py-2 bg-pawcare-teal text-white rounded-md text-sm hover:bg-opacity-90 transition-colors">
+                    <i class="fa-solid fa-plus mr-1"></i>Nueva Reserva
+                </button>
+                <button class="px-3 py-2 bg-gray-700 text-white rounded-md text-sm hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-ban mr-1"></i>Bloquear Horario
+                </button>
+            </div>
+            
+            <!-- Calendar Grid -->
+            <div class="relative overflow-x-auto">
+                <!-- Time Column -->
+                <div class="absolute left-0 top-0 w-16 h-full border-r border-gray-200 bg-gray-50 z-10">
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">8 AM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">9 AM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">10 AM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">11 AM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">12 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">1 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">2 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">3 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">4 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">5 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">6 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">7 PM</div>
+                    <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                    <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12">8 PM</div>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div class="ml-16 grid grid-cols-7 min-w-[800px]">
+                    <!-- Monday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer hover:shadow-md transition-shadow" onclick="showAppointmentModal()" data-tooltip="Tutor: Juan Pérez<br>Nota: Vacuna anual">
+                                <p class="text-xs font-medium">Max – Vacunación</p>
+                            </div>
+                        </div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-yellow rounded p-1 cursor-pointer hover:shadow-md transition-shadow" onclick="showAppointmentModal()" data-tooltip="Tutor: María García<br>Nota: Control rutinario">
+                                <p class="text-xs font-medium">Luna – Revisión</p>
+                            </div>
+                        </div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer hover:shadow-md transition-shadow" onclick="showAppointmentModal()" data-tooltip="Tutor: Carlos López<br>Nota: Control post-cirugía">
+                                <p class="text-xs font-medium">Rocky – Control</p>
+                            </div>
+                        </div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-6 border-b border-gray-100 border-dashed"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                    
+                    <!-- Tuesday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Coco – Desparasitación</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Simba – Análisis</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-yellow rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Lola – Consulta</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                    
+                    <!-- Wednesday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Toby – Cirugía</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Milo – Vacunación</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                    
+                    <!-- Thursday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Firulais – Revisión</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-yellow rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Canela – Análisis</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Nala – Control</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-yellow rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Bella – Consulta</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                    
+                    <!-- Friday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Zeus – Radiografía</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Kira – Consulta</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Bruno – Control</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-yellow rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Oreo – Revisión</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                    
+                    <!-- Saturday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-green rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Pelusa – Vacunación</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 relative">
+                            <div class="absolute inset-1 bg-pawcare-yellow rounded p-1 cursor-pointer" onclick="showAppointmentModal()">
+                                <p class="text-xs font-medium">Manchas – Consulta</p>
+                            </div>
+                        </div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                    
+                    <!-- Sunday -->
+                    <div class="border-r border-gray-200 relative">
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 border-b border-gray-200 cursor-pointer hover:bg-gray-50"></div>
+                        <div class="h-12 cursor-pointer hover:bg-gray-50"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Sidebar -->
+    <div id="right-sidebar" class="fixed right-0 top-0 h-full w-72 bg-white border-l border-gray-200 p-6 overflow-y-auto">
+        <!-- Google Calendar Sync -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold">Google Calendar</h3>
+                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sincronizado</span>
+            </div>
+            <div class="flex items-center justify-between mb-3">
+                <p class="text-sm text-gray-600">Última sincronización: hace 5 min</p>
+                <button class="text-pawcare-teal text-sm font-medium">Sincronizar ahora</button>
+            </div>
+        </div>
+        
+        <!-- Week Summary -->
+        <h3 class="font-semibold mb-4">Resumen de la semana</h3>
+        
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-white border border-gray-200 rounded-md p-4">
+                <p class="text-sm text-gray-600 mb-1">Citas hoy</p>
+                <p class="text-2xl font-semibold">4</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-md p-4">
+                <p class="text-sm text-gray-600 mb-1">Pacientes nuevos</p>
+                <p class="text-2xl font-semibold">3</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-md p-4">
+                <p class="text-sm text-gray-600 mb-1">Horas libres</p>
+                <p class="text-2xl font-semibold">27</p>
+            </div>
+            <div class="bg-white border border-gray-200 rounded-md p-4">
+                <p class="text-sm text-gray-600 mb-1">Ingresos estimados</p>
+                <p class="text-2xl font-semibold">$1,850</p>
+            </div>
+        </div>
+        
+        <div class="bg-white border border-gray-200 rounded-md p-4 mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <p class="font-medium">% de satisfacción</p>
+                <p class="text-2xl font-semibold text-green-600">98%</p>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-green-500 h-2 rounded-full" style="width: 98%"></div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Appointments -->
+        <h3 class="font-semibold mb-4">Próximas citas</h3>
+        
+        <div class="space-y-3">
+            <div class="bg-white border border-gray-200 rounded-md p-3">
+                <div class="flex justify-between mb-1">
+                    <p class="font-medium">Max – Vacunación</p>
+                    <span class="text-xs bg-pawcare-green px-2 py-1 rounded">Confirmada</span>
+                </div>
+                <p class="text-sm text-gray-600">Lunes, 08:00 - 08:30</p>
+                <p class="text-sm text-gray-600">Dr. López</p>
+            </div>
+            
+            <div class="bg-white border border-gray-200 rounded-md p-3">
+                <div class="flex justify-between mb-1">
+                    <p class="font-medium">Coco – Desparasitación</p>
+                    <span class="text-xs bg-pawcare-green px-2 py-1 rounded">Confirmada</span>
+                </div>
+                <p class="text-sm text-gray-600">Martes, 09:00 - 09:30</p>
+                <p class="text-sm text-gray-600">Dra. García</p>
+            </div>
+            
+            <div class="bg-white border border-gray-200 rounded-md p-3">
+                <div class="flex justify-between mb-1">
+                    <p class="font-medium">Luna – Revisión</p>
+                    <span class="text-xs bg-pawcare-yellow px-2 py-1 rounded">Pendiente</span>
+                </div>
+                <p class="text-sm text-gray-600">Lunes, 10:00 - 10:30</p>
+                <p class="text-sm text-gray-600">Dr. López</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Appointment Detail Modal (Hidden by default) -->
+    <div id="appointment-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg w-[500px] p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Detalles de la cita</h3>
+                <button class="text-gray-500 hover:text-gray-700" onclick="document.getElementById('appointment-modal').classList.add('hidden')">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Mascota</p>
+                <p class="font-medium">Max (Labrador, 3 años)</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Tutor</p>
+                <p class="font-medium">Juan Pérez</p>
+                <p class="text-sm text-gray-600">+34 612 345 678</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Servicio</p>
+                <p class="font-medium">Vacunación</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Fecha y hora</p>
+                <p class="font-medium">Lunes, 24 Julio 2023, 08:00 - 08:30</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Veterinario</p>
+                <p class="font-medium">Dr. López</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Estado</p>
+                <p class="font-medium text-green-600">Confirmada</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Tipo de visita</p>
+                <p class="font-medium">Recurrente (cada 6 meses)</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Notas</p>
+                <p>Vacuna anual contra la rabia y control general de salud.</p>
+            </div>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-1">Canal de reserva</p>
+                <p class="font-medium">Web</p>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700" onclick="document.getElementById('appointment-modal').classList.add('hidden')">Cerrar</button>
+                <button class="px-4 py-2 bg-pawcare-teal text-white rounded-md">Editar cita</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div id="tooltip" class="fixed bg-gray-900 text-white text-xs rounded px-2 py-1 z-50 hidden pointer-events-none"></div>
+
+    <script>
+        // Veterinarian schedule data
+        const vetSchedules = {
+            'dr-lopez': {
+                name: 'Dr. López',
+                schedule: [
+                    { day: 0, time: 8, appointment: 'Max – Vacunación', status: 'confirmed' },
+                    { day: 0, time: 10, appointment: 'Luna – Revisión', status: 'pending' },
+                    { day: 0, time: 16, appointment: 'Rocky – Control', status: 'confirmed' },
+                    { day: 3, time: 11, appointment: 'Nala – Control', status: 'confirmed' },
+                    { day: 3, time: 14, appointment: 'Bella – Consulta', status: 'pending' }
+                ]
+            },
+            'dra-garcia': {
+                name: 'Dra. García',
+                schedule: [
+                    { day: 1, time: 9, appointment: 'Coco – Desparasitación', status: 'confirmed' },
+                    { day: 1, time: 11, appointment: 'Simba – Análisis', status: 'confirmed' },
+                    { day: 1, time: 14, appointment: 'Lola – Consulta', status: 'pending' },
+                    { day: 4, time: 8, appointment: 'Zeus – Radiografía', status: 'confirmed' },
+                    { day: 4, time: 12, appointment: 'Kira – Consulta', status: 'confirmed' },
+                    { day: 4, time: 16, appointment: 'Oreo – Revisión', status: 'pending' }
+                ]
+            },
+            'dr-rodriguez': {
+                name: 'Dr. Rodríguez',
+                schedule: [
+                    { day: 2, time: 10, appointment: 'Toby – Cirugía', status: 'confirmed', duration: 2 },
+                    { day: 2, time: 15, appointment: 'Milo – Vacunación', status: 'confirmed' },
+                    { day: 5, time: 10, appointment: 'Pelusa – Vacunación', status: 'confirmed' }
+                ]
+            },
+            'dr-martinez': {
+                name: 'Dr. Martínez',
+                schedule: [
+                    { day: 1, time: 8, appointment: 'Firulais – Revisión', status: 'confirmed' },
+                    { day: 3, time: 9, appointment: 'Canela – Análisis', status: 'pending' },
+                    { day: 4, time: 14, appointment: 'Bruno – Control', status: 'confirmed' }
+                ]
+            }
+        };
+
+        function filterByVet(vetId) {
+            const grid = document.getElementById('calendar-grid');
+            const header = document.getElementById('days-header');
+            const vet = vetSchedules[vetId];
+            
+            // Update grid to single column
+            grid.className = 'ml-16 grid grid-cols-1 transition-all duration-300 max-w-md mx-auto';
+            header.className = 'grid grid-cols-1 border-b border-gray-200 max-w-md mx-auto';
+            
+            // Update header
+            header.innerHTML = `
+                <div class="p-4 text-center bg-pawcare-gray">
+                    <p class="font-medium">${vet.name}</p>
+                    <p class="text-sm text-gray-600">Lun - Dom</p>
+                </div>
+            `;
+            
+            // Generate time slots
+            let slotsHTML = '';
+            for (let hour = 8; hour <= 19; hour++) {
+                const hasAppointment = vet.schedule.find(apt => 
+                    apt.time === hour || (apt.duration && apt.time <= hour && apt.time + apt.duration > hour)
+                );
+                
+                if (hasAppointment && hasAppointment.time === hour) {
+                    const bgColor = hasAppointment.status === 'confirmed' ? 'bg-pawcare-green' : 'bg-pawcare-yellow';
+                    const height = hasAppointment.duration ? `height: ${hasAppointment.duration * 64 + (hasAppointment.duration - 1) * 1}px;` : 'h-14';
+                    
+                    slotsHTML += `
+                        <div class="h-16 border-b border-gray-200 relative">
+                            <div class="absolute top-1 left-1 right-1 ${bgColor} rounded p-2 cursor-pointer" style="${hasAppointment.duration ? height : ''}" onclick="showAppointmentModal('${hasAppointment.appointment}')">
+                                <p class="text-sm font-medium">${hasAppointment.appointment}</p>
+                                <p class="text-xs text-gray-600">${vet.name}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Skip additional slots for multi-hour appointments
+                    if (hasAppointment.duration) {
+                        for (let i = 1; i < hasAppointment.duration; i++) {
+                            slotsHTML += `<div class="h-16 border-b border-gray-200 relative"></div>`;
+                            hour++;
+                        }
+                    }
+                } else if (hasAppointment && hasAppointment.time < hour) {
+                    // Part of multi-hour appointment
+                    slotsHTML += `<div class="h-16 border-b border-gray-200 relative"></div>`;
+                } else if (hour === 19 && vetId === 'sunday') {
+                    slotsHTML += `<div class="h-16 bg-gray-50"></div>`;
+                } else {
+                    slotsHTML += `
+                        <div class="h-16 border-b border-gray-200 relative">
+                            <p class="text-xs text-center text-gray-400 mt-6">Disponible</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Special case for Sunday (closed)
+            if (vetId === 'sunday') {
+                slotsHTML = Array(12).fill('<div class="h-16 border-b border-gray-200 bg-gray-50"></div>').join('');
+            }
+            
+            grid.innerHTML = `
+                <div class="border-r border-gray-200">
+                    <div class="h-16 border-b border-gray-200 bg-pawcare-gray flex items-center justify-center">
+                        <span class="text-sm text-gray-500">${vet.name}</span>
+                    </div>
+                    ${slotsHTML}
+                </div>
+            `;
+        }
+
+        function showAppointmentModal(appointmentName) {
+            document.getElementById('appointment-modal').classList.remove('hidden');
+        }
+
+        // Tooltip functionality
+        document.addEventListener('mouseover', function(e) {
+            if (e.target.closest('[data-tooltip]')) {
+                const tooltip = document.getElementById('tooltip');
+                const tooltipText = e.target.closest('[data-tooltip]').getAttribute('data-tooltip');
+                tooltip.innerHTML = tooltipText;
+                tooltip.classList.remove('hidden');
+                
+                const rect = e.target.getBoundingClientRect();
+                tooltip.style.left = rect.left + 'px';
+                tooltip.style.top = (rect.top - tooltip.offsetHeight - 5) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.closest('[data-tooltip]')) {
+                document.getElementById('tooltip').classList.add('hidden');
+            }
+        });
+
+        // Initialize with first vet
+        document.addEventListener('DOMContentLoaded', function() {
+            filterByVet('dr-lopez');
+        });
+
+        // Show appointment modal when clicking on an appointment
+        document.querySelectorAll('.bg-pawcare-green, .bg-pawcare-yellow').forEach(appointment => {
+            appointment.addEventListener('click', () => {
+                document.getElementById('appointment-modal').classList.remove('hidden');
+            });
+        });
+    </script>
+
+</body></html>

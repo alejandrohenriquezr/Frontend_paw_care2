@@ -185,7 +185,7 @@
               <h2 class="text-2xl text-[#2E2E2E]">Iniciar Sesión</h2>
 
               <!-- Social Login -->
-              <button id="boton_login" onclick="window.location.href='/login'" class="w-full px-4 py-2 border border-neutral-300 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors">
+              <button id="boton_login" class="w-full px-4 py-2 border border-neutral-300 rounded-lg flex items-center justify-center gap-2 hover:bg-neutral-50 transition-colors">
                 <i class="fa-brands fa-google"></i>
                 <span>Continuar con Google</span>
               </button>
@@ -353,8 +353,15 @@
 
   document.getElementById("boton_login").addEventListener("click", function () {
     // Guardar en sessionStorage para que se recuerde al volver de /login/callback
-    sessionStorage.setItem("tipo_usuario", tipoSeleccionado);
-    window.location.href = "/login?tipo=" + tipoSeleccionado;
+    
+    //alert("tipo usuario=" + document.getElementById("tipo_usuario").value);
+    tipo_usuario= document.getElementById("tipo_usuario").value
+    sessionStorage.setItem("tipo_usuario", tipo_usuario);
+    if(tipo_usuario=="profesional"){
+      window.location.href = "/login?tipo=" + tipo_usuario + "&redirect=pawcarepro";
+    } else{
+      window.location.href = "/login?tipo=" + tipo_usuario;
+    }
   });
 
   // Activar estilo inicial por defecto

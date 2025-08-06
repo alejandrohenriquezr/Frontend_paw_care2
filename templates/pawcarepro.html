@@ -1,27 +1,77 @@
 <!DOCTYPE html>
 <html lang="es">
-
               
 <head>
   <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
 
   <title>Paw Care</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap" rel="stylesheet">
     
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
+        window.onload = function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                alert("La geolocalización no es soportada por este navegador.");
+            }
+        };
+
+        function showPosition(position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const comuna = data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
+                   // alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("No se pudo obtener la comuna.");
+                });
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("El usuario denegó la solicitud de geolocalización.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("La información de ubicación no está disponible.");
+                    break;
+                case error.TIMEOUT:
+                    alert("La solicitud de ubicación ha expirado.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("Ha ocurrido un error desconocido.");
+                    break;
+            }
+        }
       window.FontAwesomeConfig = {
           autoReplaceSvg: 'nest', // Options: 'nest', 'remove', 'replace'
       };
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    
+<style>
+  * {
+    font-family: "Inter", sans-serif;
+  }
+
+</style>
+
+    
 
     
   <script>
-  tailwind.config = {
+    tailwind.config = {
       theme: {
         extend: {
           colors: {
@@ -38,38 +88,23 @@
       },
       plugins: [],
     };
+  
+    const nombre = "{{ user['name'] }}";
+    
+    const nombreSeparado = nombre.split(" ");
+    // ahora para cada elemento del array, ponemos la primera letra en mayúscula y el resto de las letras en minuscula
+    for (let i = 0; i < nombreSeparado.length; i++) {
+      nombreSeparado[i] = nombreSeparado[i].charAt(0).toUpperCase() + nombreSeparado[i].slice(1).toLowerCase();
+    }
 
   </script>
 
 </head>
 
 <body class="h-full text-base-content">
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const datosVeterinario = {{ datos_veterinario | tojson }};
-      //console.log("Datos del veterinario:", datosVeterinario);
-  
-      if (!datosVeterinario[0].nombres) {
-        console.error("Los datos del veterinario no están completos o no están disponibles.");
-        return;
-      }
-      const id_veterinario = datosVeterinario[0].id_veterinario;
-      const nombres = datosVeterinario[0].nombres;
-      const apellidos = datosVeterinario[0].apellidos;
-      const nombre = "Dr. " + nombres + " " + apellidos;
-      const nombreSeparado = nombre.split(" ").map(
-        parte => parte.charAt(0).toUpperCase() + parte.slice(1).toLowerCase()
-      );
-  
-      document.getElementById("user-nombre").innerText = nombreSeparado.join(" ");
-      document.getElementById("user-nombre").classList.remove("hidden");
-      document.getElementById("user-avatar").classList.remove("hidden");
-    });
-  </script>
-  
-  
   <div id="root" class="min-h-screen bg-[#E8EFF1]">
-  <header id="header" class="fixed w-full bg-[#87AEB5] text-white border-b border-[#D1E5E8] z-50">
+  <!-- Header -->
+  <header id="header" class="fixed w-full bg-[#5A8F99] text-white border-b border-[#B0C4C9] z-50">
     <div class="container mx-auto px-4">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
@@ -88,9 +123,8 @@
 
         <!-- Navegación principal -->
         <nav id="main-nav" class="hidden md:flex items-center space-x-8">
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/pawcarepro'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_pacientes'">Mis Pacientes</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_consultas'">Mis Consultas</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='calendario'">Calendario</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='soporte'">Soporte</span>
         </nav>
@@ -99,9 +133,9 @@
   
         <!-- Menú móvil desplegable -->
         <div id="mobile-nav" class="hidden absolute top-16 left-0 w-full bg-[#5A8F99] text-white flex flex-col items-center md:hidden py-4 space-y-2 z-50">
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/pawcarepro'">Inicio</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='/'">Inicio</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_pacientes'">Mis Pacientes</span>
-          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='mis_consultas'">Mis Consultas</span>
+          <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='calendario'">Calendario</span>
           <span class="hover:text-neutral-100 cursor-pointer" onclick="window.location.href='soporte'">Soporte</span>
         </div>
 
@@ -111,41 +145,37 @@
           <button id="btn-login" onclick="window.location.href='iniciar_sesion'" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg border-2 border-[#5A8F99] shadow-md hover:bg-[#4F7F88] transition duration-200">Iniciar Sesión</button>
           <img id="user-avatar" class="user-avatar hidden cursor-pointer" onclick="window.location.href='cerrar_sesion'" title="Cerrar sesión">
           <span id="user-nombre" class="hover:text-neutral-100 hidden  cursor-pointer">
-
+            <script>
+              document.write(nombreSeparado.join(" "));
+            </script>
           </span>
         </div>
       </div>
     </div>
   </header>
 
-  <section id="hero" class="pt-24 h-[150px] bg-[#F8FAFB]">
+
+  <section id="hero" class="pt-24 h-[auto] bg-[#F8FAFB]">
     <div class="container mx-auto px-4">
-      <div class="text-center mb-12">
+      <div class="text-center mb-0">
         <h1 class="text-4xl md:text-5xl mb-4 text-[#2E2E2E]">Bienvenido a PawCare Pro</h1>
-        <p class="text-[#4A4A4A] text-lg mb-8">Gestiona tus consultas, pacientes y agenda de manera eficiente</p>
-        <!--
-        <div class="flex flex-col md:flex-row gap-4 justify-center">
-          <button id="ver_agenda" class="flex items-center justify-center gap-2 px-6 py-3 bg-[#5A8F99] text-white rounded-lg shadow-md hover:bg-[#4F7F88]">
-            <i class="fa-solid fa-calendar"></i>
-            Ver Agenda
-          </button>
-          <button class="flex items-center justify-center gap-2 px-6 py-3 bg-[#D1E5E8] text-[#2E2E2E] rounded-lg border border-[#5A8F99] shadow-md hover:bg-[#F8FAFB]">
-            <i class="fa-solid fa-users"></i>
-            Ver Pacientes
-          </button>
-        </div>
-        -->
+        <h2 class="text-4xl md:text-5xl mb-4 text-[#2E2E2E]">{{clinicas_filtradas[0].nombre}} 
+          <br>
+          {{tipo_usuario}}
+        </h2>
+        <h3 class="text-[#4A4A4A] text-lg">Gestiona tus consultas, pacientes y agenda de manera eficiente</h3>
+
       </div>
     </div>
-  </section>
 
-  <section id="dashboard" class="py-16 bg-[#F8FAFB]">
+
+  <section id="dashboard" class="py-3 h-auto bg-[#F8FAFB]">
     <div class="container mx-auto px-4">
       <div class="grid md:grid-cols-3 gap-8">
         <div class="bg-white p-6 rounded-xl border border-[#D1E5E8]">
           <h3 class="text-xl mb-4 text-[#2E2E2E] flex items-center gap-2">
             <i class="fa-solid fa-calendar-check"></i>
-            Mi agenda
+            Mi agenda para hoy
           </h3>
           <div class="space-y-4">
             {% if agenda %}
@@ -212,6 +242,7 @@
         </div>
       </div>
     </div>
+  </section>
   </section>
 
   {% include 'footerpro.html' %}

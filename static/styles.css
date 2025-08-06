@@ -750,3 +750,7 @@ body { font-family: Arial, sans-serif; text-align: center; }
   transform: translateY(-50%);
   right: 10px !important;
 }
+
+.hidden-sidebar {
+  display: none !important;
+}

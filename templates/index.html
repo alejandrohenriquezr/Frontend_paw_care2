@@ -131,7 +131,11 @@ navigator.geolocation.getCurrentPosition(
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-          const nombre = "{{ user['name'] if user else '' }}";
+         // const nombre = "{{ user['name'] if user else '' }}";
+
+          //const nombre = {{ (user['name'] if user else "") | tojson }};
+          const nombre = {{ (user.get('name') if user else "") | tojson }};
+          
           if (nombre) {
             const nombreSeparado = nombre.split(" ").map(p =>
               p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
@@ -437,7 +441,7 @@ navigator.geolocation.getCurrentPosition(
                           
                             {% for p in prestaciones_vet %}
                               <span class="text-gray-600 text-sm text-left">
-                                <li>{{ p.prestacion }}</li>
+                                <li>{{ veterinario['especialidad'] }} - {{ p.prestacion }}</li>
                               </span>
                             {% endfor %}
                         </p>
@@ -450,12 +454,12 @@ navigator.geolocation.getCurrentPosition(
                         <div class="bg-pawcare-light rounded-lg p-4">
                             <div class="flex items-center justify-between mb-3">
                               <button
+                                id="btn-ayer-{{ veterinario['id_clinica'] }}-{{ veterinario['id_veterinario'] }}"
                                 class="btn-ayer text-blue-600 hover:text-blue-800"
                                 data-ayer-clinica="{{ veterinario['id_clinica'] }}" 
                                 data-ayer-veterinario="{{ veterinario['id_veterinario'] }}" 
                                 onclick="cambiarFecha(this, -1)" class="text-blue-600 hover:text-blue-800"
                                 >&laquo; Ayer
-                                
                               </button>
                               <h4 id="fecha-label"                        
                                 class="font-medium text-gray-900">
@@ -465,7 +469,8 @@ navigator.geolocation.getCurrentPosition(
                                 data-idveterinario= "{{ veterinario['id_veterinario'] }}">
                                 </span>
                               </h4>
-                              <button 
+                              <button
+                                id="btn-manana-{{ veterinario['id_clinica'] }}-{{ veterinario['id_veterinario'] }}"
                                 class="btn-manana text-blue-600 hover:text-blue-800"
                                 data-manana-clinica="{{ veterinario['id_clinica'] }}" 
                                 data-manana-veterinario="{{ veterinario['id_veterinario'] }}"                              
@@ -546,7 +551,8 @@ navigator.geolocation.getCurrentPosition(
             </div>
         </section>
         
-          <script src="static/script2X.js"></script>
+        <!--  <script src="static/script2X.js"></script>-->
+      <script src="static/mapa_clinicas.js"></script>
 
       </div>
       
@@ -789,20 +795,45 @@ function seleccionar_hora(boton) {
 
 
   function cambiarFecha(boton, dias) {
-      fechaActual.setDate(fechaActual.getDate() + dias);
-      //alert("cambiando fecha");
-      //const boton = document.querySelector('.btn-manana'); //se usa para acceder por nombre y . para buscar por clase
-      //alert("dias=" + dias);
-      const id_clinica = boton.dataset.mananaClinica || boton.dataset.ayerClinica;
-      const id_veterinario = boton.dataset.mananaVeterinario || boton.dataset.ayerVeterinario;
+    //actualizar el valor global
+    fechaActual.setDate(fechaActual.getDate() + dias);
 
-     //alert("cambiarFecha id_clinica=" + id_clinica + "id_veterinario=" + id_veterinario);
+    //#########################
+    //habilitamos o deshabilitamos el botón ayer, dependiendo si la fecha actual = hoy
+    const hoy = new Date();
+    const esHoy =
+      (1 + fechaActual.getDate()) === hoy.getDate() &&
+      (fechaActual.getMonth()) === hoy.getMonth() &&
+      fechaActual.getFullYear() === hoy.getFullYear();
 
-      //alert("id_veterinario=" + id_veterinario);
+    const clinica = boton.dataset.ayerClinica || boton.dataset.mananaClinica;
+    const veterinario = boton.dataset.ayerVeterinario || boton.dataset.mananaVeterinario;
 
-      actualizarFechaLabel(id_clinica, id_veterinario);
+    if (!boton.id.includes("btn-ayer")){
+      id_boton_ayer="btn-ayer-" + clinica + "-" + veterinario;
+      const boton_ayer = document.getElementById(id_boton_ayer);
+      boton_ayer.disabled = false;
+      boton_ayer.classList.remove("opacity-50", "cursor-not-allowed");
+      boton_ayer.classList.add("hover:text-blue-800");        
+    }
 
-      cargarHorasDisponibles(id_clinica, id_veterinario);
+    if (esHoy) {
+      boton.disabled = true;
+      boton.classList.add("opacity-50", "cursor-not-allowed");
+      boton.classList.remove("hover:text-blue-800");
+    } else {
+      boton.disabled = false;
+      boton.classList.remove("opacity-50", "cursor-not-allowed");
+      boton.classList.add("hover:text-blue-800");
+    }
+
+    //#############################
+    //Actualizamos las etiqueta de la fecha a mostrar
+    //y luego actualizamos los botnoes de cada hora
+    const id_clinica = boton.dataset.mananaClinica || boton.dataset.ayerClinica;
+    const id_veterinario = boton.dataset.mananaVeterinario || boton.dataset.ayerVeterinario;
+    actualizarFechaLabel(id_clinica, id_veterinario);
+    cargarHorasDisponibles(id_clinica, id_veterinario);
   }
 
   function actualizarFechaLabel(id_clinica, id_veterinario) {
@@ -851,22 +882,32 @@ function seleccionar_hora(boton) {
   async function cargarHorasDisponibles(id_clinica, id_veterinario, fecha_inicial ) {
       //acá debo recoger la fecha del span correspondiente a id_clinica, id_veterinario
       const fecha_mostrada = "fecha-mostrada_" +id_clinica + "_" + id_veterinario; 
+      //alert("fecha_mostrada="+fecha_mostrada);
 
       console.log("ID buscado:", fecha_mostrada); // 🔍 Verifica el ID correcto
       const span = document.getElementById(fecha_mostrada); 
 
-      fechaActual2 = span.textContent;
+      
+      const textoFecha = span.textContent.trim();  // ← asegúrate de eliminar espacios
+      const [dia, mes, anio] = textoFecha.split("-");  // [25, 07, 2025]
+      const fechaReformateada = `${anio}-${mes}-${dia}`;  // "2025-07-25"
+      //alert("textoFecha=" + textoFecha);
+      const fechaActual2 = new Date(fechaReformateada);
       //alert("fechaActual2=" + fechaActual2);
+      //textoFecha=25-07-2025
+      //fechaActual2=Invalid Date
 
-        console.warn("fechaActual en el span es" +fechaActual2);
 
-      //const fechaFormateada = fechaActual2.toISOString().split('T')[0];
-      const fechaFormateada = fechaActual2
+      //console.warn("fechaActual en el span es " +fechaActual2);
+
+      const fechaFormateada = fechaActual2.toISOString().split('T')[0];
+      //alert("fechaFormateada=" + fechaFormateada);
+      //const fechaFormateada = fechaActual2
       try {
           const response = await fetch('/api/reservas_por_fecha', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ fecha: fechaFormateada })
+              body: JSON.stringify({ fecha: textoFecha })
           });
           const data = await response.json();
 
