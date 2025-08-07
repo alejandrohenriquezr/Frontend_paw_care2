@@ -200,7 +200,7 @@
             </div>
             
             <nav class="space-y-1">
-                <span class="flex items-center px-4 py-3 text-pawcare-teal bg-pawcare-light rounded-md font-medium cursor-pointer">
+                <!--<span class="flex items-center px-4 py-3 text-pawcare-teal bg-pawcare-light rounded-md font-medium cursor-pointer">
                     <i class="fa-regular fa-calendar mr-3"></i>
                     <span>Agenda</span>
                 </span>
@@ -220,6 +220,7 @@
                     <i class="fa-solid fa-credit-card mr-3"></i>
                     <span>Gestión de pagos</span>
                 </span>
+                !-->
                 <span class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-md cursor-pointer">
                     <i class="fa-regular fa-user mr-3"></i>
                     <span>Mi perfil</span>
@@ -387,21 +388,25 @@
     </div>
     
     <!-- Right Sidebar -->
-    <div id="right-sidebar" class="fixed right-0 top-20 h-full w-72 bg-white border-l border-gray-200 p-6 overflow-y-auto block">
+    <div id="right-sidebar"
+     class="fixed right-0 top-20 h-screen w-72 bg-white border-l border-gray-200 p-6 overflow-y-auto block">
+
         <!-- Google Calendar Sync -->
         <div class="mb-8">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold">Google Calendar</h3>
-                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sincronizado</span>
+                <!--<span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sincronizado</span>-->
             </div>
             <div class="flex items-center justify-between mb-3">
-                <p class="text-sm text-gray-600">Última sincronización: hace 5 min</p>
-                <button onclick="sincronizarReservas()" class="text-pawcare-teal text-sm font-medium">Sincronizar ahora</button>
+                <p id="ultima-sincronizacion" class="text-sm text-gray-600"></p>
+                <button onclick="sincronizarReservas()" 
+                class="bg-pawcare-light text-pawcare-teal px-4 py-2 rounded-md hover:bg-pawcare-teal hover:text-white transition" 
+                >Sincronizar ahora</button>
             </div>
         </div>
         
         <!-- Week Summary -->
-        <h3 class="font-semibold mb-4">Resumen de la semana</h3>
+        <!--<h3 class="font-semibold mb-4">Resumen de la semana</h3>-->
         
         <div class="grid grid-cols-2 gap-4 mb-6">
             <div class="bg-white border border-gray-200 rounded-md p-4">
@@ -410,7 +415,7 @@
             </div>
             <div class="bg-white border border-gray-200 rounded-md p-4">
                 <p class="text-sm text-gray-600 mb-1">Pacientes nuevos</p>
-                <p class="text-2xl font-semibold">3</p>
+                <p id="nuevos_pacientes" class="text-2xl font-semibold">{{nuevas_mascotas}}</p>
             </div>
             <div class="bg-white border border-gray-200 rounded-md p-4">
                 <p class="text-sm text-gray-600 mb-1">Horas libres</p>
@@ -418,17 +423,49 @@
             </div>
             <div class="bg-white border border-gray-200 rounded-md p-4">
                 <p class="text-sm text-gray-600 mb-1">Ingresos estimados</p>
-                <p class="text-2xl font-semibold">$1,850</p>
+                <p id="ingresos" class="text-sm font-semibold">${{ "{:,.0f}".format(ingresos_estimados).replace(",", ".") }}</p>
             </div>
         </div>
         
         <div class="bg-white border border-gray-200 rounded-md p-4 mb-6">
             <div class="flex justify-between items-center mb-3">
-                <p class="font-medium">% de satisfacción</p>
-                <p class="text-2xl font-semibold text-green-600">98%</p>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-green-500 h-2 rounded-full" style="width: 98%"></div>
+                <div class="bg-white p-4 rounded-xl shadow w-full max-w-sm space-y-3 text-sm text-gray-800">
+                    <!-- Título centrado -->
+                    <h3 class="text-center text-base font-semibold text-gray-700">Calificaciones</h3>
+                    <!-- Médico -->
+                    <!-- Barra: Médico -->
+                    <div>
+                        <div class="mb-1 text-gray-600">Médico</div>
+                        <div class="relative w-full bg-gray-200 rounded h-4">
+                        <div class="bg-green-400 h-4 rounded" style="width: {{ (promedio_notas_medico * 100)|round(0)|int }}%;"></div>
+                        <span class="absolute right-1 top-0 text-[11px] text-gray-700 leading-4 font-semibold">
+                            {{ (promedio_notas_medico * 100)|round(0)|int }}%
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Barra: Precio/calidad -->
+                    <div>
+                        <div class="mb-1 text-gray-600">Precio/calidad</div>
+                        <div class="relative w-full bg-gray-200 rounded h-4">
+                        <div class="bg-green-300 h-4 rounded" style="width: {{ (promedio_precio_calidad * 100)|round(0)|int }}%;"></div>
+                        <span class="absolute right-1 top-0 text-[11px] text-gray-700 leading-4 font-semibold">
+                            {{ (promedio_precio_calidad * 100)|round(0)|int }}%
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Barra: Puntualidad -->
+                    <div>
+                        <div class="mb-1 text-gray-600">Puntualidad</div>
+                        <div class="relative w-full bg-gray-200 rounded h-4">
+                        <div class="bg-green-300 h-4 rounded" style="width: {{ (promedio_puntualidad * 100)|round(0)|int }}%;"></div>
+                        <span class="absolute right-1 top-0 text-[11px] text-gray-700 leading-4 font-semibold">
+                            {{ (promedio_puntualidad * 100)|round(0)|int }}%
+                        </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -720,7 +757,40 @@
         
     }
 
+    fetch("/api/ultima_sincronizacion")
+        .then(res => res.json())
+        .then(data => {
+            const contenedor = document.getElementById("ultima-sincronizacion");
 
+            if (!data.timestamp) {
+                contenedor.innerText = "Aún no has sincronizado tu calendario";
+                return;
+            }
+
+            const ultima = new Date(data.timestamp);
+            const ahora = new Date();
+            const diffMs = ahora - ultima;
+            const diffMin = Math.floor(diffMs / 60000);
+            const diffHoras = Math.floor(diffMin / 60);
+            const diffDias = Math.floor(diffHoras / 24);
+
+            let texto = "";
+
+            if (diffMin < 1) {
+                texto = "Última sincronización: hace segundos";
+            } else if (diffMin < 60) {
+                texto = `Última sincronización: hace ${diffMin} minuto(s)`;
+            } else if (diffHoras < 24) {
+                texto = `Última sincronización: hace ${diffHoras} hora(s)`;
+            } else {
+                texto = `Última sincronización: hace ${diffDias} día(s)`;
+            }
+
+            contenedor.innerText = texto;
+        })
+        .catch(err => {
+            console.error("Error al obtener sincronización:", err);
+        });
 
   });
 </script>

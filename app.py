@@ -3936,6 +3936,7 @@ def calendario():
     email=user.get("email")
 
     df_reservas = pd.read_csv("data/reservas.csv", sep=";")
+
     df_staff = pd.read_csv("data/staff.csv", sep=";")
     #a df_filtradas le agregamos los datos de clientes_mascotas, donde id_clientes_mascotas == mascota
     df_reservas = df_reservas.merge(
@@ -3946,7 +3947,7 @@ def calendario():
     )
 
     df_reservas = df_reservas[df_reservas['correo'] == email]
-    df_reservas.to_csv("data/df_reservas.csv", sep=";", index=False)
+    #df_reservas.to_csv("data/df_reservas.csv", sep=";", index=False)
     
     clientes_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
     df_reservas = df_reservas.merge(
@@ -3983,6 +3984,46 @@ def calendario():
     print("DEBUG df_reservas")
     print(df_reservas)
 
+    #calculamos la cantidad de mascotas nuevas
+    hoy = datetime.now().date()
+    df_reservas['fecha2'] = pd.to_datetime(df_reservas['fecha']).dt.date
+    
+    # Mascotas con citas futuras
+    # Separar en futuras y pasadas
+    df_futuras = df_reservas[df_reservas['fecha2'] >= hoy]
+    df_pasadas = df_reservas[df_reservas['fecha2'] < hoy]
+
+    # Mascotas en pasado
+    ids_pasados = df_pasadas['mascota'].unique()
+
+    # Filtrar futuras que no estén en pasadas
+    nuevas_mascotas = df_futuras[~df_futuras['mascota'].isin(ids_pasados)]
+    print("Mascotas futuras:", nuevas_mascotas['mascota'].nunique())
+
+    #Estimamos los ingresos del mes actual
+    df_reservas['fecha2'] = pd.to_datetime(df_reservas['fecha'], errors='coerce', dayfirst=True)
+    df_actual = df_reservas[(df_reservas['fecha2'].dt.month == hoy.month) & 
+                                (df_reservas['fecha2'].dt.year == hoy.year)]
+
+    # Convertir precios a numérico
+    df_actual['precio'] = pd.to_numeric(df_actual['precio'], errors='coerce')
+
+    # Sumar precios válidos
+    ingresos_estimados = df_actual['precio'].sum()
+
+    #eliminamos el campo auxiliar
+    df_reservas = df_reservas.drop(columns=['fecha2'])
+
+    #calculamos las notas promedios del mèdico
+    # Asegurar que 'notas_medico' sea numérico
+    df_reservas['notas_medico'] = pd.to_numeric(df_reservas['notas_medico'], errors='coerce')
+
+    # Calcular el promedio, ignorando valores nulos
+    promedio_notas_medico = (df_reservas['notas_medico'].mean()/5)
+    promedio_precio_calidad = (df_reservas['precio-calidad'].mean()/5)
+    promedio_puntualidad = (df_reservas['puntualidad'].mean()/5)
+
+
 
     reservas=df_reservas.to_dict(orient="records")  
 
@@ -4002,7 +4043,8 @@ def calendario():
     # Filtrar reservas solo de esta semana
     df_reservas_filtrada = df_reservas[df_reservas["fecha"].isin(semana_str)].copy()
     df_reservas_filtrada = df_reservas_filtrada.sort_values(["fecha", "hora"])
-
+    print("DEBUG df_reservas_filtrada")
+    print(df_reservas_filtrada)
     # Formatear para frontend
     reservas_filtrada = df_reservas_filtrada.to_dict(orient="records")
 
@@ -4041,7 +4083,12 @@ def calendario():
                             semana_siguiente=semana_siguiente,
                             citas_hoy=total_citas_hoy,
                             horas_libres=horas_libres,
-                            proximas=proximas                            
+                            proximas=proximas,
+                            nuevas_mascotas=nuevas_mascotas['mascota'].nunique(),
+                            ingresos_estimados=ingresos_estimados,
+                            promedio_notas_medico = promedio_notas_medico,
+                            promedio_precio_calidad = promedio_precio_calidad,
+                            promedio_puntualidad = promedio_puntualidad
                         )
 
 #Funciones para sincronizar reservas con google calendar
@@ -4076,6 +4123,7 @@ def crear_evento_google_calendar(service, reserva):
 def sincronizar_reservas():
    # from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
+    user = session.get("user", None)
 
     # 1. Autenticación y credenciales
     if 'credentials' not in session:
@@ -4114,6 +4162,12 @@ def sincronizar_reservas():
             'hora': hora_inicio,
             'hora_fin': hora_fin,
         })
+    # guardamos la hora de la última sincronización
+    correo_usuario = user.get("email")
+    if correo_usuario:
+        df = pd.read_csv("data/usuarios.csv")
+        df.loc[df["correo"] == correo_usuario, "ultima_sincronizacion_calendario"] = datetime.now().isoformat()
+        df.to_csv("data/usuarios.csv", index=False)
 
     return jsonify({"mensaje": "Reservas sincronizadas con Google Calendar"})
 
@@ -4137,6 +4191,27 @@ def calcular_fin_hora(hora_str):
     except ValueError:
         raise ValueError(f"Hora inválida: {hora_str}")
 
+#usada para mostrar el mensaje de tiempo transcurrido desde la última sincronización del calendar
+@app.route('/api/ultima_sincronizacion')
+def obtener_ultima_sincronizacion():
+    user = session.get("user", None)
+    correo_usuario = user.get("email")
+    #correo_usuario = session.get("user", {}).get("email")
+    if not correo_usuario:
+        return jsonify({"error": "Usuario no autenticado"}), 401
+
+    df = pd.read_csv("data/usuarios.csv", sep=';')
+    print("correo_usuario=", correo_usuario)
+    print("df")
+    print(df)
+    fila = df[df["correo_cliente"] == correo_usuario]
+    print("fila")
+    print(fila)    
+    if fila.empty:
+        return jsonify({"timestamp": None})
+
+    fecha_str = fila.iloc[0]["ultima_sincronizacion_calendario"]
+    return jsonify({"timestamp": fecha_str if pd.notna(fecha_str) and fecha_str != "" else None})
 
 
 if __name__ == "__main__":
