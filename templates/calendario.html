@@ -11,6 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         window.onload = function() {
             if (navigator.geolocation) {
@@ -358,7 +359,8 @@
                                 {% set count = 0 %}
                                 {% for reserva in reservas %}
                                     {% if reserva.fecha == dia.strftime('%d-%m-%Y') and reserva.hora[:5] == hora %}
-                                    <div class="absolute inset-y-0 left-{{ count * 2 }} bg-pawcare-green rounded p-1 cursor-pointer hover:shadow-md transition-shadow"
+                                    <div class="hora-calendario absolute inset-y-0 left-{{ count * 2 }} bg-pawcare-green rounded p-1 cursor-pointer hover:shadow-md transition-shadow"
+                                        data-fecha={{dia.strftime('%Y-%m-%d')}} data-hora={{hora}}    
                                         style="width: calc(100% - {{ count * 2 }}px); margin-top: {{ count * 2 }}px;"
                                         onclick="showAppointmentModal({{reserva.id_reserva}})"
                                         data-tooltip="F. Nacimiento: {{ reserva.fecha_nacimiento }}<br>Esp.: {{ reserva.especie }}<br>Esp.: {{ reserva.nombre_raza }}">
@@ -492,41 +494,31 @@
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Mascota</p>
-                <p class="font-medium">Max (Labrador, 3 años)</p>
+                <p id="datos_mascota" class="font-medium">Max (Labrador, 3 años)</p>
             </div>
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Tutor</p>
-                <p class="font-medium">Juan Pérez</p>
-                <p class="text-sm text-gray-600">+34 612 345 678</p>
+                <p id="nombre_duenio" class="font-medium">Juan Pérez</p>
             </div>
-            
-            <div class="mb-4">
-                <p class="text-sm text-gray-600 mb-1">Servicio</p>
-                <p class="font-medium">Vacunación</p>
-            </div>
+
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Fecha y hora</p>
-                <p class="font-medium">Lunes, 24 Julio 2023, 08:00 - 08:30</p>
+                <p id="fecha_reserva" class="font-medium">Lunes, 24 Julio 2023, 08:00 - 08:30</p>
             </div>
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Veterinario</p>
-                <p class="font-medium">Dr. López</p>
+                <p id="nombre_veterinario" class="font-medium">Dr. López</p>
             </div>
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Estado</p>
-                <p class="font-medium text-green-600">Confirmada</p>
+                <p id="estado_cita" class="font-medium text-green-600">Confirmada</p>
             </div>
             
-            <div class="mb-4">
-                <p class="text-sm text-gray-600 mb-1">Tipo de visita</p>
-                <p class="font-medium">Recurrente (cada 6 meses)</p>
-            </div>
-            
-            <div class="mb-4">
+            <!--<div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Notas</p>
                 <p>Vacuna anual contra la rabia y control general de salud.</p>
             </div>
@@ -540,6 +532,7 @@
                 <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700" onclick="document.getElementById('appointment-modal').classList.add('hidden')">Cerrar</button>
                 <button class="px-4 py-2 bg-pawcare-teal text-white rounded-md">Editar cita</button>
             </div>
+            -->
         </div>
     </div>
 
@@ -717,7 +710,7 @@
 
 </body>
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     const leftSidebar = document.getElementById('sidebar');
     const rightSidebar = document.getElementById('right-sidebar');
     const toggleLeft = document.getElementById('toggle-left');
@@ -779,9 +772,11 @@
             if (diffMin < 1) {
                 texto = "Última sincronización: hace segundos";
             } else if (diffMin < 60) {
-                texto = `Última sincronización: hace ${diffMin} minuto(s)`;
+                texto = `Última sincronización: hace ${diffMin} minutos`;
+            } else if (diffHoras < 2) {
+                texto = `Última sincronización: hace ${diffHoras} hora`;
             } else if (diffHoras < 24) {
-                texto = `Última sincronización: hace ${diffHoras} hora(s)`;
+                texto = `Última sincronización: hace ${diffHoras} horas`;
             } else {
                 texto = `Última sincronización: hace ${diffDias} día(s)`;
             }
@@ -791,6 +786,49 @@
         .catch(err => {
             console.error("Error al obtener sincronización:", err);
         });
+
+
+//función para marcar las reservas sincronizadas
+    fetch("/api/eventos_sincronizados")
+        .then(res => res.json())
+        .then(data => {
+        if (!data.sincronizados) return;
+
+        const eventos = data.sincronizados.map(e => new Date(e));
+
+        document.querySelectorAll(".hora-calendario").forEach(slot => {
+            const fecha = slot.dataset.fecha;  // "2025-08-07"
+            const hora = slot.dataset.hora;    // "15:00"
+
+            const slotDate = new Date(`${fecha}T${hora}:00`);
+
+            const coincide = eventos.some(ev => {
+            return (
+                ev.getFullYear() === slotDate.getFullYear() &&
+                ev.getMonth() === slotDate.getMonth() &&
+                ev.getDate() === slotDate.getDate() &&
+                ev.getHours() === slotDate.getHours() &&
+                ev.getMinutes() === slotDate.getMinutes()
+            );
+            });
+
+            if (coincide) {
+                slot.classList.add("bg-red-200", "text-green-800", "font-semibold");
+                slot.title = "Reservado en Google Calendar";
+                  // Insertar imagen si no existe aún
+                if (!slot.querySelector("img")) {
+                    const img = document.createElement("img");
+                    img.src = "/static/images/sincronizado.png";
+                    img.alt = "Sincronizado";
+                    img.classList.add("w-5", "h-5", "inline-block", "ml-1", "align-middle");
+                    slot.appendChild(img);
+                }
+            }
+        });
+        })
+        .catch(err => {
+        console.error("Error leyendo eventos sincronizados:", err);
+    });
 
   });
 </script>
@@ -827,14 +865,80 @@
         }
     }
 
-    function sincronizarReservas() {
-        fetch('/api/sincronizar_reservas', {
-            method: 'POST'
-        }).then(res => res.json())
-        .then(data => alert(data.mensaje))
-        .catch(err => alert("Error al sincronizar: " + err));
-    }
+function sincronizarReservas() {
+    Swal.fire({
+        title: "Sincronizando reservas...",
+        html: "Por favor espera unos segundos.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
+    fetch('/api/sincronizar_reservas', {
+        method: 'POST'
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Una vez completado, mostrar mensaje de éxito
+        return fetch("/api/eventos_sincronizados")
+            .then(res => res.json())
+            .then(dataEventos => {
+                if (dataEventos.sincronizados) {
+                    marcarEventosSincronizados(dataEventos.sincronizados);
+                }
+
+                Swal.fire({
+                    icon: "success",
+                    title: "¡Reservas sincronizadas!",
+                    text: data.mensaje,
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+            });
+    })
+    .catch(err => {
+        Swal.fire({
+            icon: "error",
+            title: "Error al sincronizar",
+            text: err.toString()
+        });
+    });
+}
+
+
+
+function marcarEventosSincronizados(sincronizadosISO) {
+  const eventos = sincronizadosISO.map(e => new Date(e));
+
+  document.querySelectorAll(".hora-calendario").forEach(slot => {
+    const fecha = slot.dataset.fecha;
+    const hora = slot.dataset.hora;
+    const slotDate = new Date(`${fecha}T${hora}:00`);
+
+    const coincide = eventos.some(ev =>
+      ev.getFullYear() === slotDate.getFullYear() &&
+      ev.getMonth() === slotDate.getMonth() &&
+      ev.getDate() === slotDate.getDate() &&
+      ev.getHours() === slotDate.getHours() &&
+      ev.getMinutes() === slotDate.getMinutes()
+    );
+
+    if (coincide) {
+      slot.classList.add("bg-green-200", "text-green-800", "font-semibold");
+      slot.title = "Reservado en Google Calendar";
+
+      if (!slot.querySelector("img")) {
+        const img = document.createElement("img");
+        img.src = "/static/images/sincronizado.png";
+        img.alt = "Sincronizado";
+        img.classList.add("w-5", "h-5", "inline-block", "ml-1", "align-middle");
+        slot.appendChild(img);
+      }
+    }
+  });
+}
 
 
   </script>

@@ -861,6 +861,7 @@ def callback():
     elif next_path == "/pawcarepro":
         #return redirect(url_for("finalizar_pago"))  # usará GET y cargará los datos desde sesión
         usuarios_df = pd.read_csv("data/usuarios.csv", delimiter=";")   
+        
         usuarios_filtrado = usuarios_df[usuarios_df['correo_cliente'] == user_info.get("email")]
         if not usuarios_filtrado.empty:
             tipo_usuarios = pd.read_csv("data/tipo_usuarios.csv", delimiter=";")   
@@ -4093,16 +4094,46 @@ def calendario():
 
 #Funciones para sincronizar reservas con google calendar
 def crear_evento_google_calendar(service, reserva):
+
+
+    # Definir valores
+    resumen = f"Reserva de {reserva['nombre_mascota']}"
+    #fecha_hora_inicio = f"{reserva['fecha']}T{reserva['hora']}:00"
+    #fecha_hora_fin = f"{reserva['fecha']}T{reserva['hora_fin']}:00"
+
+    # Agrega zona horaria correcta
+    tz = pytz.timezone("America/Santiago")
+    inicio_dt = tz.localize(datetime.strptime(f"{reserva['fecha']} {reserva['hora']}", "%Y-%m-%d %H:%M"))
+    fin_dt = tz.localize(datetime.strptime(f"{reserva['fecha']} {reserva['hora_fin']}", "%Y-%m-%d %H:%M"))
+
+    # Convertir a string ISO con zona horaria
+    fecha_hora_inicio = inicio_dt.isoformat()
+    fecha_hora_fin = fin_dt.isoformat()
+    # Buscar eventos existentes en ese rango exacto
+    eventos = service.events().list(
+        calendarId='primary',
+        timeMin=fecha_hora_inicio,
+        timeMax=fecha_hora_fin,
+        q=resumen,
+        singleEvents=True,
+        orderBy="startTime"
+    ).execute().get("items", [])
+
+    if eventos:
+        print("Evento ya existente, no se crea duplicado.")
+        return None  # o retorna eventos[0] si quieres
+
+    # Si no existe, se crea
     evento = {
-        'summary': f"Reserva de {reserva['nombre_mascota']}",
+        'summary': resumen,
         'location': reserva['direccion_clinica'],
         'description': f"Atiende: {reserva['nombre_veterinario']}. Motivo: {reserva['motivo_reserva']}",
         'start': {
-            'dateTime': f"{reserva['fecha']}T{reserva['hora']}:00",
+            'dateTime': fecha_hora_inicio,
             'timeZone': 'America/Santiago',
         },
         'end': {
-            'dateTime': f"{reserva['fecha']}T{reserva['hora_fin']}:00",
+            'dateTime': fecha_hora_fin,
             'timeZone': 'America/Santiago',
         },
         'reminders': {
@@ -4117,6 +4148,7 @@ def crear_evento_google_calendar(service, reserva):
     evento_creado = service.events().insert(calendarId='primary', body=evento).execute()
     print(f"Evento creado: {evento_creado.get('htmlLink')}")
     return evento_creado
+
 
 @app.route('/api/sincronizar_reservas', methods=['POST'])
 @login_required  # si quieres que solo funcione autenticado
@@ -4141,6 +4173,15 @@ def sincronizar_reservas():
 
     # 2. Obtener reservas futuras (puede ser desde CSV o MySQL)
     df_reservas = pd.read_csv("data/reservas.csv", sep=';')  # o query desde MySQL
+    df_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+    df_reservas = df_reservas.merge(
+        df_mascotas[["id_clientes_mascotas", "nombre_mascota"]],
+        left_on="mascota",
+        right_on="id_clientes_mascotas",
+        how="left" )   
+    del df_mascotas
+
+
     hoy = pd.Timestamp.now().date()
     df_reservas['fecha'] = pd.to_datetime(df_reservas['fecha']).dt.date
     reservas_futuras = df_reservas[df_reservas['fecha'] >= hoy]
@@ -4154,7 +4195,7 @@ def sincronizar_reservas():
         hora_fin = calcular_fin_hora(hora_inicio)
 
         crear_evento_google_calendar(service, {
-            'nombre_mascota': reserva['mascota'],
+            'nombre_mascota': reserva['nombre_mascota'],
             'direccion_clinica': obtener_direccion_clinica(reserva['id_clinica']),
             'nombre_veterinario': obtener_nombre_veterinario(reserva['medico_que_atendio']),
             'motivo_reserva': reserva.get('motivo', 'Consulta Veterinaria'),
@@ -4165,10 +4206,14 @@ def sincronizar_reservas():
     # guardamos la hora de la última sincronización
     correo_usuario = user.get("email")
     if correo_usuario:
-        df = pd.read_csv("data/usuarios.csv")
-        df.loc[df["correo"] == correo_usuario, "ultima_sincronizacion_calendario"] = datetime.now().isoformat()
-        df.to_csv("data/usuarios.csv", index=False)
-
+        df = pd.read_csv("data/usuarios.csv", sep=';')
+        print("DEBUG sincronizar_reservas df=")
+        print(df)
+        df.loc[df["correo_cliente"] == correo_usuario, "ultima_sincronizacion_calendario"] = datetime.now().isoformat()
+        df.to_csv("data/usuarios.csv", sep=';', index=False)
+    
+    #actualizar el estado de la reserva en la pantalla
+    
     return jsonify({"mensaje": "Reservas sincronizadas con Google Calendar"})
 
 def obtener_direccion_clinica(id_clinica):
@@ -4212,6 +4257,57 @@ def obtener_ultima_sincronizacion():
 
     fecha_str = fila.iloc[0]["ultima_sincronizacion_calendario"]
     return jsonify({"timestamp": fecha_str if pd.notna(fecha_str) and fecha_str != "" else None})
+
+
+
+
+
+# Proceso para leer el calendario de google calendar y luego poner una marca en el calendario
+# de la aplicación que indique que el evento está sincronizado
+@app.route("/api/eventos_sincronizados")
+def eventos_sincronizados():
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+    from datetime import datetime
+    import pytz
+
+    token = session.get('credentials')
+    if not token:
+        return jsonify({"error": "No autenticado con Google"}), 401
+
+    creds = Credentials(
+        token=token['access_token'],
+        refresh_token=token.get('refresh_token'),
+        token_uri='https://oauth2.googleapis.com/token',
+        client_id=Config.GOOGLE_CLIENT_ID,
+        client_secret=Config.GOOGLE_CLIENT_SECRET,
+        scopes=['https://www.googleapis.com/auth/calendar']
+    )
+
+    service = build("calendar", "v3", credentials=creds)
+
+    ahora = datetime.utcnow().isoformat() + "Z"  # formato requerido
+
+    eventos_result = service.events().list(
+        calendarId="primary",
+        timeMin=ahora,
+        maxResults=100,
+        singleEvents=True,
+        orderBy="startTime"
+    ).execute()
+
+
+    eventos = eventos_result.get("items", [])
+
+    sincronizados = []
+    for evento in eventos:
+        inicio = evento.get("start", {}).get("dateTime")
+        if inicio:
+            sincronizados.append(inicio)  # ISO 8601
+
+    return jsonify({"sincronizados": sincronizados})
+
+
 
 
 if __name__ == "__main__":
