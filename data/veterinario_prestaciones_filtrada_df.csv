@@ -1,12 +1,167 @@
 id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;prestacion
 1;1;13;3;Cirugía neurológica
+2;1;67;14;Asesoramiento en dietas crudas
+3;1;39;8;Resonancia magnética (RM)
+4;1;39;8;Resonancia magnética (RM)
+5;1;18;4;Tratamiento de enfermedades autoinmunes de la piel
+6;1;44;9;Suplementación nutricional
+7;2;32;7;Radioterapia
+8;2;66;14;Planes de alimentación basados en alimentos naturales
+9;2;52;11;Terapia para ansiedad y estrés
+10;2;56;12;Diagnóstico y tratamiento de enfermedades digestivas
+11;2;54;11;Modificación de conductas
+12;3;9;2;Reanimación cardiopulmonar
+13;3;25;5;Masajes terapéuticos
+14;3;31;7;Quimioterapia
+15;4;60;12;Manejo de vómitos y diarreas crónicas
+16;4;7;2;Tratamiento de intoxicaciones
+17;4;66;14;Planes de alimentación basados en alimentos naturales
 18;4;13;3;Cirugía neurológica
+19;5;17;4;Manejo de infecciones de la piel
+20;5;45;9;Control de peso
+21;5;66;14;Planes de alimentación basados en alimentos naturales
+22;5;18;4;Tratamiento de enfermedades autoinmunes de la piel
+23;5;31;7;Quimioterapia
+24;5;70;14;Evaluación de la calidad de los alimentos naturales
+25;6;67;14;Asesoramiento en dietas crudas
 26;6;14;3;Cirugía reconstructiva
+27;6;33;7;Cirugía oncológica
+28;6;10;2;Tratamiento de heridas graves
+29;6;20;4;Tratamiento de tumores cutáneos
+30;6;8;2;Manejo de shock y trauma
+31;6;53;11;Manejo de agresividad
+32;6;63;13;Control de enfermedades degenerativas
+33;7;43;9;Asesoramiento en dietas especiales
+34;7;34;7;Diagnóstico y tratamiento de tumores
+35;8;65;13;Evaluación geriátrica integral
+36;9;56;12;Diagnóstico y tratamiento de enfermedades digestivas
+37;10;61;13;Manejo de enfermedades crónicas en animales mayores
+38;10;38;8;Tomografía computarizada (TC)
+39;10;29;6;Cirugía ocular
+40;11;23;5;Hidroterapia
 41;11;12;3;Cirugía de tejidos blandos
+42;11;35;7;Manejo paliativo del cáncer
+43;11;53;11;Manejo de agresividad
+44;11;41;9;Planes de alimentación personalizados
+45;11;32;7;Radioterapia
+46;11;29;6;Cirugía ocular
+47;11;5;1;Manejo de enfermedades renales
+48;12;24;5;Electroterapia
+49;13;59;12;Terapia para enfermedades intestinales
+50;13;53;11;Manejo de agresividad
+51;13;45;9;Control de peso
+52;13;6;2;Atención de emergencias por accidentes
+53;13;43;9;Asesoramiento en dietas especiales
+54;13;28;6;Tratamiento de úlceras corneales
+55;13;36;8;Radiografías
+56;13;47;10;Manejo de enfermedades tiroideas
+57;14;69;14;Manejo de alergias alimentarias
+58;14;24;5;Electroterapia
+59;14;29;6;Cirugía ocular
+60;14;41;9;Planes de alimentación personalizados
+61;14;28;6;Tratamiento de úlceras corneales
+62;14;18;4;Tratamiento de enfermedades autoinmunes de la piel
+63;14;69;14;Manejo de alergias alimentarias
+64;15;3;1;Tratamiento de enfermedades respiratorias
+65;15;30;6;Terapia para enfermedades retinianas
+66;15;51;11;Diagnóstico y tratamiento de problemas de comportamiento
+67;15;47;10;Manejo de enfermedades tiroideas
+68;15;70;14;Evaluación de la calidad de los alimentos naturales
+69;15;49;10;Terapia para enfermedades suprarrenales
+70;15;50;10;Control de enfermedades metabólicas
+71;15;6;2;Atención de emergencias por accidentes
+72;16;28;6;Tratamiento de úlceras corneales
+73;16;20;4;Tratamiento de tumores cutáneos
+74;16;20;4;Tratamiento de tumores cutáneos
+75;16;53;11;Manejo de agresividad
+76;17;68;14;Suplementación con productos naturales
+77;17;17;4;Manejo de infecciones de la piel
+78;17;16;4;Diagnóstico y tratamiento de alergias cutáneas
+79;17;63;13;Control de enfermedades degenerativas
+80;17;3;1;Tratamiento de enfermedades respiratorias
+81;17;34;7;Diagnóstico y tratamiento de tumores
 82;17;13;3;Cirugía neurológica
 83;17;13;3;Cirugía neurológica
+84;17;36;8;Radiografías
+85;18;60;12;Manejo de vómitos y diarreas crónicas
+86;18;51;11;Diagnóstico y tratamiento de problemas de comportamiento
 87;18;13;3;Cirugía neurológica
+88;18;67;14;Asesoramiento en dietas crudas
+89;19;28;6;Tratamiento de úlceras corneales
+90;19;18;4;Tratamiento de enfermedades autoinmunes de la piel
+91;19;20;4;Tratamiento de tumores cutáneos
+92;19;28;6;Tratamiento de úlceras corneales
+93;19;48;10;Tratamiento de enfermedades hormonales
+94;19;10;2;Tratamiento de heridas graves
+95;20;65;13;Evaluación geriátrica integral
+96;20;23;5;Hidroterapia
 97;20;12;3;Cirugía de tejidos blandos
+98;20;43;9;Asesoramiento en dietas especiales
+99;20;16;4;Diagnóstico y tratamiento de alergias cutáneas
+100;20;30;6;Terapia para enfermedades retinianas
+101;21;32;7;Radioterapia
+102;21;40;8;Estudios contrastados
+103;21;2;1;Manejo de enfermedades metabólicas
+104;21;37;8;Ecografías
+105;21;62;13;Terapia para artritis y enfermedades articulares
+106;21;30;6;Terapia para enfermedades retinianas
+107;21;32;7;Radioterapia
+108;21;7;2;Tratamiento de intoxicaciones
+109;21;16;4;Diagnóstico y tratamiento de alergias cutáneas
+110;22;60;12;Manejo de vómitos y diarreas crónicas
+111;22;68;14;Suplementación con productos naturales
+112;22;48;10;Tratamiento de enfermedades hormonales
+113;22;66;14;Planes de alimentación basados en alimentos naturales
+114;22;38;8;Tomografía computarizada (TC)
+115;22;3;1;Tratamiento de enfermedades respiratorias
+116;23;33;7;Cirugía oncológica
+117;23;16;4;Diagnóstico y tratamiento de alergias cutáneas
+118;23;46;10;Diagnóstico y tratamiento de diabetes
+119;23;2;1;Manejo de enfermedades metabólicas
+120;23;55;11;Asesoramiento en socialización
+121;24;3;1;Tratamiento de enfermedades respiratorias
+122;24;58;12;Tratamiento de enfermedades pancreáticas
+123;24;52;11;Terapia para ansiedad y estrés
+124;24;70;14;Evaluación de la calidad de los alimentos naturales
+125;24;70;14;Evaluación de la calidad de los alimentos naturales
+126;24;34;7;Diagnóstico y tratamiento de tumores
+127;24;23;5;Hidroterapia
+128;24;56;12;Diagnóstico y tratamiento de enfermedades digestivas
+129;24;21;5;Rehabilitación postoperatoria
+130;25;69;14;Manejo de alergias alimentarias
+131;25;33;7;Cirugía oncológica
+132;25;5;1;Manejo de enfermedades renales
+133;25;34;7;Diagnóstico y tratamiento de tumores
+134;25;61;13;Manejo de enfermedades crónicas en animales mayores
+135;26;48;10;Tratamiento de enfermedades hormonales
+136;26;31;7;Quimioterapia
+137;26;40;8;Estudios contrastados
+138;26;57;12;Manejo de enfermedades hepáticas
+139;26;19;4;Terapia para dermatitis
+140;26;1;1;Diagnóstico y tratamiento de enfermedades infecciosas
 141;26;15;3;Cirugía laparoscópica
+142;26;26;6;Diagnóstico y tratamiento de cataratas
+143;26;69;14;Manejo de alergias alimentarias
+144;27;65;13;Evaluación geriátrica integral
+145;27;58;12;Tratamiento de enfermedades pancreáticas
+146;27;25;5;Masajes terapéuticos
+147;27;51;11;Diagnóstico y tratamiento de problemas de comportamiento
+148;28;16;4;Diagnóstico y tratamiento de alergias cutáneas
+149;28;19;4;Terapia para dermatitis
+150;28;36;8;Radiografías
 151;28;13;3;Cirugía neurológica
+152;28;57;12;Manejo de enfermedades hepáticas
+153;29;47;10;Manejo de enfermedades tiroideas
+154;29;59;12;Terapia para enfermedades intestinales
+155;30;42;9;Manejo de enfermedades nutricionales
+156;31;17;4;Manejo de infecciones de la piel
+157;31;41;9;Planes de alimentación personalizados
+158;31;53;11;Manejo de agresividad
+159;32;9;2;Reanimación cardiopulmonar
+160;32;45;9;Control de peso
+161;33;52;11;Terapia para ansiedad y estrés
+162;33;57;12;Manejo de enfermedades hepáticas
+163;33;48;10;Tratamiento de enfermedades hormonales
 164;33;11;3;Cirugía ortopédica
+165;33;17;4;Manejo de infecciones de la piel
+166;33;20;4;Tratamiento de tumores cutáneos

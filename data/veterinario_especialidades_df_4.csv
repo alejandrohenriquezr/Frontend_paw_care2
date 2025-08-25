@@ -1,15 +1,15 @@
 id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellidos;sexo;especialidad;id_clinica;nombre_clinica;direccion;n_calificaciones;calificacion;latitud;longitud;dpa
-1;1;13;3;Oscar Orlando;Aburto Bravo;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-2;1;67;14;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-3;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-4;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-5;1;18;4;Oscar Orlando;Aburto Bravo;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-6;1;44;9;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición animal;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-7;2;32;7;Mario Oscar;Acevedo Sánchez;MASCULINO;Oncología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-8;2;66;14;Mario Oscar;Acevedo Sánchez;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-9;2;52;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-10;2;56;12;Mario Oscar;Acevedo Sánchez;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-11;2;54;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+1;1;13;3;Oscar Orlando;Aburto Bravo;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+2;1;67;14;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+3;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+4;1;39;8;Oscar Orlando;Aburto Bravo;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+5;1;18;4;Oscar Orlando;Aburto Bravo;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+6;1;44;9;Oscar Orlando;Aburto Bravo;MASCULINO;Nutrición animal;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+7;2;32;7;Mario Oscar;Acevedo Sánchez;MASCULINO;Oncología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+8;2;66;14;Mario Oscar;Acevedo Sánchez;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+9;2;52;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+10;2;56;12;Mario Oscar;Acevedo Sánchez;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+11;2;54;11;Mario Oscar;Acevedo Sánchez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;5;Clínica 5;Huérfanos 2653;69;2,9;-33.4418933;-70.6727172;13101
 12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;12;Clínica 12;Huérfanos 2653;26;3,9;-33.4418933;-70.6727172;13101
 12;3;9;2;Patricia Verónica ;Acevedo Chamorro;FEMENINO;Urgencias veterinarias;15;Clínica 15;Huérfanos 2653;12;3,5;-33.4418933;-70.6727172;13101
@@ -105,42 +105,42 @@ id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellid
 62;14;18;4;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Dermatología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
 63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
 63;14;69;14;Guillermo Enríque;Biridinis Caltagirone;MASCULINO;Nutrición natural;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
-64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 64;15;3;1;Mario Julio;Bustos Vásquez;MASCULINO;Medicina interna;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 65;15;30;6;Mario Julio;Bustos Vásquez;MASCULINO;Oftalmología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 66;15;51;11;Mario Julio;Bustos Vásquez;MASCULINO;Etología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 67;15;47;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 68;15;70;14;Mario Julio;Bustos Vásquez;MASCULINO;Nutrición natural;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 69;15;49;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 70;15;50;10;Mario Julio;Bustos Vásquez;MASCULINO;Endocrinología;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 71;15;6;2;Mario Julio;Bustos Vásquez;MASCULINO;Urgencias veterinarias;3;Clínica 3;Avenida El Rosal 4250;12;3,9;-33.4851875;-70.7675101;13119
-72;16;28;6;Camila Fernanda;Cabezón Marchant;FEMENINO;Oftalmología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-73;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-74;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-75;16;53;11;Camila Fernanda;Cabezón Marchant;FEMENINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-76;17;68;14;Carlos Luis;Campos Paiva;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-77;17;17;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-78;17;16;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-79;17;63;13;Carlos Luis;Campos Paiva;MASCULINO;Geriatría;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-80;17;3;1;Carlos Luis;Campos Paiva;MASCULINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-81;17;34;7;Carlos Luis;Campos Paiva;MASCULINO;Oncología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-82;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-83;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-84;17;36;8;Carlos Luis;Campos Paiva;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+72;16;28;6;Camila Fernanda;Cabezón Marchant;FEMENINO;Oftalmología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+73;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+74;16;20;4;Camila Fernanda;Cabezón Marchant;FEMENINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+75;16;53;11;Camila Fernanda;Cabezón Marchant;FEMENINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+76;17;68;14;Carlos Luis;Campos Paiva;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+77;17;17;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+78;17;16;4;Carlos Luis;Campos Paiva;MASCULINO;Dermatología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+79;17;63;13;Carlos Luis;Campos Paiva;MASCULINO;Geriatría;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+80;17;3;1;Carlos Luis;Campos Paiva;MASCULINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+81;17;34;7;Carlos Luis;Campos Paiva;MASCULINO;Oncología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+82;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+83;17;13;3;Carlos Luis;Campos Paiva;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+84;17;36;8;Carlos Luis;Campos Paiva;MASCULINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 85;18;60;12;Juan Andrés;Caro Galan;MASCULINO;Gastroenterología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
-86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 86;18;51;11;Juan Andrés;Caro Galan;MASCULINO;Etología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
-87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 87;18;13;3;Juan Andrés;Caro Galan;MASCULINO;Cirugía;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
-88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 88;18;67;14;Juan Andrés;Caro Galan;MASCULINO;Nutrición natural;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
 89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;4;Clínica 4;Huérfanos 2653;10;4,8;-33.4418933;-70.6727172;13101
 89;19;28;6;José Miguel;Carrizo Nuñez;MASCULINO;Oftalmología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
@@ -214,37 +214,37 @@ id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellid
 109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;8;Clínica 8;Huérfanos 2653;26;4,8;-33.4418933;-70.6727172;13101
 109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;10;Clínica 10;Huérfanos 2653;74;3,4;-33.4418933;-70.6727172;13101
 109;21;16;4;Ricardo Alejandro;Castillo Pablos;MASCULINO;Dermatología;18;Clínica 18;Huérfanos 2653;28;4;-33.4418933;-70.6727172;13101
-110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 110;22;60;12;Claudia Andrea;Castillo Yusta;FEMENINO;Gastroenterología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
-111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 111;22;68;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
-112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 112;22;48;10;Claudia Andrea;Castillo Yusta;FEMENINO;Endocrinología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
-113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 113;22;66;14;Claudia Andrea;Castillo Yusta;FEMENINO;Nutrición natural;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
-114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
 114;22;38;8;Claudia Andrea;Castillo Yusta;FEMENINO;Radiología;16;Clínica 16;Huérfanos 2653;53;4;-33.4418933;-70.6727172;13101
-115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 115;22;3;1;Claudia Andrea;Castillo Yusta;FEMENINO;Medicina interna;11;Clínica 11;Huérfanos 2653;60;3,6;-33.4418933;-70.6727172;13101
@@ -315,9 +315,9 @@ id_vet_especialidad;id_veterinario;id_prestacion;id_especialidad;nombres;apellid
 151;28;13;3;Macarena Cecilia;Cortéz Jara;FEMENINO;Cirugía;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
 152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO;Gastroenterología;2;Clínica 2;Los Conquistadores 2328;45;5;-33.4151561;-70.6110142;13123
 152;28;57;12;Macarena Cecilia;Cortéz Jara;FEMENINO;Gastroenterología;17;Clínica 17;Huérfanos 2653;70;2,6;-33.4418933;-70.6727172;13101
-153;29;47;10;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-154;29;59;12;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
-155;30;42;9;José Leonardo;Cuevas Pavéz;MASCULINO;Nutrición animal;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13130
+153;29;47;10;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Endocrinología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+154;29;59;12;Nicolás Ignacio;Cozzolino Puelma;MASCULINO;Gastroenterología;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
+155;30;42;9;José Leonardo;Cuevas Pavéz;MASCULINO;Nutrición animal;1;Clínica 1: Veterinaría los perritos flojos;José Joaquín Vallejos 1312;25;4,2;-33.4823152;-70.6512387;13101
 156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;6;Clínica 6;Huérfanos 2653;54;3;-33.4418933;-70.6727172;13101
 156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;7;Clínica 7;Huérfanos 2653;44;2,4;-33.4418933;-70.6727172;13101
 156;31;17;4;Rodrigo;Contreras Diaz;MASCULINO;Dermatología;9;Clínica 9;Huérfanos 2653;16;3,3;-33.4418933;-70.6727172;13101

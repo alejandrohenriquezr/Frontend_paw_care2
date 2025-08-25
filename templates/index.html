@@ -77,28 +77,31 @@ navigator.geolocation.getCurrentPosition(
 
 
       function showPosition(position) {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-        
-          console.log(`Ubicación del usuario en el index es: Latitud ${lat}, Longitud ${lon}`);
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
 
-          const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+        //console.log(`Ubicación del usuario: Latitud ${lat}, Longitud ${lon}`);
 
-          fetch(url)
-              .then(response => response.json())
-              .then(data => {
-                  
-                //comuna = data. identifier || data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
-                  const comuna = data.address.city || data.address.town || data.address.village || "Comuna no encontrada";
-                  sessionStorage.setItem("comuna", comuna);  
-                  //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
-                  cargarComunas(comuna);
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-                  alert("No se pudo obtener la comuna.");
-              });
+        fetch(`/api/reverse?lat=${encodeURIComponent(lat)}&lon=${encodeURIComponent(lon)}`)
+          .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.json();
+          })
+          .then(data => {
+            //console.log("Reverse geocode:", data);
+            // Ojo: Nominatim a veces no trae city/town/village; por eso normalizamos en backend
+            const comuna = data.comuna || "Comuna no encontrada";
+            //alert("comuna=" + comuna);
+            sessionStorage.setItem("comuna", comuna);
+            //alert(`Tu ubicación es: Latitud: ${lat}, Longitud: ${lon}, Comuna: ${comuna}`);
+            cargarComunas(comuna);
+          })
+          .catch(error => {
+            console.error('Error reverse:', error);
+            alert("No se pudo obtener la comuna.");
+          });
       }
+
 
       function showError(error) {
           switch(error.code) {
@@ -119,16 +122,16 @@ navigator.geolocation.getCurrentPosition(
       
       async function cargarComunas(comuna) {
 
-            const response = await fetch('/api/insertar_comunas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ comuna: comuna })
-            });
-            const options = await response.text();
-            document.getElementById('comunas').innerHTML = options;
-        }
+        const response = await fetch('/api/insertar_comunas', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ comuna: comuna })
+        });
+        const options = await response.text();
+        document.getElementById('comunas').innerHTML = options;
+      }
 
         document.addEventListener("DOMContentLoaded", function() {
          // const nombre = "{{ user['name'] if user else '' }}";
@@ -396,7 +399,7 @@ navigator.geolocation.getCurrentPosition(
                                       class="text-gray-500 text-sm flex items-center"
                                       title="Abrir mapa en Waze">
                                       <i class="fas fa-map-marker-alt mr-1"></i>
-                                      {{ veterinario['direccion'] }}, {{ veterinario['Nombre_Comuna'] }}                                      
+                                      {{ veterinario['nombre'] }} <br> {{ veterinario['direccion'] }}, {{ veterinario['Nombre_Comuna'] }}                                      
                                     </button>
 
                                 </div>
@@ -439,11 +442,11 @@ navigator.geolocation.getCurrentPosition(
                             {% endif %}
                           {% endfor %}
                           
-                            {% for p in prestaciones_vet %}
+                            <!--{% for p in prestaciones_vet %}
                               <span class="text-gray-600 text-sm text-left">
                                 <li>{{ veterinario['especialidad'] }} - {{ p.prestacion }}</li>
                               </span>
-                            {% endfor %}
+                            {% endfor %} -->
                         </p>
 
 
@@ -484,7 +487,7 @@ navigator.geolocation.getCurrentPosition(
                             <div id="horas-disponibles-{{ veterinario.id_veterinario }}">
                               {% set horas_ocupadas = reservas | map(attribute='hora_hhmm') | list %}
 
-                              {% set hora_inicio = namespace(hora="09:30") %}
+                              {% set hora_inicio = namespace(hora="09:00") %}
                               {% set pasos = [0, 45, 90, 135, 180, 225, 270, 315, 360, 405, 450, 495, 540, 585] %}
                               {% for paso in pasos %}
                                 {% set partes = hora_inicio.hora.split(":") %}
@@ -620,7 +623,7 @@ navigator.geolocation.getCurrentPosition(
     selectComunas.classList.remove("hidden");
     selectTeleconsulta.classList.add("hidden");
     const comunaInicial = sessionStorage.getItem("comuna");
-    //alert("comunaInicial=", comunaInicial);
+    alert("comunaInicial=", comunaInicial);
     cargarComunas(comunaInicial);
 
     // Evento botón presencial

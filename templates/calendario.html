@@ -279,7 +279,7 @@
                 <button class="px-3 py-2 bg-pawcare-teal text-white rounded-md text-sm hover:bg-opacity-90 transition-colors">
                 <i class="fa-solid fa-plus mr-1"></i>Nueva Reserva
                 </button>
-                <button class="px-3 py-2 bg-gray-700 text-white rounded-md text-sm hover:bg-gray-800 transition-colors">
+                <button id="btn-abrir-bloqueo" class="px-3 py-2 bg-gray-700 text-white rounded-md text-sm hover:bg-gray-800 transition-colors">
                 <i class="fa-solid fa-ban mr-1"></i>Bloquear Horario
                 </button>
             </div>
@@ -321,35 +321,35 @@
                         <div id="horas" class="absolute left-0 top-0 w-16 h-full border-r border-gray-200 bg-gray-50 z-10">
                             <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">9:00 AM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">10:15 AM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">9:45 AM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">11:00 AM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">10:30 AM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">11:45 AM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">11:15 AM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">12:30 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">12:00 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">1:15 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">12:45 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">2:00 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">1:30 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">2:45 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">2:15 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">3:30 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">3:00 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">4:15 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">3:45 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">5:00 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">4:30 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">5:45 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12 border-b border-gray-200">5:15 PM</div>
                             <div class="h-6 border-b border-gray-100 border-dashed"></div>
-                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12">6:15 PM</div>
+                            <div class="text-xs text-right pr-2 pt-2 text-gray-500 h-12">6:00 PM</div>
                         </div>
                         <!-- Calendar Grid -->
                         <div class="ml-16 grid grid-cols-7 w-full">
-                        {% set horas = ['09:00', '10:15', '11:00', '11:45', '12:30',
-                                        '13:15', '14:00', '14:45', '15:30', '16:15',
-                                        '17:00', '17:45', '18:15'] %}
+                        {% set horas = ['09:00', '09:45', '10:30', '11:15', '12:00',
+                                        '12:45', '13:30', '14:15', '15:00', '15:45',
+                                        '16:30', '17:15', '18:00'] %}
                         
                         {% for dia in semana %}
                             
@@ -359,16 +359,33 @@
                                 {% set count = 0 %}
                                 {% for reserva in reservas %}
                                     {% if reserva.fecha == dia.strftime('%d-%m-%Y') and reserva.hora[:5] == hora %}
-                                    <div class="hora-calendario absolute inset-y-0 left-{{ count * 2 }} bg-pawcare-green rounded p-1 cursor-pointer hover:shadow-md transition-shadow"
-                                        data-fecha={{dia.strftime('%Y-%m-%d')}} data-hora={{hora}}    
-                                        style="width: calc(100% - {{ count * 2 }}px); margin-top: {{ count * 2 }}px;"
-                                        onclick="showAppointmentModal({{reserva.id_reserva}})"
-                                        data-tooltip="F. Nacimiento: {{ reserva.fecha_nacimiento }}<br>Esp.: {{ reserva.especie }}<br>Esp.: {{ reserva.nombre_raza }}">
-                                        <p class="text-xs font-medium">
-                                        {{ reserva.nombre_mascota }}
-                                        </p>
-                                    </div>
-                                    {% set count = count + 1 %}
+                                        {% if reserva.nombre_mascota == 'Bloqueada' %}
+                                            <div class="hora-calendario absolute inset-y-0 left-{{ count * 2 }} rounded p-1 transition-shadow"
+                                                style="background-color: #F4C2C2; width: calc(100% - {{ count * 2 }}px); margin-top: {{ count * 2 }}px;">
+                                                <p class="text-xs font-medium">
+                                                    {{ reserva.nombre_mascota }}
+                                                </p>
+                                            </div>
+                                        {% else %}
+                                            <div class="hora-calendario absolute inset-y-0 left-{{ count * 2 }} bg-pawcare-green rounded p-1 cursor-pointer hover:shadow-md transition-shadow"
+                                                data-fecha={{dia.strftime('%Y-%m-%d')}} data-hora={{hora}}    
+                                                style="width: calc(100% - {{ count * 2 }}px); margin-top: {{ count * 2 }}px;"
+                                                onclick="showAppointmentModal({{reserva.id_reserva}}, 
+                                                '{{ reserva.nombre_mascota }}',
+                                                '{{ reserva.nombres }}',
+                                                '{{ reserva.apellidos }}',
+                                                '{{ reserva.nombre_raza }}',
+                                                '{{ reserva.especie }}',
+                                                '{{ reserva.fecha }}',
+                                                '{{ reserva.hora }}'                                    
+                                                )"
+                                                data-tooltip="F. Nacimiento: {{ reserva.fecha_nacimiento }}<br>Esp.: {{ reserva.especie }}<br>Esp.: {{ reserva.nombre_raza }}">
+                                                <p class="text-xs font-medium">
+                                                {{ reserva.nombre_mascota }}
+                                                </p>
+                                            </div>
+                                        {% endif %}
+                                        {% set count = count + 1 %}
                                     {% endif %}
                                 {% endfor %}
                                 
@@ -412,7 +429,7 @@
         
         <div class="grid grid-cols-2 gap-4 mb-6">
             <div class="bg-white border border-gray-200 rounded-md p-4">
-                <p class="text-sm text-gray-600 mb-1">Citas hoy</p>
+                <p class="text-sm text-gray-600 mb-1">Citas de hoy</p>
                 <p class="text-2xl font-semibold">{{ citas_hoy }}</p>
             </div>
             <div class="bg-white border border-gray-200 rounded-md p-4">
@@ -421,7 +438,12 @@
             </div>
             <div class="bg-white border border-gray-200 rounded-md p-4">
                 <p class="text-sm text-gray-600 mb-1">Horas libres</p>
-                <p class="text-2xl font-semibold">{{ horas_libres }}</p>
+                <p class="text-2xl font-semibold">
+                    {% if horas_libres < 0 %}
+                    {% set horas_libres = 0 %}
+                    {% endif %}
+                    {{ horas_libres }}
+                </p>
             </div>
             <div class="bg-white border border-gray-200 rounded-md p-4">
                 <p class="text-sm text-gray-600 mb-1">Ingresos estimados</p>
@@ -494,23 +516,23 @@
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Mascota</p>
-                <p id="datos_mascota" class="font-medium">Max (Labrador, 3 años)</p>
+                <p id="datos_mascota" class="font-medium"></p>
             </div>
             
             <div class="mb-4">
-                <p class="text-sm text-gray-600 mb-1">Tutor</p>
-                <p id="nombre_duenio" class="font-medium">Juan Pérez</p>
+                <p class="text-sm text-gray-600 mb-1">Raza</p>
+                <p id="especie_raza" class="font-medium"></p>
             </div>
 
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Fecha y hora</p>
-                <p id="fecha_reserva" class="font-medium">Lunes, 24 Julio 2023, 08:00 - 08:30</p>
+                <p id="fecha_reserva" class="font-medium"></p>
             </div>
             
             <div class="mb-4">
                 <p class="text-sm text-gray-600 mb-1">Veterinario</p>
-                <p id="nombre_veterinario" class="font-medium">Dr. López</p>
+                <p id="nombre_veterinario" class="font-medium"></p>
             </div>
             
             <div class="mb-4">
@@ -527,12 +549,12 @@
                 <p class="text-sm text-gray-600 mb-1">Canal de reserva</p>
                 <p class="font-medium">Web</p>
             </div>
-            
+            -->            
             <div class="flex justify-end space-x-3 mt-6">
                 <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700" onclick="document.getElementById('appointment-modal').classList.add('hidden')">Cerrar</button>
-                <button class="px-4 py-2 bg-pawcare-teal text-white rounded-md">Editar cita</button>
+            <!--<button class="px-4 py-2 bg-pawcare-teal text-white rounded-md">Editar cita</button>-->
             </div>
-            -->
+
         </div>
     </div>
 
@@ -654,8 +676,16 @@
             `;
         }
 
-        function showAppointmentModal(appointmentName) {
+        function showAppointmentModal(idReserva, nombreMascota, nombres, apellidos, raza, especie, fecha, hora) {
             document.getElementById('appointment-modal').classList.remove('hidden');
+            // Insertar nombre en el modal
+            document.getElementById('datos_mascota').textContent = nombreMascota.toUpperCase() ;
+            document.getElementById('nombre_veterinario').textContent = nombres + ' ' + apellidos;
+            document.getElementById('fecha_reserva').textContent = fecha + ' - ' + hora.slice(0, 5);
+            document.getElementById('especie_raza').textContent = especie.toUpperCase() + ' - ' + raza.toUpperCase() ;
+
+
+            //document.getElementById('datos_mascota').textContent = nombreMascota;
         }
 
         // Tooltip functionality
@@ -707,6 +737,256 @@
 
 
 
+<!-- Modal Bloqueo -->
+<div id="modal-bloqueo" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center">
+  <div class="bg-white w-full max-w-xl rounded-2xl p-6 shadow-lg">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-semibold">Bloquear agenda del veterinario</h3>
+      <button id="cerrar-modal-bloqueo" class="text-gray-500 hover:text-gray-700">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+
+    <form id="form-bloqueo" class="space-y-4">
+
+      <!-- Si ya tienes el id del médico en sesión/JS, puedes ocultarlo -->
+      <input type="hidden" id="id_medico_bloqueo" name="id_medico" value="{{ medico_que_atendio }}"/>
+      <input type="hidden" id="id_clinica_bloqueo" name="id_clinica" value="{{ id_clinica }}"/>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Desde (fecha)</label>
+          <input type="date" id="fecha_inicio" class="w-full p-3 border rounded-lg" required>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Hasta (fecha)</label>
+          <input type="date" id="fecha_fin" class="w-full p-3 border rounded-lg" required>
+        </div>
+      </div>
+
+      <!--<div>
+        <label class="block text-sm text-gray-600 mb-1">Días de la semana</label>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+           values en formato 0..6 (lunes..domingo) para facilitar backend
+          <label class="flex items-center gap-2"><input type="checkbox" value="0" class="dias-semana"> Lunes</label>
+          <label class="flex items-center gap-2"><input type="checkbox" value="1" class="dias-semana"> Martes</label>
+          <label class="flex items-center gap-2"><input type="checkbox" value="2" class="dias-semana"> Miércoles</label>
+          <label class="flex items-center gap-2"><input type="checkbox" value="3" class="dias-semana"> Jueves</label>
+          <label class="flex items-center gap-2"><input type="checkbox" value="4" class="dias-semana"> Viernes</label>
+          <label class="flex items-center gap-2"><input type="checkbox" value="5" class="dias-semana"> Sábado</label>
+          <label class="flex items-center gap-2"><input type="checkbox" value="6" class="dias-semana"> Domingo</label>
+        </div>
+      </div>-->
+
+      <div class="flex items-center gap-3">
+        <input id="bloqueo-dia-completo" type="checkbox" class="h-4 w-4">
+        <label for="bloqueo-dia-completo" class="text-sm text-gray-700">Bloqueo de día completo</label>
+      </div>
+
+      <div id="rango-horas" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Desde (hora)</label>
+          <input type="time" id="hora_inicio" class="w-full p-3 border rounded-lg" value="09:00">
+        </div>
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Hasta (hora)</label>
+          <input type="time" id="hora_fin" class="w-full p-3 border rounded-lg" value="20:00">
+        </div>
+        <!--
+        <div>
+          <label class="block text-sm text-gray-600 mb-1">Duración (min)</label>
+          <input type="number" id="duracion" class="w-full p-3 border rounded-lg" value="30" min="5" step="5">
+        </div>
+        -->
+      </div>
+
+      <div>
+        <label class="block text-sm text-gray-600 mb-1">Motivo (opcional)</label>
+        <input type="text" id="motivo" class="w-full p-3 border rounded-lg" placeholder="Reunión, cirugía, feriado, etc.">
+      </div>
+
+
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button type="button" id="cancelar-bloqueo" class="px-4 py-2 border rounded-lg">Cancelar</button>
+        <button type="submit" class="px-4 py-2 bg-[#5A8F99] text-white rounded-lg hover:bg-[#4F7F88]">
+          Crear bloqueo
+        </button>            
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+      function convertirFechaA_ddmmyyyy(fechaISO) {
+        const [año, mes, dia] = fechaISO.split("-");
+        return `${dia}-${mes}-${año}`;
+      }
+  
+
+  const modal = document.getElementById('modal-bloqueo');
+  document.getElementById('btn-abrir-bloqueo').onclick = () => modal.classList.remove('hidden');
+  document.getElementById('cerrar-modal-bloqueo').onclick = cerrarModal;
+  document.getElementById('cancelar-bloqueo').onclick = cerrarModal;
+
+  function cerrarModal(){ modal.classList.add('hidden'); }
+
+  // Toggle "día completo"
+  const chkDiaCompleto = document.getElementById('bloqueo-dia-completo');
+  const rangoHoras = document.getElementById('rango-horas');
+  chkDiaCompleto.addEventListener('change', () => {
+    rangoHoras.classList.toggle('opacity-50', chkDiaCompleto.checked);
+    rangoHoras.querySelectorAll('input').forEach(i => i.disabled = chkDiaCompleto.checked);
+  });
+
+
+</script>
+
+
+
+<script>
+    //bloquear fechas pasadas en el calendario emergente
+document.addEventListener('DOMContentLoaded', () => {
+  const fechaInicio = document.getElementById('fecha_inicio');
+  const fechaFin    = document.getElementById('fecha_fin');
+  fechaInicio.addEventListener('change', () => {
+    if (fechaInicio.value) {
+      fechaFin.min = fechaInicio.value;   // No permitir fechas antes de inicio
+      fechaFin.value = fechaInicio.value; // Sugerencia de fecha_fin
+      fechaFin.focus();                   // Abrir calendario
+      fechaFin.showPicker?.();            // Abre el calendario en navegadores que lo soportan
+    }
+  });
+  // yyyy-mm-dd en hora local (no UTC)
+  const hoyLocal = (() => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  })();
+
+  // Bloquear “ayer hacia atrás”
+  fechaInicio.setAttribute('min', hoyLocal);
+  // (opcional) inicializa valor por defecto
+  // fechaInicio.value = hoyLocal;
+
+  // fecha_fin no puede ser menor a fecha_inicio
+  const syncFechaFin = () => {
+    const minFin = fechaInicio.value || hoyLocal;
+    fechaFin.setAttribute('min', minFin);
+    if (fechaFin.value && fechaFin.value < minFin) {
+      fechaFin.value = minFin;
+    }
+  };
+
+  // Inicializa y sincroniza cuando cambie “desde”
+  syncFechaFin();
+  fechaInicio.addEventListener('change', syncFechaFin);
+
+
+
+  // Bloquear fechas pasadas y sincronizar min de fecha_fin
+  document.addEventListener('DOMContentLoaded', () => {
+    const fechaInicio = document.getElementById('fecha_inicio');
+    const fechaFin    = document.getElementById('fecha_fin');
+
+    const hoyLocal = (() => {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    })();
+
+    fechaInicio.min = hoyLocal;
+    fechaFin.min = hoyLocal;
+
+    const syncFechaFin = () => {
+      const minFin = fechaInicio.value || hoyLocal;
+      fechaFin.min = minFin;
+      if (fechaFin.value && fechaFin.value < minFin) fechaFin.value = minFin;
+    };
+    syncFechaFin();
+    fechaInicio.addEventListener('change', syncFechaFin);
+  });
+
+  // Toggle “día completo”
+  const chkDiaCompleto = document.getElementById('bloqueo-dia-completo');
+  const rangoHoras = document.getElementById('rango-horas');
+  chkDiaCompleto.addEventListener('change', () => {
+    const on = chkDiaCompleto.checked;
+    rangoHoras.classList.toggle('opacity-50', on);
+    rangoHoras.querySelectorAll('input').forEach(i => i.disabled = on);
+  });
+
+  // Submit
+  document.getElementById('form-bloqueo').addEventListener('submit', async (e) => {
+    e.preventDefault(); // evita recarga del form
+    e.stopPropagation(); // evita burbujeos raros
+
+    try {    
+        //si no existe fecha-inicio o fecha-fin
+        if (!document.getElementById('fecha_inicio').value || !document.getElementById('fecha_fin').value) {
+        alert('Selecciona las fechas de inicio y fin.');
+        return;
+        }
+
+        //Si no está bloqueado el día completo, entonces se solicita hora de inicio y fin
+        if (!document.getElementById('bloqueo-dia-completo').checked){
+            if(document.getElementById('hora_inicio').value === '' || document.getElementById('hora_fin').value === ''){
+                alert('Selecciona las horas de inicio y fin.');
+                return;
+            }
+        }
+        const fecha_inicio = convertirFechaA_ddmmyyyy(document.getElementById('fecha_inicio').value);
+        const fecha_fin = convertirFechaA_ddmmyyyy(document.getElementById('fecha_fin').value);
+
+        const payload = {
+        id_medico: document.getElementById('id_medico_bloqueo').value,
+        id_clinica: document.getElementById('id_clinica_bloqueo').value,
+        fecha_inicio: fecha_inicio,
+        fecha_fin: fecha_fin,
+        bloqueo_dia_completo: chkDiaCompleto.checked,
+        hora_inicio: document.getElementById('hora_inicio').value || null,
+        hora_fin: document.getElementById('hora_fin').value || null,
+       // duracion_min: parseInt(document.getElementById('duracion').value || '30'),
+        motivo: document.getElementById('motivo').value || ''
+        };
+        //alert("payload= " + JSON.stringify(payload));
+
+        alert("entrando a /api/bloquear_horario");
+        const res = await fetch('/api/bloquear_horario', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        });
+        // Si NO ves esta alerta, revisa la consola (F12) por errores JS previos.
+        alert("Fetch hecho. res.ok=" + res.ok + " status=" + res.status);
+        const data = await res.json();
+
+        if (!res.ok) {
+            console.error(data);
+            alert(data.error || 'No se pudo crear el bloqueo.');
+            return;
+        }
+
+        alert(`Bloqueos creados: ${data.insertados}\nDuplicados: ${data.duplicados}\nConflictos con reservas existentes: ${data.conflictos?.length || 0}`);
+        modal.classList.add('hidden');
+
+        // Refresca tu calendario
+        if (window.recargarCalendario) window.recargarCalendario();
+        else location.reload();
+
+        } catch (err) {
+        console.error(err);
+        alert('Error de red creando bloqueos.');
+        }
+    });
+});
+</script>
 
 </body>
 <script>

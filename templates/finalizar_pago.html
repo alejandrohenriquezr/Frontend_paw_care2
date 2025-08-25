@@ -75,42 +75,20 @@ navigator.geolocation.getCurrentPosition(
         console.warn("No se pudo obtener la ubicación del usuario");
     }
 );
-</script>
-<script>
-/*
-      window.onload = function() {
-        sessionStorage.clear();
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
-        } else {
-            alert("La geolocalización no es soportada por este navegador.");
-        }
-      };
-*/
 
-
-
-
-      
-
-
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-          const nombre = "{{ user['name'] if user else '' }}";
-          if (nombre) {
-            const nombreSeparado = nombre.split(" ").map(p =>
-              p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
-            );
-            const target = document.getElementById("nombre-usuario");
-            if (target) {
-              target.innerText = nombreSeparado.join(" ");
-            }
-          }
-        });
-
- 
-
+document.addEventListener("DOMContentLoaded", function() {
+const nombre = "{{ user['name'] if user else '' }}";
+//alert("Bienvenido a PawCare, " + nombre + "!");
+if (nombre) {
+  const nombreSeparado = nombre.split(" ").map(p =>
+    p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()
+  );
+  const target = document.getElementById("nombre-usuario");
+  if (target) {
+    target.innerText = nombreSeparado.join(" ");
+  }
+}
+});
 </script>
 <script>
       tailwind.config = {
@@ -326,7 +304,21 @@ navigator.geolocation.getCurrentPosition(
                     <input type="email" placeholder="Ingresa tu correo" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-[#5A8F99] focus:border-transparent">
                   </div>
                   <div>
-                    <input type="password" placeholder="Ingresa tu contraseña" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-[#5A8F99] focus:border-transparent">
+                    <div class="relative w-full">
+                      <input 
+                        id="password"
+                        type="password"
+                        placeholder="Ingresa tu contraseña"
+                        class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-[#5A8F99] focus:border-transparent"
+                      >
+                      <button 
+                        type="button" 
+                        onclick="togglePassword()" 
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                      >
+                        <i id="icono-ojo" class="fa-solid fa-eye"></i>
+                      </button>
+                    </div>
                   </div>
 
 
@@ -445,6 +437,47 @@ navigator.geolocation.getCurrentPosition(
     </div>
 
   <script>
+  // Capturamos radios y botón
+  const btnConfirmar = document.getElementById("btn-confirmar-pago");
+  const card = document.getElementById("card");
+  const cash = document.getElementById("cash");
+
+  // Función que actualiza el texto del botón
+  function actualizarTexto() {
+    if (card.checked) {
+      btnConfirmar.textContent = "Confirmar y Pagar";
+    } else if (cash.checked) {
+      btnConfirmar.textContent = "Confirmar y Finalizar";
+    }
+    // Habilitamos el botón al seleccionar una opción
+    btnConfirmar.disabled = false;
+  }
+
+  // Agregar listeners
+  card.addEventListener("change", actualizarTexto);
+  cash.addEventListener("change", actualizarTexto);
+
+  // Llamada inicial para setear el texto según lo que esté seleccionado por defecto
+  actualizarTexto();
+
+
+    // Función para alternar la visibilidad de la contraseña
+  function togglePassword() {
+    const input = document.getElementById("password");
+    const icono = document.getElementById("icono-ojo");
+
+    if (input.type === "password") {
+      input.type = "text";
+      icono.classList.remove("fa-eye");
+      icono.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      icono.classList.remove("fa-eye-slash");
+      icono.classList.add("fa-eye");
+    }
+  }
+
+
     function onSubmit() {
       // Obtenemos el token invisible
       grecaptcha.execute();
@@ -479,7 +512,7 @@ navigator.geolocation.getCurrentPosition(
 
       ///picture: "{{ user['picture'] if user else '' }}",
       const user = {{ user | tojson | safe }};
-      alert("user.picture="+ user.picture);
+      //alert("user.picture="+ (user.picture || ''));
 
       if (user.picture) {
 
@@ -546,10 +579,10 @@ navigator.geolocation.getCurrentPosition(
        // document.getElementById("cargo_servicio").textContent = `$${formatCL(cargoServicio)}`;
         document.getElementById("cargo_total").textContent = `$${formatCL(cargoTotal)}`;
       }      
-        alert("fuera");  
+        //alert("fuera");  
       const user2 = {{ 'true' if user else 'false' }};
       //const cantidad_mascotas = llenar_mascotas({{clientes_mascotas | tojson }});
-      //alert("cantidad_mascotas=" + cantidad_mascotas);
+      ////alert("cantidad_mascotas=" + cantidad_mascotas);
       //console.log("USER={{use2}}");
       const petselection = document.getElementById("pet-selection");
       const divcorreos = document.getElementById("correos");
@@ -558,7 +591,7 @@ navigator.geolocation.getCurrentPosition(
       const nueva_mascota = document.getElementById("nueva_mascota");
 
       if (!user2) {
-        alert("!user2");
+        //alert("!user2");
         // Usuario no autenticado
         petselection.classList.add("hidden");
         divcorreos.classList.add("hidden");
@@ -568,7 +601,7 @@ navigator.geolocation.getCurrentPosition(
         btnInvitado?.classList.remove("bg-gray-200");
 
       } else {
-        alert("Llegue a llenar mascotas");
+        //alert("Llegue a llenar mascotas");
         // Usuario autenticado
         petselection.classList.remove("hidden");
         cantidad_mascotas = llenar_mascotas({{ clientes_mascotas | tojson | safe }});
@@ -885,7 +918,7 @@ navigator.geolocation.getCurrentPosition(
     
     function llenar_mascotas(clientes_mascotas){
       // Llenar el select de mascotas:
-      alert("clientes_mascotas.length=" + clientes_mascotas.length);
+      //alert("clientes_mascotas.length=" + clientes_mascotas.length);
       const selectMascotas = document.getElementById("mascotaSeleccionada");
    
       if(clientes_mascotas.length > 0){
@@ -899,10 +932,10 @@ navigator.geolocation.getCurrentPosition(
           selectMascotas.appendChild(option);
         });  
       }
-      alert("fuera del if");
+      //alert("fuera del if");
       const option = document.createElement("option");
       option.value = 0;
-      alert("option.value = 0");
+      //alert("option.value = 0");
       option.textContent = "Nueva mascota";
       selectMascotas.appendChild(option); 
 
@@ -934,6 +967,7 @@ navigator.geolocation.getCurrentPosition(
       .then(response => response.json())
       .then(data => {
         console.log("Sesión actualizada:", data);
+        habilita_botonPago();
       });
     });
 
@@ -1040,22 +1074,23 @@ navigator.geolocation.getCurrentPosition(
 
 
     //Validaciòn del formulario para pagar
-    document.getElementById("btn-confirmar-pago").addEventListener("click", function (e) {
+    // Validación + bifurcación a cash / card
+    document.getElementById("btn-confirmar-pago").addEventListener("click", async function (e) {
       const select = document.getElementById("mascotaSeleccionada");
-      const valorSeleccionado = select.value.trim();
+      const valorSeleccionado = (select?.value || "").trim();
       const petselection = document.getElementById("pet-selection");
-      const divcorreos= document.getElementById("correos");
-      const divcorreo1= document.getElementById("correo-usuario");
-      const divcorreo2= document.getElementById("correo-usuario2");
+      const divcorreos = document.getElementById("correos");
+      const divcorreo1 = document.getElementById("correo-usuario");
+      const divcorreo2 = document.getElementById("correo-usuario2");
       const inputNombre = document.getElementById("nombre-nueva-mascota");
       const fecha_nacimiento = document.getElementById("calendario");
-      const correoValor1 = divcorreo1.value.trim();
-      const correoValor2 = divcorreo2.value.trim();
+      const correoValor1 = (divcorreo1?.value || "").trim();
+      const correoValor2 = (divcorreo2?.value || "").trim();
 
-      alert("entrando botón de pago y valorSeleccionado=" + valorSeleccionado);
+      //alert("entrando botón de pago y valorSeleccionado=" + valorSeleccionado);
 
       if (!petselection.classList.contains("hidden")) {
-        alert("!petselection.classList.contains('hidden')");        
+        //alert("!petselection.classList.contains('hidden')");        
         if (!valorSeleccionado || valorSeleccionado === "Seleccionar mascota") {
           select.focus();
 
@@ -1077,14 +1112,14 @@ navigator.geolocation.getCurrentPosition(
           return;
         }
       }
-      alert("saliendo de !petselection.classList.contains('hidden')"); 
+      //alert("saliendo de !petselection.classList.contains('hidden')"); 
       // si el divcorreousuario no está oculto, entonces
       // debo validarlo
       // y luego entrego el correo para una variable de sesión
       //alert("divcorreousuario.classList.contains('hidden')=" + divcorreousuario.classList.contains("hidden"));
       if (!divcorreos.classList.contains("hidden") && (correoValor1 == correoValor2)) {
         // ✅ Validar correo
-        alert("entrando a validar correo");         
+        //alert("entrando a validar correo");         
         const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correoValor1);
         if (!correoValido) {
           Swal.fire({
@@ -1116,9 +1151,9 @@ navigator.geolocation.getCurrentPosition(
           return;          
         }
       }
-      alert("saliendo de validar correo"); 
+      //alert("saliendo de validar correo"); 
       if(valorSeleccionado == "0"){
-        alert("valorSeleccionado"); 
+        //alert("valorSeleccionado"); 
         nombre_mascota =inputNombre.value.trim();
         if(nombre_mascota ==""){
           Swal.fire({
@@ -1185,7 +1220,51 @@ navigator.geolocation.getCurrentPosition(
 
       }
 
-      // Redirigir si todo está OK
+
+
+      const card = document.getElementById("card");
+      const cash = document.getElementById("cash");
+
+      // CASH: insertar reserva y NO ir a Transbank
+      if (cash && cash.checked) {
+        e.preventDefault();
+
+        const btn = document.getElementById("btn-confirmar-pago");
+        btn.disabled = true;
+
+        try {
+          const resp = await fetch("/api/reservar_cash", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ medio_pago: "EFECTIVO" })
+          });
+          const data = await resp.json();
+
+          if (resp.ok) {
+            // El backend puede devolver {redirect:"/cita_reservada_cash"}
+            window.location.href = data.redirect || "/cita_reservada_cash";
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "No se pudo reservar",
+              text: data?.message || "Intenta nuevamente."
+            });
+            btn.disabled = false;
+          }
+        } catch (err) {
+          console.error(err);
+          Swal.fire({
+            icon: "error",
+            title: "Error de red",
+            text: "Revisa tu conexión e intenta nuevamente."
+          });
+          btn.disabled = false;
+        }
+        return; // <- no continuar a /api/pagar
+      }
+
+      // CARD: continuar con Transbank
       window.location.href = "/api/pagar";
     });
  
@@ -1207,7 +1286,7 @@ navigator.geolocation.getCurrentPosition(
 
   <script>
     function onSubmit(token) {
-      alert("Token generado: " + token);
+      //alert("Token generado: " + token);
 
       fetch('/api/enviar_rcaptcha', {
         method: 'POST',
@@ -1218,11 +1297,11 @@ navigator.geolocation.getCurrentPosition(
       })
       .then(res => res.json())
       .then(data => {
-        alert("[reCAPTCHA OK]: " + JSON.stringify(data));
+        //alert("[reCAPTCHA OK]: " + JSON.stringify(data));
         // Aquí puedes continuar con tu lógica de pago
       })
       .catch(err => {
-        alert("[reCAPTCHA Error]: " + err);
+        //alert("[reCAPTCHA Error]: " + err);
         console.error("[reCAPTCHA Error]:", err);
       });
     }
@@ -1261,18 +1340,21 @@ navigator.geolocation.getCurrentPosition(
       return res.json();
     })
     .then(data => {
-      alert("Login exitoso ✅");
+      //alert("Login exitoso ✅");
       const inicio_sesion = document.getElementById("inicio_sesion");
       if (inicio_sesion) {
         inicio_sesion.classList.add("hidden");
+        user = data.user;
+        //alert("Login exitoso ✅ " + user.name);
       }
 
       const petselection = document.getElementById("pet-selection");
       if (petselection) {
         petselection.classList.remove("hidden");
         const user = data.user;
+
         const clientes_mascotas = data.clientes_mascotas;
-        alert(clientes_mascotas);
+        //alert(clientes_mascotas);
 
         window.clientes_mascotas = clientes_mascotas;
         
@@ -1299,7 +1381,9 @@ navigator.geolocation.getCurrentPosition(
     const id_seleccionada = mascotaSeleccionada.value;
     //alert("mascotaSeleccionada.value=" + mascotaSeleccionada.value);
     //alert("mascotaSeleccionada.value==-1=" + (id_seleccionada==-1));
-
+    //alert("btnConfirmar=" + btnConfirmar);
+    //alert("estaAutenticado=" + estaAutenticado);
+    //alert("id_seleccionada=" + id_seleccionada);
     if (btnConfirmar && estaAutenticado && id_seleccionada!=-1) {
       //alert("habilitando");
       btnConfirmar.removeAttribute("disabled");
@@ -1308,10 +1392,36 @@ navigator.geolocation.getCurrentPosition(
     } else {
       //alert("Deshabilitando");
       btnConfirmar.setAttribute("disabled", "true");
-      btnConfirmar.setAttribute("title", "Debes iniciar sesión para confirmar el pago");
+      btnConfirmar.setAttribute("title", "Debes iniciar sesión y seleccionar una mascota para confirmar el pago");
       btnConfirmar.classList.add("opacity-50", "cursor-not-allowed");
     }
   });
+
+  function habilita_botonPago() {
+    const btnConfirmar = document.getElementById("btn-confirmar-pago");
+    const mascotaSeleccionada = document.getElementById("mascotaSeleccionada");
+    const id_seleccionada = mascotaSeleccionada.value;
+    const estaAutenticado = {{ 'true' if (user or (user.name!='')) else 'false' }};
+
+    //alert("user en habilita_botonPago es " + user);
+    //alert("name en habilita_botonPago es " + user.name);
+
+    
+    //alert("habilita_botonPago: id_seleccionada=" + id_seleccionada);
+    //alert("habilita_botonPago: estaAutenticado=" + estaAutenticado);  
+    //alert("habilita_botonPago: btnConfirmar=" + btnConfirmar);
+    
+
+    if (estaAutenticado && btnConfirmar && id_seleccionada != -1) {
+      btnConfirmar.removeAttribute("disabled");
+      btnConfirmar.classList.remove("opacity-50", "cursor-not-allowed");
+      btnConfirmar.removeAttribute("title");
+    } else {
+      btnConfirmar.setAttribute("disabled", "true");
+      btnConfirmar.setAttribute("title", "Debes seleccionar una mascota para confirmar el pago");
+      btnConfirmar.classList.add("opacity-50", "cursor-not-allowed");
+    }
+  }
 </script>
 
   </body>

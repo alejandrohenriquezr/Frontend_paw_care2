@@ -156,22 +156,30 @@
           {% for cita in mis_citas %}
             <div class="bg-[#D8E5E8] p-4 rounded-lg cita-item datos_reserva" data-fecha="{{ cita['fecha'].strftime('%Y-%m-%d') }}">
               <div class="flex items-center justify-between mb-3" id="{{ cita.hora}}">
+                <div class="flex gap-2">
                 {% if cita['estado'] == 'Confirmar' %}
-                <button 
-                class="confirmar_cita bg-blue-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                data-id_reserva="{{ cita.id_reserva }}"
-                >Confirmar
-                </button>  
-                {% elif cita['estado'] == 'Confirmada' %}
+                  <button 
+                  class="confirmar_cita bg-blue-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                  data-id_reserva="{{ cita.id_reserva }}"
+                  >Confirmar
+                  </button>  
+                  {% elif cita['estado'] == 'Confirmada' %}
+                    <span class="estado_cita bg-green-500 text-white px-3 py-1 rounded-full text-sm">Confirmada</span>
+
+                  {% elif cita['estado'] == 'Cancelada' %}
+                    <span class="estado_cita bg-red-500 text-white px-3 py-1 rounded-full text-sm">Cancelada</span>
+                {% endif %}
+                  <span> </span>
+                {% if cita['estado_pago'] == 1 %}
                   <span class="estado_cita bg-green-500 text-white px-3 py-1 rounded-full text-sm">Pagada</span>
 
-                {% elif cita['estado'] == 'Cancelada' %}
-                  <span class="estado_cita bg-red-500 text-white px-3 py-1 rounded-full text-sm">Cancelada</span>
-
-                {% endif %}
+                  {% elif cita['estado_pago'] == 0 %}
+                    <span class="estado_cita bg-red-500 text-white px-3 py-1 rounded-full text-sm">Por pagar</span>
+                {% endif %} 
+                </div>               
                 
                 
-                <span class="text-neutral-600 fecha">{{ cita['fecha'].strftime('%d de %B, %Y') }} - {{ cita['hora'] }}</span>
+                <span class="text-neutral-600 fecha">{{ cita['fecha'].strftime('%d de %B, %Y') }} - {{ cita['hora_am_pm'] }}</span>
               </div>
               <div class="grid md:grid-cols-2 gap-4">
                 <div>

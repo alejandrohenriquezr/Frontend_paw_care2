@@ -29,7 +29,7 @@ from email.mime.text import MIMEText
 from flask import render_template_string
 from google.oauth2.credentials import Credentials
 
-import os
+import os, math
 import base64
 import requests
 from config import Config
@@ -44,6 +44,10 @@ import fitz  # PyMuPDF
 import pypandoc
 import pytz
 import numpy as np  # importar numpy para usar np.nan
+import time
+import re
+import locale
+import platform
 
 
 #configuración de la APP
@@ -74,7 +78,20 @@ else:
     REDIRECT_URI = "http://127.0.0.1:5000/login/callback"
 
 
-
+# Detecta sistema operativo
+so = platform.system()
+# Configura el locale (para los meses del año) según el sistema operativo
+try:
+    if so == "Windows":
+        # En Windows el locale suele ser "Spanish_Chile.1252" o "Spanish_Spain.1252"
+        locale.setlocale(locale.LC_TIME, "Spanish_Spain.1252")
+    elif so == "Darwin":  # macOS
+        locale.setlocale(locale.LC_TIME, "es_ES.UTF-8")
+    else:  # Linux y otros
+        locale.setlocale(locale.LC_TIME, "es_ES.utf8")
+except locale.Error:
+    # Fallback por si el sistema no tiene instalado ese locale
+    locale.setlocale(locale.LC_TIME, "")
 
 # Configuración de OAuth
 def get_google_provider_cfg():
@@ -245,7 +262,7 @@ def index():
         session["comuna"] = None
         session["busqueda"] = None
         session["comuna2"] = None
-        session["user"] = None
+        #session["user"] = None
         print("[INFO] No hay argumentos en la URL, eliminando variables de sesión comuna y busqueda")
     else:
 
@@ -269,7 +286,7 @@ def index():
             session["busqueda"] = busqueda
             print(f"[INFO] busqueda obtenida de la URL del INDEX: {busqueda}")            
         #ejecutamos la función obtener_clinicas()
-        
+        print(f"DEBUG index busqueda es {busqueda} y comuna es {comuna}")
         resultado_busqueda = obtener_resultado(busqueda, comuna)
 
         
@@ -365,9 +382,10 @@ def finalizar_pago():
 
         print("POST")
         if user:
-            correo = session.get("correo_cliente")
+            correo = session.get("correo_cliente") or user.get("email")
+            print("DEBUG correo=", correo)
             # leer clientes_mascotas.csv según el correo
-            df = pd.read_csv("data/clientes_mascotas.csv")
+            df = pd.read_csv("data/clientes_mascotas.csv", sep=";")
             df_filtrado = df[df["correo_cliente"].str.strip() == correo.strip()]
             mascotas = df_filtrado[["id_clientes_mascotas", "correo_cliente", "nombre_mascota"]].to_dict(orient="records")
             return render_template("finalizar_pago.html", user=session["user"], clientes_mascotas=mascotas, **datos)
@@ -523,7 +541,81 @@ def obtener_resultado(busqueda, comuna):
         print("Existe comuna criterio de bùsqueda")
         clinicas_filtrada_df = clinicas_filtrada_comuna_df[clinicas_filtrada_comuna_df["especialidad"] == busqueda]
         if clinicas_filtrada_df.empty: #entonces está buscando por nombre del veterinario
-            clinicas_filtrada_df = clinicas_filtrada_comuna_df[clinicas_filtrada_comuna_df["nombre_completo"] == busqueda]
+            #debo buscar los datos del veterinario y las clinicas donde trabaja
+            print("clinicas_filtrada_comuna_df filtrada por comuna")
+            print(clinicas_filtrada_comuna_df)
+            print("Buscando por nombre")
+            staff_clinica= pd.read_csv("data/staff_clinica.csv", sep=";")
+            staff= pd.read_csv("data/staff.csv", sep=";")
+            staff['nombre_completo'] = staff['nombres'] + " " + staff['apellidos']
+            staff_original=staff.copy()
+            staff=staff[staff["nombre_completo"] == busqueda]
+            id_veterinario = None  # valor por defecto
+            if staff.empty: #Entonces estoy buscando por clínica
+                staff = staff_original
+                clinicas= pd.read_csv("data/clinicas.csv", sep=";")
+                clinicas = clinicas[clinicas["nombre"] == busqueda]
+                id_clinica=clinicas["id_clinica"].values[0]
+                staff_clinica=staff_clinica[staff_clinica["id_clinica"] == id_clinica]
+            else:
+                id_veterinario=staff["id_veterinario"].values[0]        
+                staff_clinica=staff_clinica[staff_clinica["id_veterinario"] == id_veterinario]
+                clinicas= pd.read_csv("data/clinicas.csv", sep=";")
+
+            print("DEBUG staff en obtener_resultado es")
+            print(staff)
+            print("DEBUG staff_clinica en obtener_resultado es")
+            print(staff_clinica)    
+
+         
+
+            staff_clinica=staff_clinica.merge(
+                staff[["id_veterinario", "nombres", "apellidos", "sexo", "correo", "estado", "valor"]],
+                left_on="id_veterinario",
+                right_on="id_veterinario",
+                how="left"
+            )
+            print("DEBUG staff_clinica filtrado por id_veterinario en obtener_resultado es")
+            print(staff_clinica)                 
+
+            
+            clinicas_filtrada_df = staff_clinica.merge(
+                clinicas[["id_clinica", "nombre", "direccion", "dpa", "n_calificaciones", "calificacion", "latitud", "longitud", "estado"]],
+                left_on="id_clinica",
+                right_on="id_clinica",
+                how="left"
+            )
+            print("DEBUG clinicas_filtrada_df filtrado por id_veterinario en obtener_resultado es")
+            print(clinicas_filtrada_df)  
+
+            veterinario_prestaciones=pd.read_csv("data/veterinario_prestaciones.csv", sep=";")
+            #Si id_veterinario existe
+
+            if id_veterinario is not None:
+                veterinario_prestaciones=veterinario_prestaciones[veterinario_prestaciones["id_veterinario"] == id_veterinario]
+            else:
+                # veterinario_prestaciones contendrá todos los registros de veterinario_prestaciones que coincidan con el campo id_veterinario de staff_clinica
+                veterinario_prestaciones=veterinario_prestaciones[veterinario_prestaciones["id_veterinario"].isin(staff_clinica["id_veterinario"])]
+            #clinicas_filtrada_df = clinicas_filtrada_df.merge(
+            #    veterinario_prestaciones[["id_veterinario", "id_vet_especialidad", "id_prestacion", "id_especialidad"]],
+            #    left_on="id_veterinario",
+            #    right_on="id_veterinario",
+            #    how="left"
+            #)
+            print("clinicas_filtrada_df filtrada por nombre")
+            print(clinicas_filtrada_df)
+
+            #Le agregamos los precios
+            #precios=pd.read_csv("data/precios.csv", sep=";")
+            #clinicas_filtrada_df = clinicas_filtrada_df.merge(
+            #    precios[["id_clinica", "id_especialidad", "valor"]],
+            #    left_on=["id_clinica", "id_especialidad"],
+            #    right_on=["id_clinica", "id_especialidad"],
+            #    how="left"
+            #)
+            print("clinicas_filtrada_df filtrada por nombre con precios")
+            print(clinicas_filtrada_df)
+
     else: # Indica que está buscando por id de la clínica
         
         if "id_clinica" in request.args:
@@ -551,6 +643,13 @@ def obtener_resultado(busqueda, comuna):
             clinicas_filtrada_df = clinicas_filtrada_df[clinicas_filtrada_df["dpa"]==int(comuna)]
 
     print(f"clinicas_filtrada_df")
+    comunas= pd.read_csv("data/dpa.csv", sep=";")
+    clinicas_filtrada_df = clinicas_filtrada_df.merge(
+        comunas[["id_dpa", "Nombre_Comuna"]],
+        left_on="dpa",
+        right_on="id_dpa",
+        how="left"
+    )
     print(clinicas_filtrada_df)
     clinicas_filtrada_df.to_csv("data/clinicas_filtrada_df.csv", sep=";", index=False)
 
@@ -561,13 +660,14 @@ def obtener_resultado(busqueda, comuna):
     ## Preparamos el dataframe para veterinario_prestaciones_filtrada_df para entregarlo en la respuesta
 
     veterinario_prestaciones_filtrada_df = veterinario_prestaciones_df.copy()
-
+    if clinicas_filtrada_df.empty:
+        jsonify({"error": "No se encontró la clínica buscada"}), 400
 
     # 1. Obtenemos el valor id_especialidad desde el primer registro de clinicas_filtrada_df
-    id_especialidad = clinicas_filtrada_df["id_especialidad"].values[0]
+   # id_especialidad = clinicas_filtrada_df["id_especialidad"].values[0]
 
     # 2. filtramos veterinario_prestaciones_filtrada_df por el campo id_especialidad para el valor id_especialidad
-    veterinario_prestaciones_filtrada_df = veterinario_prestaciones_filtrada_df[veterinario_prestaciones_filtrada_df["id_especialidad"] == id_especialidad]
+    #veterinario_prestaciones_filtrada_df = veterinario_prestaciones_filtrada_df[veterinario_prestaciones_filtrada_df["id_especialidad"] == id_especialidad]
     veterinario_prestaciones_filtrada_df.to_csv("data/veterinario_prestaciones_filtrada_df.csv", sep=";", index=False)
     ###############
     #FIN de preparamos el dataframe para veterinario_prestaciones_filtrada_df para entregarlo en la respuesta
@@ -1689,9 +1789,9 @@ def guardar_vet_fecha_hora():
     
 
 
-@app.route("/api/insertar_reservas", methods=["GET"])
+@app.route("/api/insertar_reservas_original", methods=["GET"])
 #insertar una reserva
-def insert_reservation():
+def insert_reservation_original():
     #imprimo en la consola todas las variables de sesión y sus valores
     print("Variables de sesión:")
     for key, value in session.items():  
@@ -1826,28 +1926,7 @@ def insert_reservation():
     with open('data/reservas.csv', 'r') as f:
         reader = csv.DictReader(f, delimiter=';')
         reservations = list(reader)
-    # Verificar si la reserva ya existe
-    #for reservation in reservations:
-    #    print(">>> Comparando:")
-    #    print("id_clinica:", reservation['id_clinica']," ? ", id_clinica)
-    #    print("correo_cliente:", reservation['correo_cliente']," ? ", correo_cliente)
-    #    print("mascota:", reservation['mascota']," ? ", mascotaSeleccionada)
-    #    print("fecha:", reservation['fecha']," ? ", fechaSeleccionada)
-    #    print("hora:", reservation['hora']," ? ", horaSeleccionada)
-    #    print("medico_que_atendio:", reservation['medico_que_atendio']," ? ", id_veterinario)
-    #    print("estado:", reservation['estado'])
-    #    print("Tipos de dato en reservation:")
-    #    if ((reservation['id_clinica']) == str(id_clinica) and
-    #        reservation['correo_cliente'] == correo_cliente and
-    #        (reservation['mascota']) == str(mascotaSeleccionada) and  
-    #        reservation['fecha'] == str(fechaSeleccionada) and
-    #        reservation['hora'] == str(horaSeleccionada) and
-    #        (reservation['medico_que_atendio']) == str(id_veterinario) and
-    #        (reservation['estado']) == str(1)):
-    #        print("La reserva ya existe")
-    #        return jsonify({"error": "La reserva ya existe"}), 400
-
-    
+     
     #transformar reservations en un data frame
     reservations_df = pd.DataFrame(reservations)
     #obtener el valor maximo de la columna id_reserva del data frame
@@ -1905,6 +1984,262 @@ def insert_reservation():
     return jsonify({"message": "Reserva creada exitosamente"}), 200
 
 
+@app.route("/api/insertar_reservas", methods=["GET", "POST"])
+def insert_reservation(estado_pago=None, medio_pago=None):
+    # ---- DEBUG: variables de sesión
+    print("Variables de sesión:")
+    for key, value in session.items():
+        print(f"{key}: {value}")
+
+    # ---- Reserva en proceso (requerida)
+    reserva_en_proceso = session.get('reserva_en_proceso')
+    if not reserva_en_proceso:
+        return jsonify({"message": "No hay reserva en proceso en la sesión."}), 400
+
+    # ---- Identificación de usuario
+    if session.get('user'):
+        print("Usuario LOGEADO")
+        correo_cliente = session.get('user')['email']
+        nombre_cliente = session.get('user')['name']
+    else:
+        print("Usuario invitado")
+        correo_cliente = session.get('correo_cliente_invitado') or session.get('correo_cliente')
+        nombre_cliente = "Usuario invitado"
+        if not correo_cliente:
+            return jsonify({"message": "No hay correo para el usuario invitado."}), 400
+
+    # ---- Datos base desde sesión
+    id_clinica = reserva_en_proceso['id_clinica']
+    id_veterinario = reserva_en_proceso['veterinario']
+    mascotaSeleccionada = session.get('mascotaSeleccionada')
+
+    # ---- Crear nueva mascota si corresponde (cuando la selección no es numérica)
+    if (not str(mascotaSeleccionada).isdigit()):  # viene nombre directo
+        with open('data/clientes_mascotas.csv', 'r', encoding='utf-8-sig') as f:
+            reader = csv.DictReader(f, delimiter=';')
+            clientes_mascotas = list(reader)
+
+        nombre_mascota = mascotaSeleccionada
+        clientes_mascotas_df = pd.DataFrame(clientes_mascotas)
+        clientes_mascotas_df['id_clientes_mascotas'] = pd.to_numeric(
+            clientes_mascotas_df.get('id_clientes_mascotas', pd.Series(dtype='float')),
+            errors='coerce'
+        )
+        id_clientes_mascotas = int(clientes_mascotas_df['id_clientes_mascotas'].max(skipna=True) or 0) + 1
+        session['mascotaSeleccionada'] = id_clientes_mascotas
+
+        fecha_nacimiento = session.get('fecha_nacimiento')
+        id_especie_raza = session.get('raza')
+
+        new_mascota = {
+            'id_clientes_mascotas': id_clientes_mascotas,   # <- corrige nombre de columna
+            'correo_cliente': correo_cliente,
+            'nombre_mascota': nombre_mascota,
+            'fecha_nacimiento': fecha_nacimiento,
+            'sexo': 0,
+            'peso': 0,
+            'id_especie_raza': int(id_especie_raza) if id_especie_raza else 0
+        }
+        with open('data/clientes_mascotas.csv', 'a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=new_mascota.keys(), delimiter=';')
+            # No escribimos header aquí para evitar duplicarlo si ya existe
+            writer.writerow(new_mascota)
+
+    # ---- Si no hay mascota (invitado sin registrar), forzar 0
+    if not mascotaSeleccionada:
+        print("Mascota no seleccionada ya que usuario es invitado")
+        session['mascotaSeleccionada'] = 0
+        mascotaSeleccionada = 0
+
+    # ---- Crear nueva mascota si flag crear_nueva_mascota == 1
+    if 'crear_nueva_mascota' not in session:
+        session['crear_nueva_mascota'] = 0
+    print("[DEBUG] crear_nueva_mascota =", session['crear_nueva_mascota'])
+
+    if session['crear_nueva_mascota'] == 1:
+        with open('data/clientes_mascotas.csv', 'r', encoding='utf-8-sig') as f:
+            reader = csv.DictReader(f, delimiter=';')
+            clientes_mascotas = list(reader)
+
+        clientes_mascotas_df = pd.DataFrame(clientes_mascotas)
+        clientes_mascotas_df['id_clientes_mascotas'] = pd.to_numeric(
+            clientes_mascotas_df.get('id_clientes_mascotas', pd.Series(dtype='float')),
+            errors='coerce'
+        )
+        max_id_clientes_mascotas = int(clientes_mascotas_df['id_clientes_mascotas'].max(skipna=True) or 0)
+
+        mascotaSeleccionada = max_id_clientes_mascotas + 1
+        session['mascotaSeleccionada'] = mascotaSeleccionada
+        session['max_id_clientes_mascotas'] = int(max_id_clientes_mascotas)
+
+        nueva = session.get('nueva_mascota', {})
+        nombre_mascota = nueva.get('nombre_mascota', 'Mascota')
+        id_especie_raza = nueva.get('raza_mascota', 0)
+        fecha_nacimiento = nueva.get('fecha_nacimiento')
+        sexo = nueva.get('sexo_mascota', 0)
+        peso = nueva.get('peso_mascota')
+
+        new_mascota = {
+            'id_clientes_mascotas': (max_id_clientes_mascotas + 1),   # <- corrige nombre de columna
+            'correo_cliente': correo_cliente,
+            'nombre_mascota': nombre_mascota,
+            'fecha_nacimiento': fecha_nacimiento,
+            'sexo': sexo,
+            'peso': float(peso) if peso else 0.0,
+            'id_especie_raza': int(id_especie_raza) if id_especie_raza else 0
+        }
+        with open('data/clientes_mascotas.csv', 'a', newline='', encoding='utf-8') as f:
+            writer = csv.DictWriter(f, fieldnames=new_mascota.keys(), delimiter=';')
+            writer.writerow(new_mascota)
+
+    # ---- Montos/fechas/horas
+    fechaSeleccionada = reserva_en_proceso.get('fecha') or session.get('fecha')
+    horaSeleccionada = reserva_en_proceso.get('hora') or session.get('hora')
+
+    cargoServicio = int(session.get('cargoServicio', 0))
+    cargoTotal = int(session.get('cargoTotal', 0))
+    precio = int(reserva_en_proceso.get('valor', 0))
+
+    token = session.get('token')
+
+    # Normalizar hora a HH:MM:SS
+    if horaSeleccionada and len(horaSeleccionada) == 5:
+        horaSeleccionada += ":00"
+
+    # ---- Determinar medio y estado de pago
+    medio_from_req = None
+    if request.method == "POST" and request.is_json:
+        medio_from_req = (request.get_json() or {}).get('medio_pago')
+    medio_from_qs = request.args.get('medio_pago')
+
+    pago_confirmado = bool(session.get('pago_confirmado'))
+
+
+    # Normaliza lo que venga por request (si llamas esta ruta vía HTTP directamente)
+    medio_from_req = None
+    if request.method in ("POST", "GET"):
+        if request.is_json:
+            medio_from_req = (request.get_json(silent=True) or {}).get("medio_pago")
+        else:
+            medio_from_req = request.args.get("medio_pago")
+
+    # Si recibimos argumentos explícitos en la llamada Python, tienen prioridad
+    if (estado_pago is not None) or (medio_pago is not None):
+        medio_pago = (medio_pago or "EFECTIVO").upper()
+        estado_pago = int(estado_pago) if estado_pago is not None else (1 if medio_pago == "WEBPAY" else 0)
+        valor_pagado = cargoTotal if estado_pago == 1 else 0
+    else:
+        # Si no hay args, usamos sesión / request
+        if pago_confirmado:
+            estado_pago = 1
+            medio_pago = "WEBPAY"
+            valor_pagado = cargoTotal
+        else:
+            if (session.get("medio_pago", "").upper() == "EFECTIVO") or (medio_from_req and medio_from_req.upper() == "EFECTIVO"):
+                estado_pago = 0
+                medio_pago = "EFECTIVO"
+                valor_pagado = 0
+            else:
+                # Por defecto, si no hay pago confirmado, tratamos como EFECTIVO (pendiente)
+                estado_pago = 0
+                medio_pago = "EFECTIVO"
+                valor_pagado = 0
+
+    print(f"[PAGO] medio_pago={medio_pago} | estado_pago={estado_pago} | valor_pagado={valor_pagado}")
+
+    # ---- Leer CSV de reservas para obtener max id
+    path_csv = 'data/reservas.csv'
+    sep = ';'
+    if not os.path.exists(path_csv):
+        # Si no existe, creamos un DF vacío con columnas base
+        df_res = pd.DataFrame(columns=[
+            'id_reserva','id_clinica','correo_cliente','mascota','fecha','hora',
+            'precio','cargo_servicio','valor_pagado','estado','fecha_agrega_reserva',
+            'hora_agrega_reserva','medico_que_atendio','session_id','token_pago',
+            'estado_pago','medio_pago'
+        ])
+        max_id_reserva = 0
+    else:
+        df_res = pd.read_csv(path_csv, sep=sep, dtype=str)
+        if 'id_reserva' not in df_res.columns:
+            return jsonify({"message": "El archivo reservas.csv no tiene columna id_reserva."}), 500
+
+        df_res['id_reserva'] = pd.to_numeric(df_res['id_reserva'], errors='coerce').fillna(0).astype(int)
+        max_id_reserva = int(df_res['id_reserva'].max(skipna=True) or 0)
+
+    # ---- Nuevo ID y guardar en sesión (para Transbank buy_order)
+    new_id_reserva = max_id_reserva + 1
+    session['max_id_reserva'] = int(new_id_reserva)  # <- ahora consistente con buy_order
+
+    session_id = session.get('session_id')
+
+    new_reservation = {
+        'id_reserva': new_id_reserva,
+        'id_clinica': id_clinica,
+        'correo_cliente': correo_cliente,
+        'mascota': mascotaSeleccionada,
+        'fecha': fechaSeleccionada,
+        'hora': horaSeleccionada,
+        'precio': precio,                     # Precio de la consulta
+        'cargo_servicio': cargoServicio,      # 3% u otro
+        'valor_pagado': valor_pagado,         # 0 si efectivo
+        'estado': 1,                          # 1 = activa (ajusta si tu semántica es distinta)
+        'fecha_agrega_reserva': pd.Timestamp.now().strftime('%Y-%m-%d'),
+        'hora_agrega_reserva': pd.Timestamp.now().strftime('%H:%M:%S'),
+        'medico_que_atendio': int(id_veterinario),
+        'session_id': session_id,
+        'token_pago': token if token else '',
+        'estado_pago': estado_pago,           # <-- NUEVO
+        'medio_pago': medio_pago              # <-- NUEVO
+    }
+
+    # ---- Asegurar columnas y escribir reescribiendo archivo (seguro)
+    df_res = df_res.copy()
+
+    # Asegurar columnas nuevas en DF
+    for col in new_reservation.keys():
+        if col not in df_res.columns:
+            df_res[col] = ""
+
+    # Verificación de duplicado lógico (opcionalmente estricta)
+    dup = df_res[
+        (df_res['id_clinica'].astype(str) == str(id_clinica)) &
+        (df_res['correo_cliente'].astype(str) == str(correo_cliente)) &
+        (df_res['mascota'].astype(str) == str(mascotaSeleccionada)) &
+        (df_res['fecha'].astype(str) == str(fechaSeleccionada)) &
+        (df_res['hora'].astype(str) == str(horaSeleccionada)) &
+        (df_res['medico_que_atendio'].astype(str) == str(id_veterinario)) &
+        (df_res['estado'].astype(str) == "1")
+    ]
+    if not dup.empty:
+        return jsonify({"message": "La reserva ya existe."}), 409
+
+    # Concatenar y guardar
+    df_out = pd.concat([df_res, pd.DataFrame([new_reservation])], ignore_index=True)
+    df_out.to_csv(path_csv, sep=sep, index=False, encoding='utf-8')
+
+    # ---- Envío de correo (corrige fecha/hora)
+    datos_correo = {
+        "nombresvet": reserva_en_proceso.get('nombresvet'),
+        "apellidosvet": reserva_en_proceso.get('apellidosvet'),
+        "fecha": reserva_en_proceso.get('fecha'),
+        "hora": reserva_en_proceso.get('hora'),
+        "centro": reserva_en_proceso.get('clinica'),
+        "direccion": reserva_en_proceso.get('direccion'),
+        "comuna": reserva_en_proceso.get('comuna'),
+        "reserva": new_id_reserva,                     # id recién asignado
+        "valor": session.get('precio', precio),
+        "tarjeta": session.get('numero_tarjeta') if pago_confirmado else None
+    }
+    print(f"Datos para el correo: {datos_correo}")
+    try:
+        enviar_correo_reserva(correo_cliente, datos_correo)
+    except Exception as e:
+        print(f"[WARN] Error enviando correo: {e}")
+
+    return jsonify({"message": "Reserva creada exitosamente", "id_reserva": new_id_reserva, "medio_pago": medio_pago, "estado_pago": estado_pago}), 200
+
+
 @app.route("/limpiar_sesion_parcial")
 def limpiar_sesion_parcial():
     claves_a_conservar = {"user", 
@@ -1956,50 +2291,185 @@ def parametros():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
+
+
+# Cache simple en memoria para no golpear tanto a Nominatim (1 hora)
+_reverse_cache = {}  # key: (lat_round, lon_round) -> {"ts": unix, "data": {...}}
+_CACHE_TTL = 3600  # 1 hora
+
+def _round_coord(x):
+    # redondeo a 4 decimales (~11m): sube/baja si lo necesitas
+    return round(float(x), 4)
+
+def _pick_comuna(addr: dict) -> str | None:
+    """
+    Intenta extraer un nombre de comuna desde las llaves más comunes de Nominatim.
+    Evita usar 'county' si viene como 'Provincia de ...'.
+    """
+    candidates = [
+        "city", "town", "village", "municipality",
+        "city_district", "suburb", "neighbourhood"
+    ]
+    for k in candidates:
+        v = addr.get(k)
+        if v:
+            return v
+
+    county = addr.get("county")
+    if county and not county.lower().startswith("provincia de"):
+        return county
+
+    return None
+
+@app.get("/api/reverse")
+def reverse_geocode():
+    lat = request.args.get("lat")
+    lon = request.args.get("lon")
+    if not lat or not lon:
+        return jsonify({"error": "Parámetros 'lat' y 'lon' son requeridos"}), 400
+
+    try:
+        latf = float(lat)
+        lonf = float(lon)
+    except ValueError:
+        return jsonify({"error": "Parámetros 'lat' y/o 'lon' inválidos"}), 400
+
+    key = (_round_coord(latf), _round_coord(lonf))
+    now = time.time()
+    # cache
+    hit = _reverse_cache.get(key)
+    if hit and now - hit["ts"] < _CACHE_TTL:
+        return jsonify(hit["data"])
+
+    url = "https://nominatim.openstreetmap.org/reverse"
+    params = {
+        "format": "jsonv2",
+        "lat": latf,
+        "lon": lonf,
+        "addressdetails": 1,
+        "accept-language": "es",
+        "zoom": 14
+    }
+    headers = {
+        "User-Agent": "PawCare/1.0 (contacto: alhen1970@gmail.com)"  # IDENTIFÍCATE
+    }
+
+    try:
+        r = requests.get(url, params=params, headers=headers, timeout=10)
+        if r.status_code != 200:
+            return jsonify({"error": f"Nominatim {r.status_code}"}), r.status_code
+        data = r.json()
+        addr = data.get("address", {})
+        comuna = _pick_comuna(addr) or "Comuna no encontrada"
+
+        # Plan B: si no encontramos comuna en zoom 14, probamos un zoom distinto
+        if comuna == "Comuna no encontrada":
+            params_b = params | {"zoom": 12}
+            rb = requests.get(url, params=params_b, headers=headers, timeout=10)
+            if rb.status_code == 200:
+                addr_b = rb.json().get("address", {})
+                comuna_b = _pick_comuna(addr_b)
+                if comuna_b:
+                    comuna = comuna_b
+
+        payload = {
+            "comuna": comuna,
+            "display_name": data.get("display_name"),
+            "address": addr,
+            "lat": data.get("lat"),
+            "lon": data.get("lon")
+        }
+        _reverse_cache[key] = {"ts": now, "data": payload}
+        return jsonify(payload)
+
+    except requests.RequestException as e:
+        return jsonify({"error": f"Fallo consultando Nominatim: {e}"}), 502
+
+def _norm(s: str) -> str:
+    s = (s or "").strip()
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    return s.casefold()
+
 @app.route("/api/insertar_comunas", methods=["POST"])
 def insertar_comunas():
-    data = request.json
-    comuna = data.get('comuna')
-    #si comuna existe en los argumentos de la url
-    #rescatamos el valor de comuna desde los argumentos de la url
-    comuna2 = session.get('comuna2', None)
+    print("DEBUG ENTRANDO A INSERTAR COMUNAS")
+    data = request.json or {}
+    comuna_input = data.get("comuna", "")
+
+    # Si existe sesión 'comuna2', sobrescribe
+    comuna2 = session.get('comuna2')
     print("Comuna recibida desde la url:", comuna2)
     if comuna2:
-        comuna=comuna2
-    print("Comuna recibida:", comuna)
-    
+        comuna_input = comuna2
+
+    comuna_str = str(comuna_input).strip()
+    print("Comuna recibida:", comuna_str)
+
     # Lee el archivo data/dpa.csv y lo convierte a un dataframe
+    # Se asume columnas: Region (código o id), Comuna (código), Nombre_Comuna (string)
     df = pd.read_csv("data/dpa.csv", delimiter=";")
-    
-    if comuna.isdigit():
-        filtered_df = df[df['Comuna'] == int(comuna)]
+
+    # Detectar si es código numérico (aunque venga como string con espacios)
+    es_codigo = comuna_str.isdigit()
+    if not es_codigo:
+        # permitir "13101", "13101 " etc
+        es_codigo = comuna_str.replace(" ", "").isdigit()
+
+    filtered_df = pd.DataFrame()
+
+    if es_codigo:
+        try:
+            comuna_code = int(comuna_str.replace(" ", ""))
+            filtered_df = df[df['Comuna'] == comuna_code]
+        except Exception:
+            pass
     else:
-        # Filtra el dataframe por la comuna seleccionada
-        filtered_df = df[df['Nombre_Comuna'] == (comuna)]
-    
-    # Obtiene el valor del campo Region
+        # Comparación robusta por nombre (sin acentos/case)
+        nombre_norm = _norm(comuna_str)
+        df = df.copy()
+        df["__nombre_norm__"] = df["Nombre_Comuna"].fillna("").apply(_norm)
+
+        # 1) match exacto normalizado
+        filtered_df = df[df["__nombre_norm__"] == nombre_norm]
+
+        # 2) si no hay exacto, intenta contención (por ej. "santiago centro" -> "santiago")
+        if filtered_df.empty and nombre_norm:
+            # busca que una de las palabras principales esté contenida
+            # tomamos la primera palabra fuerte (no artículos muy cortos)
+            tokens = [t for t in re.split(r"\s+", nombre_norm) if len(t) > 2]
+            if tokens:
+                pat = r"|".join(re.escape(t) for t in tokens)
+                mask = df["__nombre_norm__"].str.contains(rf"\b({pat})\b", regex=True)
+                filtered_df = df[mask]
+
+    # Si sigue vacío, usa fallback (13101) como tenías
+    if filtered_df.empty:
+        filtered_df = df[df['Comuna'] == 13101]
+
     if not filtered_df.empty:
+        # Obtiene la región del primer match y lista todas las comunas de esa región
         region = filtered_df.iloc[0]['Region']
-        
-        # Filtra el df por la región seleccionada
-        filtered_df = df[df['Region'] == region]
-        
-        # Para cada registro de filtered_df, inserta un option en el select comunas
-        options = ""
-        for index, row in filtered_df.iterrows():
-            if comuna.isdigit():
-                selected = "selected" if row['Comuna'] == int(comuna) else ""
-            else:
-                #si comuna = row['Comuna'] entonces le agregamos el atributo selected
-                selected = "selected" if row['Nombre_Comuna'] == (comuna) else ""
-            # Agrega el option al string options
-            options += f"<option value='{row['Comuna']}' {selected}>{row['Nombre_Comuna']}</option>"
-            
-        
-        # Retorna el HTML de los options
-        return options
-    else:
-        return "<option value=''>No se encontraron comunas</option>"
+        df_region = df[df['Region'] == region].copy()
+
+        # Determinar cuál debe ir 'selected'
+        selected_code = None
+        if es_codigo:
+            selected_code = int(str(comuna_str).replace(" ", ""))
+        else:
+            # si nos llegó nombre, tomamos el primer match
+            selected_code = int(filtered_df.iloc[0]['Comuna'])
+
+        # Construir options
+        options = []
+        for _, row in df_region.iterrows():
+            sel = "selected" if int(row['Comuna']) == selected_code else ""
+            options.append(f"<option value='{int(row['Comuna'])}' {sel}>{row['Nombre_Comuna']}</option>")
+
+        return "".join(options)
+
+    return "<option value=''>No se encontraron comunas</option>"
 
 @app.route("/api/especialidades_teleconsulta", methods=["GET"])
 def obtener_especialidades_teleconsulta():
@@ -2057,6 +2527,7 @@ def mis_citas():
     session['next'] = request.full_path
     print(f"[INFO] next mis_citas: {request.full_path}")
     user = session.get("user", None)
+    print(f"[INFO] user mis_citas: {user}")
     #si no hay usuario, entonces redirigimos a la página de inicio de sesión
     if not user:
         return redirect(url_for("login"))
@@ -2064,6 +2535,7 @@ def mis_citas():
     email = user.get("email")
     df_reservas = pd.read_csv("data/reservas.csv", sep=";")
     df_reservas = df_reservas[(df_reservas["correo_cliente"] == email)]
+    df_reservas = df_reservas[(df_reservas["mascota"] >0)]
 
     #si el campo estado==1 lo cambiamos por Confirmada, si es -1 lo cambiamos por Cancelada, si es 0 lo cambiamos por Confirmar
     df_reservas["estado"] = df_reservas["estado"].replace({1: "Confirmada", -1: "Cancelada", 0: "Confirmar"})
@@ -2111,6 +2583,11 @@ def mis_citas():
 
     # Convertir columna fecha a datetime
     df_reservas["fecha"] = pd.to_datetime(df_reservas["fecha"], format='mixed', dayfirst=True)
+    df_reservas["hora_am_pm"] = (
+    pd.to_datetime(df_reservas["hora"], errors="coerce")
+      .dt.strftime("%I:%M %p")
+      .str.lstrip("0")   # quita cero a la izquierda (09:30 -> 9:30)
+    )
 
     df_reservas = df_reservas.sort_values(by=["fecha"], ascending=False)
     print("[INFO] DataFrame de reservas después de la unión:")
@@ -2916,6 +3393,74 @@ def cita_pagada():
         return "<script>alert('La cita ya existe, no recargue la página después de haber pagado.'); window.location.href='/mis_citas';</script>"
 
 
+@app.route('/api/reservar_cash', methods=['POST'])
+def api_reservar_cash():
+    try:
+        # Forzamos el flujo de efectivo
+        session['pago_confirmado'] = False
+        session['medio_pago'] = 'EFECTIVO'
+
+        # Llamamos a insert_reservation con argumentos (YA PERMITIDOS)
+        resp, status = insert_reservation(estado_pago=0, medio_pago="EFECTIVO")
+        if status == 200:
+            return jsonify({"ok": True, "redirect": url_for('cita_reservada_cash')}), 200
+        else:
+            return resp, status
+    except Exception as e:
+        return jsonify({"message": f"Error al reservar en efectivo: {str(e)}"}), 500
+
+
+@app.route('/cita_reservada_cash')
+def cita_reservada_cash():
+    # Puedes reutilizar parte de la lógica de cita_pagada para armar el contexto:
+    print("DEBUG: Entrando a cita_reservada_cash")
+
+    reserva_en_proceso = session.get('reserva_en_proceso')
+    if not reserva_en_proceso:
+        return "<script>alert('No hay reserva en proceso.'); window.location.href='/';</script>"
+
+    user = session.get("user", None)
+    if user:
+        email = user.get("email")
+    else:
+        email = session.get('correo_cliente_invitado')
+
+    id_clinica = int(reserva_en_proceso['id_clinica'])
+    fecha = reserva_en_proceso['fecha']
+    hora = reserva_en_proceso['hora']
+    id_veterinario = int(reserva_en_proceso['veterinario'])
+    id_mascota = int(session.get('mascotaSeleccionada', 0))
+    nombre_clinica = reserva_en_proceso['clinica']
+    direccion_clinica = reserva_en_proceso['direccion']
+
+    # nombre_mascota como en cita_pagada
+    if (id_mascota != 999 and id_mascota != 0):
+        df_mis_mascotas = pd.read_csv("data/clientes_mascotas.csv", sep=";")
+        df_mis_mascotas = df_mis_mascotas[(df_mis_mascotas["id_clientes_mascotas"] == id_mascota)]
+        nombre_mascota = df_mis_mascotas.iloc[0]["nombre_mascota"] if not df_mis_mascotas.empty else "Mascota"
+    else:
+        nombre_mascota = "Nueva mascota"
+
+    # Veterinario
+    nombres_veterinario = reserva_en_proceso.get('nombresvet', '')
+    apellidos_veterinario = reserva_en_proceso.get('apellidosvet', '')
+
+    # (Opcional) limpiar sesión parcial como haces en cita_pagada
+    # limpiar_sesion_parcial()
+
+    return render_template(
+        "cita_reservada_cash.html",
+        user=user,
+        correo=email,
+        nombre_clinica=nombre_clinica,
+        direccion_clinica=direccion_clinica,
+        nombre_mascota=nombre_mascota,
+        nombres_veterinario=nombres_veterinario,
+        apellidos_veterinario=apellidos_veterinario,
+        fecha=fecha,
+        hora=hora
+    )
+
 
 @app.route('/almacenar_precio', methods=['POST'])
 def procesar_pago():
@@ -2958,6 +3503,197 @@ def generar_pdf():
     precio = f"${precio:,}".replace(",", ".")     
 
     numero_tarjeta = session.get('numero_tarjeta')
+    hora = session.get('hora', '08:40')
+    id_reserva = session.get('max_id_reserva')
+    print(f"En generar PDF id_reserva={id_reserva}")
+    id_reserva = int(id_reserva) + 1
+    cliente = session.get('nombre_cliente', 'Estimado/a Cliente')
+
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer, pagesize=LETTER)
+    width, height = LETTER
+    x_margin = inch
+    y = height - inch
+
+
+    # === ENCABEZADO CON FONDO CELESTE ===
+    alto_encabezado = 80
+    y_encabezado = height - alto_encabezado
+
+    c.setFillColorRGB(0.87, 0.94, 0.98)  # celeste suave
+    c.rect(0, y_encabezado, width, alto_encabezado, fill=True, stroke=0)
+
+    # Logo dentro del encabezado
+    c.drawImage(
+        "static/images/icono paw care/android-chrome-192x192.png",
+        x_margin,
+        y_encabezado + 10,
+        width=60,
+        height=60,
+        preserveAspectRatio=True,
+        mask='auto'
+    )
+
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawCentredString(x_margin + 120, y+20, "PawCare")
+
+    # Actualizar posición de Y para el resto del contenido
+    y = y_encabezado - 30  # bajar contenido general bajo el encabezado
+
+    ##==== CUERPO ===
+    # Título
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 16)
+    texto = "Confirmación de reserva"
+    x_centro = width / 2
+    y_texto = y
+
+    # Dibujar el texto centrado
+    c.drawCentredString(x_centro, y_texto, texto)
+
+    # Calcular ancho del texto para subrayado
+    ancho_texto = c.stringWidth(texto, "Helvetica-Bold", 16)
+    x_inicio = x_centro - (ancho_texto / 2)
+    x_final = x_centro + (ancho_texto / 2)
+    y_linea = y_texto - 2  # 2 puntos debajo del texto
+
+    # Dibujar la línea de subrayado
+    c.setLineWidth(1)
+    c.line(x_inicio, y_linea, x_final, y_linea)
+
+    y -= 40
+
+    # Cuerpo del mensaje
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y, f"{cliente},")
+    y -= 20
+
+    c.drawString(x_margin, y, f"Su cita se agendó correctamente con el/la especialista: {reserva['nombresvet']} {reserva['apellidosvet']}.")
+    y -= 20
+    #c.setFont("Helvetica-Bold", 12)
+    #c.drawString(x_margin, y, f"Dr. {reserva['nombresvet']}")
+    #y -= 20
+
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y, f"El día {reserva['fecha']} a las {reserva['hora']} horas.")
+    y -= 20
+    c.drawString(x_margin, y, f"En el centro de atención: {reserva['clinica']}.")
+    y -= 20
+    c.drawString(x_margin, y, f"Dirección: {reserva['direccion']}, {reserva['comuna']}.")
+    y -= 30
+
+    # Detalles
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Nº de reserva:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{id_reserva}")
+    y -= 20
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Valor pagado:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{cargoTotal}")
+    y -= 20
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Cargo por servicio pagado:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{cargoServicio}")
+    y -= 20
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Valor de la consulta:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, f"{precio}")
+    y -= 20    
+
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "Tarjeta utilizada terminada en:")
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin + 180, y, numero_tarjeta)
+    y -= 40
+
+    # Recomendaciones
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y, "Le solicitamos llegar 20 minutos antes de la hora de su cita para una mejor atención.")
+    y -= 30
+
+    c.drawString(x_margin, y, "Agradecemos su preferencia en nuestros servicios.")
+    y -= 40
+    
+    c.drawString(x_margin, y, "Atentamente,")
+    y -= 20
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y, "El equipo de PawCare")
+    y -= 60
+
+    # Línea separadora
+    c.setStrokeColor(colors.grey)
+    c.setLineWidth(0.5)
+    c.line(x_margin, y, width - x_margin, y)
+    y -= 25
+
+        # === PIE CON FONDO CELESTE ===
+    alto_pie = 110
+    y_pie = 0
+    c.setFillColorRGB(0.87, 0.94, 0.98)  # celeste suave
+    c.rect(0, y_pie, width, alto_pie, fill=True, stroke=0)
+
+    # Texto del encabezado del pie
+    c.setFillColor(colors.black)
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(x_margin, y_pie + alto_pie - 20, "Si tienes alguna pregunta o requieres asistencia adicional, contáctanos")
+
+    # Subtítulos
+    c.setFont("Helvetica", 12)
+    c.drawString(x_margin, y_pie + alto_pie - 50, "Teléfono")
+    c.drawString(x_margin + 120, y_pie + alto_pie - 50, "Dirección")
+    c.drawString(x_margin + 420, y_pie + alto_pie - 50, "Síguenos en")
+
+    # Datos
+    c.drawString(x_margin, y_pie + alto_pie - 70, "2 2520 5900")
+    c.drawString(x_margin + 120, y_pie + alto_pie - 70, "Av. Luis Pasteur 5917. Vitacura")
+
+    # Redes sociales
+    redes = [
+        ("facebook.png", "https://www.facebook.com/pawcare_oficial"),
+        ("instagram.png", "https://www.instagram.com/pawcare_oficial"),
+        ("x.png", "https://twitter.com/pawcare_oficial")
+    ]
+    x_icon = x_margin + 400
+    y_icon = y_pie + alto_pie - 90  # alineado con texto
+
+    for icon_file, url in redes:
+        icon_path = f"static/images/social/{icon_file}"
+        c.linkURL(url, (x_icon, y_icon, x_icon + 32, y_icon + 32))
+        c.drawImage(icon_path, x_icon, y_icon, width=32, height=32, mask='auto')
+        x_icon += 40  # espacio entre íconos
+
+    c.save()
+    buffer.seek(0)
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name="reserva_cita.pdf",
+        mimetype="application/pdf"
+    )
+
+
+@app.route('/generar_pdf_cash', methods=['GET', 'POST'])
+def generar_pdf_cash():
+    reserva = session.get('reserva_en_proceso')
+    nombre_mascota = session.get('nombre_mascota', '')
+
+    cargoServicio = int(session.get('cargoServicio', 0))
+    cargoServicio = f"${cargoServicio:,}".replace(",", ".")
+    cargoTotal = 0 #en pago cash so se cobra el cargo por servicio
+    cargoTotal = f"${cargoTotal:,}".replace(",", ".")   
+    precio = int(reserva['valor'])
+    precio = f"${precio:,}".replace(",", ".")     
+
+    numero_tarjeta = "N/A"
     hora = session.get('hora', '08:40')
     id_reserva = session.get('max_id_reserva')
     print(f"En generar PDF id_reserva={id_reserva}")
@@ -3849,6 +4585,8 @@ def enviar_rcaptcha_login():
 
         print(f"clientes_mascotas{clientes_mascotas}")
 
+        print(f"user en enviar_rcaptcha_login es {user}")
+
         clientes_mascotas=clientes_mascotas.to_dict(orient="records")  
 
         return jsonify({
@@ -3867,6 +4605,10 @@ def enviar_rcaptcha_login():
             return jsonify({'error': 'La combinación usuario contraseña no existe'}), 401            
 
     return jsonify({'mensaje': 'Formulario recibido correctamente'})
+
+
+
+
 
 @app.route('/clear_sesion')
 def clear_sesion():
@@ -3981,7 +4723,9 @@ def calendario():
         left_on="id_raza",
         right_on="id_raza",
         how="left"
-    )            
+    ) 
+
+              
     print("DEBUG df_reservas")
     print(df_reservas)
 
@@ -3998,7 +4742,7 @@ def calendario():
     ids_pasados = df_pasadas['mascota'].unique()
 
     # Filtrar futuras que no estén en pasadas
-    nuevas_mascotas = df_futuras[~df_futuras['mascota'].isin(ids_pasados)]
+    nuevas_mascotas = df_futuras[~df_futuras['mascota'].isin(ids_pasados) & (df_futuras['mascota'] != -88)]
     print("Mascotas futuras:", nuevas_mascotas['mascota'].nunique())
 
     #Estimamos los ingresos del mes actual
@@ -4024,7 +4768,8 @@ def calendario():
     promedio_precio_calidad = (df_reservas['precio-calidad'].mean()/5)
     promedio_puntualidad = (df_reservas['puntualidad'].mean()/5)
 
-
+    df_reservas['hora'] = pd.to_datetime(
+        df_reservas['hora'], errors='coerce').dt.strftime('%H:%M')
 
     reservas=df_reservas.to_dict(orient="records")  
 
@@ -4055,14 +4800,16 @@ def calendario():
     print(hoy_str)    
     print("DEBUG df_reservas asntes del filtrar por fecha de hoy")
     print(df_reservas)
-    citas_hoy = df_reservas[df_reservas["fecha"] == hoy_str]
+    citas_hoy = df_reservas[(df_reservas["fecha"] == hoy_str) & (df_reservas["mascota"] !=-88)]
     print("DEBUG citas_hoy")
     print(citas_hoy)    
     total_citas_hoy = len(citas_hoy)
 
+    horas_bloqueadas = df_reservas[(df_reservas["mascota"] ==-88)]
+
 
     # Horas libres (suponiendo 14 bloques por día)
-    horas_libres = 14 - len(citas_hoy)
+    horas_libres = 13 - len(citas_hoy) - len(horas_bloqueadas)
 
     # Próximas 3 reservas
     ahora = datetime.now()
@@ -4076,6 +4823,8 @@ def calendario():
     return render_template("calendario.html", 
                             user=user,
                             reservas=reservas,
+                            id_clinica=df_reservas.iloc[0]["id_clinica"],  # primer registro
+                            medico_que_atendio=df_reservas.iloc[0]["medico_que_atendio"], 
                             reservas_filtrada=reservas_filtrada,
                             semana=semana,
                             lunes=lunes.strftime("%Y-%m-%d"),
@@ -4307,7 +5056,193 @@ def eventos_sincronizados():
 
     return jsonify({"sincronizados": sincronizados})
 
+#########################
+## Bloquear fechas y horas en calendario
+# app.py (extracto)
+import os
+from datetime import datetime, timedelta
+import pandas as pd
+from flask import request, jsonify, session
 
+# -------- Helpers --------
+def generar_slots(hora_inicio: str, hora_fin: str, duracion_min: int):
+    """Devuelve lista de strings HH:MM en [inicio, fin) cada 'duracion_min'."""
+    if not hora_inicio or not hora_fin:
+        return []
+    fmt = "%H:%M:%S"  # incluye segundos
+    t0 = datetime.strptime(hora_inicio, "%H:%M")
+    t1 = datetime.strptime(hora_fin, "%H:%M")
+    if t1 <= t0:
+        return []
+    out, cur = [], t0
+    while cur < t1:
+        out.append(cur.strftime(fmt))
+        cur += timedelta(minutes=duracion_min)
+    return out
+
+def fechas_en_rango(fecha_inicio: str, fecha_fin: str):
+    """Lista de fechas YYYY-MM-DD entre inicio y fin, ambas incluidas."""
+    di = datetime.strptime(fecha_inicio, "%d-%m-%Y").date()
+    df = datetime.strptime(fecha_fin, "%d-%m-%Y").date()
+    if df < di:
+        return []
+    out = []
+    cur = di
+    while cur <= df:
+        out.append(cur.strftime("%d-%m-%Y"))
+        cur += timedelta(days=1)
+    return out
+
+# -------- Endpoint --------
+@app.route('/api/bloquear_horario', methods=['POST'])
+def api_bloquear_horario():
+    # 1) Requiere sesión (sin reCAPTCHA)
+    print("entrando a api_bloquear_horario")
+
+    if 'user' not in session or not session['user'].get('email'):
+        return jsonify({"error":"No autenticado"}), 401
+
+    data = request.get_json(silent=True) or {}
+
+    id_medico = str(data.get('id_medico', '')).strip()
+    id_clinica = str(data.get('id_clinica', '')).strip()
+    fecha_inicio = data.get('fecha_inicio')
+    fecha_fin = data.get('fecha_fin')
+    bloqueo_dia_completo = bool(data.get('bloqueo_dia_completo'))
+    hora_inicio = data.get('hora_inicio') or "09:00"
+    hora_fin = data.get('hora_fin') or "18:00"
+    duracion_min = int(data.get('duracion_min') or 45)
+    motivo = (data.get('motivo') or '').strip()
+    print("hora inicio =", hora_inicio, " hora fin =", hora_fin, " duracion=", duracion_min)
+
+    # 2) Validaciones básicas
+    if not (id_medico and id_clinica and fecha_inicio and fecha_fin):
+        return jsonify({"error":"Parámetros incompletos"}), 400
+
+    if fecha_fin < fecha_inicio:
+        return jsonify({"error":"La fecha fin no puede ser menor a la fecha inicio"}), 400
+
+    # No permitir pasado
+    hoy = datetime.now().date()
+    if datetime.strptime(fecha_inicio, "%d-%m-%Y").date() < hoy:
+        return jsonify({"error":"No se puede bloquear en fechas pasadas"}), 400
+
+    # Ajuste para día completo
+    if bloqueo_dia_completo:
+        hora_inicio, hora_fin = "09:00", "19:00"
+        if duracion_min < 30:
+            duracion_min = 45  # menos filas
+
+    fechas = fechas_en_rango(fecha_inicio, fecha_fin)
+    if not fechas:
+        return jsonify({"error":"Rango de fechas no válido"}), 400
+
+    slots = generar_slots(hora_inicio, hora_fin, duracion_min)
+    print("DEBUG slots=")
+    print(slots)
+
+    if not slots:
+        return jsonify({"error":"El rango horario no genera slots"}), 400
+
+    # 3) Leer CSV
+    path_csv = 'data/reservas.csv'
+    sep = ';'
+    try:
+        df = pd.read_csv(path_csv, sep=sep, dtype=str)
+    except FileNotFoundError:
+        df = pd.DataFrame()
+
+    cols = df.columns.tolist()
+    # Columnas mínimas si el CSV aún no existe
+    if df.empty and not cols:
+        cols = ['id_reserva','id_clinica','correo_cliente','mascota',
+                'fecha','hora','medico_que_atendio','estado','creado_en','observacion']
+
+    # 4) Preparar duplicados/conflictos
+    existentes = set()
+    conflictos_set = set()
+
+    if not df.empty:
+        df_med = df[df.get('medico_que_atendio', '') == id_medico]
+
+        # Bloqueos existentes (mascota = -88)
+        df_blk = df_med[df_med.get('mascota','') == "-88"]
+        for _, r in df_blk.iterrows():
+            existentes.add((r.get('fecha'), r.get('hora')))
+
+        # Reservas reales (mascota != -88)
+        df_real = df_med[df_med.get('mascota','') != "-88"]
+        for _, r in df_real.iterrows():
+            conflictos_set.add((r.get('fecha'), r.get('hora')))
+        print("DEBUD conflictos_set=")
+        print(conflictos_set)
+
+    # 5) Generar filas
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    insertados, duplicados = 0, 0
+    conflictos = []
+    nuevas_filas = []
+
+    # siguiente id_reserva
+    next_id = 1
+    if 'id_reserva' in cols and not df.empty:
+        try:
+            next_id = int(pd.to_numeric(df['id_reserva'], errors='coerce').fillna(0).max()) + 1
+        except:
+            next_id = 1
+
+    user_email = session['user']['email'].strip()
+
+    # (Opcional) límite de filas para evitar abusos accidentales
+    max_filas = 1000
+
+    for f in fechas:
+        for h in slots:
+            if (f, h) in conflictos_set:
+                conflictos.append({"fecha": f, "hora": h})
+                continue
+            if (f, h) in existentes:
+                duplicados += 1
+                continue
+
+            row = {c: '' for c in cols}
+            if 'id_reserva' in cols: row['id_reserva'] = str(next_id); next_id += 1
+            if 'id_clinica' in cols: row['id_clinica'] = id_clinica
+            if 'correo_cliente' in cols: row['correo_cliente'] = user_email
+            if 'mascota' in cols: row['mascota'] = "-88"              # marca de bloqueo
+            if 'fecha' in cols: row['fecha'] = f
+            if 'hora' in cols: row['hora'] = h 
+            if 'medico_que_atendio' in cols: row['medico_que_atendio'] = id_medico
+            if 'estado' in cols: row['estado'] = '1'                  # ocupado
+            if 'creado_en' in cols: row['creado_en'] = now_str
+            if 'observacion' in cols: row['observacion'] = f"BLOQUEO: {motivo}" if motivo else "BLOQUEO"
+
+            nuevas_filas.append(row)
+            insertados += 1
+
+            if insertados >= max_filas:
+                break
+        if insertados >= max_filas:
+            break
+
+    # 6) Guardar CSV
+    if insertados > 0:
+        df_out = pd.concat([df, pd.DataFrame(nuevas_filas, columns=cols)], ignore_index=True) if not df.empty \
+                 else pd.DataFrame(nuevas_filas, columns=cols)
+        os.makedirs(os.path.dirname(path_csv), exist_ok=True)
+        df_out.to_csv(path_csv, sep=sep, index=False)
+
+    return jsonify({
+        "insertados": insertados,
+        "duplicados": duplicados,
+        "conflictos": conflictos,
+        "limitado_por_max": insertados >= max_filas
+    }), 200
+
+
+
+
+## FIN Bloqear fechas y horas en calendario
 
 
 if __name__ == "__main__":
